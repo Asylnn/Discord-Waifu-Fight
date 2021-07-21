@@ -1,0 +1,19 @@
+{
+  "name": "node-osu-api-v2",
+  "version": "1.0.0",
+  "description": "Wrapper for osu api v2",
+  "main": "Api.js",
+  "scripts": {
+    "test": "node Api.js"
+  },
+  "keywords": [
+    "osu",
+    "api",
+    "v2"
+  ],
+  "author": "Asyln",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.1"
+  }
+}
