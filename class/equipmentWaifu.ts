@@ -1,17 +1,17 @@
 import modificator from "./types/modificator";
  
 export default class equipmentWaifu {
-    private id: number;
+    private id: string;
     private name: string;
     private level: number;
-    private rarity: string;
+    private rarity: number;
     private type: string; //Helmet,chestplate,boots ...
     private set: string;//Maybe add a class for the set of equipment for different checks
     private img: string; //URL of the image
     private tabModificators: Array<modificator>;//The list of modificators
 
     //Generating a new instance
-    constructor(id: number,name: string,level: number,rarity: string,type: string,set: string
+    constructor(id: number,name: string,rarity: string,type: string,set: string
     ,img: string){
         this.id = id;
         this.name = name;
