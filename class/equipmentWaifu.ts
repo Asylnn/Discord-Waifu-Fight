@@ -11,7 +11,7 @@ export default class equipmentWaifu {
     private tabModificators: Array<modificator>;//The list of modificators
 
     constructor(id: number,name: string,level: number = 0,rarity: string,type: string,set: string
-    ,img: string,tabModificators: Array<modificator>){
+    ,img: string,tabModificators: Array<modificator> = Array()){
         this.id = id;
         this.name = name;
         this.level = level;
@@ -21,6 +21,8 @@ export default class equipmentWaifu {
         this.img = img;
         this.tabModificators = tabModificators;
     }
+
+
 
     toString(){
         "id: " + this.id + " name: " + this.name + " level: " + this.level + " rarity: " + 
