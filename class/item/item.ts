@@ -1,40 +1,32 @@
-import globalMessage from './message'
-import user from './user'
-import waifuClass from './waifu'
-import { modificator } from './types/modificator'
-import itemType from './types/itemType'
+import globalMessage from '../message'
+import user from '../user'
+import waifuClass from '../waifu'
+import { modificator } from '../types/modificator'
+import itemType from '../types/itemType'
 
 type effectType = "set_multxp" | 'earn_waifuXP' | 'extract_XP' |'add_modificator' | 'earn_money' | 'set_multxp' | 'give_item' | 'give_waifu' | 'summon_nagisa' | 'earn_XP' | 'level_up' | 'quest_reroll' | 'extract_item'
 
 
-export default class item {
-  public readonly objectType = "item"
-  public readonly type: itemType
-  public readonly id: string
-  public readonly stackable: boolean
-  public readonly name: string
-  public readonly description: string
-  public effects: Array<{effect:effectType, value:any}> = []
-  public modificators: Array<modificator> = []
-  public readonly tier: number
-  public readonly value: number
+export default abstract class item {
+  protected readonly id: string
+  protected readonly name: string
+  protected readonly description: string
+  /*protected effects: Array<{effect:effectType, value:any}> = []
+  protected modificators: Array<modificator> = []*/
+  protected readonly rarity: number
+  protected readonly value: number
+  protected readonly img: string
 
-  constructor(name = "noName", effects:Array<{effect:effectType, value:any}> | Array<modificator> = [], value = -1000 , description = "noDesc", id = "-1", type: itemType = 'userConsumable', tier = 1, stackable = true){
-    this.type = type
+  constructor(id = "-1", name = "noName", description = "noDesc", rarity = 0, value = -69, img = ""){
     this.id = id
-    this.stackable = stackable
     this.name = name
-    if(type == "userItem" || type == "waifuItem"){
-      this.modificators = effects as Array<modificator>
-    }
-    else{
-      this.effects = effects as Array<{effect:effectType, value:any}>
-    }
-    this.tier = tier
     this.description = description
+    this.rarity = rarity
     this.value = value
-    this.objectType;
+    this.img = img
   }
+
+  abstract use(message: globalMessage): boolean
 
   use(message: globalMessage, user: user, index = 1){
     const effects = this.effects // Collection des effets de l'item usedItem

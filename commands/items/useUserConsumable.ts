@@ -11,6 +11,4 @@ export default async function useUserConsumable(message: message, user: user, ar
   if(itemHasBeenUsed){
     user.items.removeItem(item.id)
   }
-
-
 }
