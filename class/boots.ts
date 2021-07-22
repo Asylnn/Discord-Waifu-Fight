@@ -1,0 +1,1 @@
+/* Heritated class from equipmentWaifu */
