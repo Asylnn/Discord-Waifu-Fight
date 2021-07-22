@@ -10,19 +10,22 @@ export default class equipmentWaifu {
     private img: string; //URL of the image
     private tabModificators: Array<modificator>;//The list of modificators
 
-    constructor(id: number,name: string,level: number = 0,rarity: string,type: string,set: string
-    ,img: string,tabModificators: Array<modificator> = Array()){
+    //Generating a new instance
+    constructor(id: number,name: string,level: number,rarity: string,type: string,set: string
+    ,img: string){
         this.id = id;
         this.name = name;
-        this.level = level;
+        this.level = 0;
         this.rarity = rarity;
         this.type = type;
         this.set = set;
         this.img = img;
-        this.tabModificators = tabModificators;
+        this.tabModificators = generateEffect(rarity); /*Generating the number of modificators
+        depending on the rarity*/
     }
 
-
+    generateEffect(){}//Generate a new effect when reaching a milestone
+    generateEffect(rarity){} //Generate the modificator(s) depending on the rarity
 
     toString(){
         "id: " + this.id + " name: " + this.name + " level: " + this.level + " rarity: " + 
