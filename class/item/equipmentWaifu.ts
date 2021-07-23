@@ -2,7 +2,7 @@
 Ce mini-jeu à l'air pour le moment élitiste en terme de ranking osu!, il faut donc faire en sorte que
 les plus débutants puisse quand meme y participer un minimum =
 - Accompagnement du user par une waifu / l'équipe active de waifus.
-- Refaire le système d'items (Item en classe abstraite).
+- Refaire le système d'items (Item en classe abstraite). //Fait
 
 
 
@@ -11,13 +11,20 @@ les plus débutants puisse quand meme y participer un minimum =
 
 
 
-Addition d'une stat :
-Nouvelle stats : chance de double claims, Stat Rare?
+Nouvelle stats? : Chance de double claims, Augmentation XP pour X mode, Augmentation XP pour tous les modes,
+Augmentation XP si le claim contient X mod (HD, HR, DT...), Augmentation XP pour l'équipe entière / soi-même,
+Chance de drop de box, Augmentation de LUCK, Augmentation du niveau des loots de o!box (Level de parchemin recu, yens recus, xp pure recue),
+Capacité de multiexp et/ou de xp share (La waifu gagne 100% ou moins du montant du claim et les autres waifus se partagent un montant du claim ou le reste du claim)
+
+(Certains de ces effets peuvent être utilisés comme bonus de tenue et serait non disponibles pour les rolls et procs des equipements)
+
+
+Maybe certaines stats seraient reservés à un slot de waifu active?
 Potentiellement stats disponibles uniquement sur un type d'équipement (épée : XP, bottes : EX etc...)
 
 
 
-- Mini event : VS entre la personne et un de nous (Asyln & QuentinFTW)
+- Mini event : multi osu VS entre la personne et un de nous (Asyln & QuentinFTW)
 
 TODO : Tableaux des montants de génération/augmentation
 
