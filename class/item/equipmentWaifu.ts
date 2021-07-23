@@ -15,9 +15,10 @@ Nouvelle stats? : Chance de double claims, Augmentation XP pour X mode, Augmenta
 Augmentation XP si le claim contient X mod (HD, HR, DT...), Augmentation XP pour l'équipe entière / soi-même,
 Chance de drop de box, Augmentation de LUCK, Augmentation du niveau des loots de o!box (Level de parchemin recu, yens recus, xp pure recue),
 Capacité de multiexp et/ou de xp share (La waifu gagne 100% ou moins du montant du claim et les autres waifus se partagent un montant du claim ou le reste du claim)
+Réduction temps exploration/decryptage/analyse
 
 (Certains de ces effets peuvent être utilisés comme bonus de tenue et serait non disponibles pour les rolls et procs des equipements)
-
+Maybe forcer en sub stat fixe la valeur actuelle des accessoires (lunette : reduction temps analyse, pluck : +50% all modes etc...)
 
 Maybe certaines stats seraient reservés à un slot de waifu active?
 Potentiellement stats disponibles uniquement sur un type d'équipement (épée : XP, bottes : EX etc...)
