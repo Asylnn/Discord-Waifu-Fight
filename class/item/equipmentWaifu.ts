@@ -34,17 +34,16 @@ import {modificator} from "../types/modificator";
 import randInt from '../../genericFunctions/randInt'
 import message from '../../class/message'
 import item from './item'
-import waifu from '../waifu'
 
 type equipmentType = "weapon" | "outfit" | "accessory"
 
 export default class equipmentWaifu extends item {
-    private readonly objectType = "equipmentWaifu"
-    private lvl = 0;
-    private xp = 0
-    private readonly type: equipmentType; // Helmet,chestplate,boots ...
-    private readonly set: string;// Maybe add a class for the set of equipment for different checks
-    private tabModificators: Array<modificator>;//The list of modificators
+    public readonly objectType = "equipmentWaifu"
+    public lvl = 0;
+    public xp = 0
+    public readonly type: equipmentType; // Helmet,chestplate,boots ...
+    public readonly set: string;// Maybe add a class for the set of equipment for different checks
+    public tabModificators: Array<modificator>;//The list of modificators
 
     //Generating a new instance
     constructor(id: string, name: string, description:string, rarity: number, value: number, img:string, type: equipmentType, set: string){

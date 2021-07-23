@@ -428,7 +428,7 @@ export default function replyCommand(message: message, user: userClass, args: Ar
       message.reply(eval(getLoc)("command_not_exist"))
       break;
   }
-  //BETER ALTERNATIVE ?
+  //BETTER ALTERNATIVE ?
 
   commandStatus.then(hasUserNotBeenModified => {
     if(!hasUserNotBeenModified ){
