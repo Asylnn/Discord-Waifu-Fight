@@ -4,12 +4,30 @@ les plus débutants puisse quand meme y participer un minimum =
 - Accompagnement du user par une waifu / l'équipe active de waifus.
 - Refaire le système d'items (Item en classe abstraite). //Fait
 
+Ca se présente comme ca (exemple type):
+Couronne de lauriers ***** level 15/60
+URL de l'image
+Stat principale : Niveau de box + 1 
+Sub stat principale (fixe) : LUCK + 10 (100% de chances de générer un effet fixe aléatoire parmi les possibles ou la stat définie pour les accessoires)
+Sub stat 1 : Chance de drop de box + 15%
+Sub stat 2 : 20% de l'exp du claim est réparti entre les autres waifus équipées
+Sub stat 3 : INT + 12
+Sub stat 4 : Gain de yens + 7%
 
 
+L'XP d'un équipement n'augmentera pas à chaque claim, il faudrait manuellement les améliorer avec des matériaux et une quantité de yen.
+Ils seront revendables selon leur rareté et leur level actuel en échange de yen.
+Toutes les pièces d'équipement actuelles et futures devront avoir un set (correspondre a un ensemble)
+Avoir 2 ou 3 pièces du même set donnera un buff unique au set en question
+Ex : Ensemble de magicienne : Tenue de magicienne avec ses stats dont la stat fixe générée aléatoirement
+                              Arme de magicienne avec ses stats dont la stat fixe générée aléatoirement
+                              Lunette de magicienne avec la stat fixe égale au modificateur de la lunette (Réduction temps des analyses)
+                              
+Pour les items avec un nom qui pourrait poser problème : "Écrits de vigenère de magicienne" => "Écrits vigenèriens de magicienne"
 
-
-
-
+Faire plusieurs "donjons" pour pas chopper tous les sets au même endroit.
+Potentiellement certains sets farmable un certain nombre de fois par heure? jour? semaine? waifu? possibilité d'acheter des runs de donjons avec des yens
+si les runs sont toutes consommées?
 
 Nouvelle stats? : Chance de double claims, Augmentation XP pour X mode, Augmentation XP pour tous les modes,
 Augmentation XP si le claim contient X mod (HD, HR, DT...), Augmentation XP pour l'équipe entière / soi-même,
