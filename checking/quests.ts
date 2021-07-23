@@ -7,6 +7,7 @@ import {QUEST_PROBABILITY_BONUS} from '../files/config.json'
 export default function checkQuests(user: user, message: message, userMention: any){
   if(user.quests.date != (new Date()).getDate()){
     user.quests.refreshQuests()
+    user.save()
   }
 
   user.quests.activeQuests.forEach((userQuest, index) => {

@@ -1,8 +1,6 @@
 import message from '../class/message'
-import {GUILD_ID} from '../files/config.json'
 
-export default function checkQuests(message: message){
-  const guild: any = GUILD_ID
+export default function checkShopAndUpdateQuests(message: message){
 
   if(day != (new Date()).getDate() || global.forceAuctionCompletion){
     global.forceAuctionCompletion = false

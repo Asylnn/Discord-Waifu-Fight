@@ -7,6 +7,7 @@ import itemManager from '../class/itemManager'
 import save from '../save'
 
 
+
 var w = (nb:number) => BigInt(Math.pow(2, nb))
 itemManager;
 item;
@@ -70,7 +71,7 @@ import stats from './information/stats'
 import textCreateAcc from './information/textCreateAccount'
 import textHelp from './information/textHelp'
 import waifuCollection from './information/waifuCollection'
-
+import action from './information/action'
 
 
 import accept from './trades/accept'
@@ -355,7 +356,7 @@ export default function replyCommand(message: message, user: userClass, args: Ar
       break;
     case "text-action":
     case "text-actions":
-      user.waifus.forEach(waifu => waifu.testSendMesAction(message, "doing_action"))
+       action(message, user)
       break;
     case "text-swap":
       commandStatus = swap(message, user, args)

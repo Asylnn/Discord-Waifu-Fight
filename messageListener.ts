@@ -21,13 +21,8 @@ discordClient.on('messageReactionAdd', (reaction, user) => {
 discordClient.on('message', async function(discordMessage: Discord.Message) {
   if(discordMessage.author.bot) return;
   const message = new messageClass(defaultLanguage, discordMessage.content, discordMessage.channel.type, discordMessage.createdTimestamp, discordMessage.channel, discordMessage.id)
-  const np = message.content.split('/b/')
-  if(np[1]){
-    const beatmapID = +(np[1].split(' '))[0]
-    const beatmap = await osuAPI.getBeatmap({beatmapId:beatmapID})
-    beatmap.beatmapset_id
-    addbeatmapset(message, [beatmap.beatmapset_id.toString()])
-  }
+
+
   const args = message.content.toLowerCase().split(' ');
   if(!message.content.toLowerCase().startsWith(PREFIX)) return;
   let userObj: user = {currentDealId:"-1", lg:defaultLanguage, id:discordMessage.author.id, verified:false, osuName:"Asyln"} as any
@@ -43,14 +38,17 @@ discordClient.on('message', async function(discordMessage: Discord.Message) {
 
 osuBancho.on("PM", async (osuMessage: any) => {
   console.log(`${osuMessage.user.ircUsername}: ${osuMessage.message}`)
+  if(osuMessage.user.ircUsername == USERNAME){return;}
   const message = new messageClass(defaultLanguage, osuMessage.message, "osu", Date.now(),osuMessage.user, "-1")
   let userObj: user = {currentDealId:"-1", lg:defaultLanguage, id:"-1", verified:false, osuName:osuMessage.user.ircUsername} as any
-  /*if(osuMessage.message.split("https://osu.ppy.sh/b/")[1] != undefined && user.canAddMap){
-    let beatmapId = osuMessage.message.split("https://osu.ppy.sh/b/")[1].split(" ")[0]
-    message.author.id = user.id
-    addmapset(message, user, [null, beatmapId])
-  }*/
-  if(osuMessage.user.ircUsername == USERNAME){return;} // If it comes from the bot itself return.
+  const np = message.content.split('beatmapsets/')
+  if(np[1]){
+    const beatmapsetID = +(np[1].split('#/'))[0]
+    console.log(beatmapsetID)
+    if(beatmapsetID){
+      addbeatmapset(message, ["69727", beatmapsetID.toString()])
+    }
+  }
   const args = message.content.toLowerCase().split(' ');
   if(!message.content.toLowerCase().startsWith(PREFIX)) return;
 
