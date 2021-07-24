@@ -4,14 +4,14 @@ import collection from './class/collection'
 import randInt from './genericFunctions/randInt'
 import templateWaifu from './class/templateWaifu'
 
-const quest1: quest = {name:"get_claims", type:"osu", objective:4, difficulty:1, generalType:"claim", state:0}
-const quest2: quest = {name:"get_claims", type:"osu", objective:8, difficulty:2, generalType:"claim", state:0}
-const quest3: quest = {name:"get_claims", type:"osu", objective:16, difficulty:3, generalType:"claim", state:0}
+const quest1: quest = {name:"get_claims", type:"std", objective:4, difficulty:1, generalType:"claim", state:0}
+const quest2: quest = {name:"get_claims", type:"std", objective:8, difficulty:2, generalType:"claim", state:0}
+const quest3: quest = {name:"get_claims", type:"std", objective:16, difficulty:3, generalType:"claim", state:0}
 //var quest4 = new quest("get_dango", "quest_obtain_dango", 1, 2)
 //var quest1 = {name:"get_dango", type:"quest_obtain_dango", objective:1, difficulty:2, generalType:"other", state:0}
-const quest4: quest = {name:"get_claims", type:"fruits", objective:4, difficulty:1, generalType:"claim", state:0}
-const quest5: quest = {name:"get_claims", type:"fruits", objective:8, difficulty:2, generalType:"claim", state:0}
-const quest6: quest = {name:"get_claims", type:"fruits", objective:16, difficulty:3, generalType:"claim", state:0}
+const quest4: quest = {name:"get_claims", type:"catch", objective:4, difficulty:1, generalType:"claim", state:0}
+const quest5: quest = {name:"get_claims", type:"catch", objective:8, difficulty:2, generalType:"claim", state:0}
+const quest6: quest = {name:"get_claims", type:"catch", objective:16, difficulty:3, generalType:"claim", state:0}
 const quest13: quest = {name:"get_box", type:"quest_box", objective:1, difficulty:1, generalType:"other", state:0}
 const quest14: quest = {name:"get_box", type:"quest_box", objective:2, difficulty:2, generalType:"other", state:0}
 const quest15: quest = {name:"get_box", type:"quest_box", objective:4, difficulty:3, generalType:"other", state:0}

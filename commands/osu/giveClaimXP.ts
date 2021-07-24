@@ -8,6 +8,10 @@ import randInt from '../../genericFunctions/randInt'
 
 export default function giveClaimXP(message: message, user: user, rawXP: number, mode: string){
 
+
+  //const tempSolution = mode == "osu"
+
+
   user.quests.updateQuest("quest_claim_" + mode as questType)
   //let lb = global.dailyChallenge.lb[1]
   /*let claim = lb.has(user.id) ? lb.get(user.id) : 0

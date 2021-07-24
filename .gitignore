@@ -1,0 +1,19 @@
+/files/deals
+/files/nameToId
+/files/language/old loc
+/files/users
+/files/beatmapsIds.json
+/files/globalAuction.json
+/files/userShop.json
+
+
+
+/node_modules
+/dist
+/OLD PWF
+unused code
+usersave.json
+testing.js
+testing.ts
+osuAPI/node_modules
+testingReq.js
