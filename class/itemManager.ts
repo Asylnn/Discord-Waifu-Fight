@@ -5,6 +5,9 @@ import equipmentUser from './item/equipmentUser'
 import equipmentWaifu from './item/equipmentWaifu'
 import materials from './item/materials'
 
+type itemClassType = materials | equipmentUser | equipmentWaifu | consumableUser | consumableWaifu
+type itemManagerType = materials & equipmentUser & equipmentWaifu & consumableUser & consumableWaifu
+
 
 
 export default class itemManager {
@@ -14,6 +17,7 @@ export default class itemManager {
   public equipmentUser: Array<{item:equipmentUser, qty:number}>
   public equipmentWaifu: Array<{item:equipmentWaifu, qty:number}>
   public materials: Array<{item:materials, qty:number}>
+
 
   constructor(){
     this.consumableUser = []
@@ -33,28 +37,28 @@ export default class itemManager {
     return userConCount + userItemCount + waifuConCount + waifuItemCount + matCount
   }
 
-  addItem(item: materials | equipmentUser | equipmentWaifu | consumableWaifu | consumableUser | string, qty = 1){
+  addItem(item: itemClassType | string, qty = 1){
     if(typeof item == "string"){
-      item = items.get(item) as item
+      item = items.get(item) as itemClassType
     }
-
-    if(item.objectType != "equipmentWaifu" /*&& item.objectType != "equipmentUser"*/){
+    //item est un object d'une des classes de itemClassType
+    if(item.objectType != "equipmentWaifu" /*&& item.objectType != "equipmentUser"*/){ //If the item is stackable
       let itemAndQty = this[item.objectType].find((itemAndQty: {item:item, qty:number}) => itemAndQty.item.id == (item as item).id )
       if(itemAndQty == undefined){
-        this[item.objectType].push({item:item, qty:qty})
+        this[item.objectType].push({item:item as itemManagerType, qty:qty})
       }
       else{
         itemAndQty.qty += qty
       }
     }
-    else{
-      this[item.objectType].push({item:item, qty:1})
+    else{//If the item is not stackable
+      this[item.objectType].push({item:item  as itemManagerType, qty:1})
     }
-    this[item.objectType].sort((itemA, itemB) => itemA.item.tier - itemB.item.tier)
+    this[item.objectType].sort((itemA, itemB) => itemA.item.rarity - itemB.item.rarity)
   }
 
   removeItem(id: string, amount:number = 1){
-    let item = items.get(id)
+    let item = items.get(id) as itemClassType
     if(typeof item == "undefined") return;
     let index = this[item.objectType].findIndex((itemAndQty: {item:item, qty:number}) => itemAndQty.item.id == id)
 
@@ -68,7 +72,7 @@ export default class itemManager {
   }
 
   hasItem(id: string): boolean {
-    let item = items.get(id)
+    let item = items.get(id) as itemClassType
 
     if(typeof item == "undefined") return false;
     return this[item.objectType].some((itemAndQty: {item:item, qty:number}) => itemAndQty.item.id == id)

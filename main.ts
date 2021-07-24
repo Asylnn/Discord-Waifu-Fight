@@ -1,6 +1,6 @@
 import Discord from 'discord.js'
 import waifu from "./class/waifu"
-import item from './class/item'
+import item from './class/item/item'
 import api from './osuAPI/Api'
 import collection from './class/collection'
 import pageEmbed from './class/types/pageEmbed'

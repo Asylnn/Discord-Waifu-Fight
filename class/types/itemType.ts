@@ -1,6 +1,17 @@
-type itemType = 'userConsumable' | 'waifuConsumable' | 'userItem' | 'waifuItem' | 'materials'
+type itemType = 'consumableUser' | 'consumableWaifu' | 'equipmentUser' | 'equipmentWaifu' | 'materials'
 export default itemType
 
 
-export const MAJ: {"userconsumable": "userConsumable", "useritem": "userItem", "waifuconsumable": "waifuConsumable", "waifuitem": "waifuItem", "materials":"materials"}
- =  {"userconsumable": "userConsumable", "useritem": "userItem", "waifuconsumable": "waifuConsumable", "waifuitem": "waifuItem", "materials":"materials"}
+export const MAJ: {
+"consumableuser": "consumableUser",
+"equipmentuser": "equipmentUser",
+"consumablewaifu": "consumableWaifu",
+"equipmentwaifu": "equipmentWaifu",
+"materials":"materials"
+} =  {
+  "consumableuser": "consumableUser",
+  "equipmentuser": "equipmentUser",
+  "consumablewaifu": "consumableWaifu",
+  "equipmentwaifu": "equipmentWaifu",
+  "materials":"materials"
+}

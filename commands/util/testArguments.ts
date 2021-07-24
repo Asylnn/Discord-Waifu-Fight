@@ -3,7 +3,7 @@ import user from '../../class/user'
 import {MAJ} from '../../class/types/itemType'
 
 type testType = 'validWaifu' | 'validReserveWaifu' | 'validItem' | 'validItemType'
-type itemTypeLowerCase = 'userconsumable' | 'waifuconsumable' | 'useritem' | 'waifuitem' | 'materials'
+type itemTypeLowerCase = 'consumablewaifu' | 'consumableuser' | 'equipmentuser' | 'equipmentwaifu' | 'materials'
 
 export default function testArg(message: message, user: user, arg: number , testtype: testType, itemType?: itemTypeLowerCase){
   let isValid = false

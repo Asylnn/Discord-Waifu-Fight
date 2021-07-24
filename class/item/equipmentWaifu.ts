@@ -7,7 +7,7 @@ les plus débutants puisse quand meme y participer un minimum =
 Ca se présente comme ca (exemple type):
 Couronne de lauriers ***** level 15/60
 URL de l'image
-Stat principale : Niveau de box + 1 
+Stat principale : Niveau de box + 1
 Sub stat principale (fixe) : LUCK + 10 (100% de chances de générer un effet fixe aléatoire parmi les possibles ou la stat définie pour les accessoires)
 Sub stat 1 : Chance de drop de box + 15%
 Sub stat 2 : 20% de l'exp du claim est réparti entre les autres waifus équipées
@@ -22,7 +22,7 @@ Avoir 2 ou 3 pièces du même set donnera un buff unique au set en question
 Ex : Ensemble de magicienne : Tenue de magicienne avec ses stats dont la stat fixe générée aléatoirement
                               Arme de magicienne avec ses stats dont la stat fixe générée aléatoirement
                               Lunette de magicienne avec la stat fixe égale au modificateur de la lunette (Réduction temps des analyses)
-                              
+
 Pour les items avec un nom qui pourrait poser problème : "Écrits de vigenère de magicienne" => "Écrits vigenèriens de magicienne"
 
 Faire plusieurs "donjons" pour pas chopper tous les sets au même endroit.

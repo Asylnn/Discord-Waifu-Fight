@@ -14,10 +14,10 @@ export default async function recycleItem(message: message, user: user, args: Ar
   let waifu:waifu
 
   switch(type){
-    case'userconsumable':
-    case'waifuconsumable':
-    case'useritem':
-    case'waifuitem':
+    case'consumableuser':
+    case'consumablewaifu':
+    case'equipmentuser':
+    case'equipmentwaifu':
     case'materials':
 
       const itemIndex = Math.floor(parseInt(args[2]) - 1)

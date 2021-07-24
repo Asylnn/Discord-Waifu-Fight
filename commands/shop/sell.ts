@@ -13,10 +13,10 @@ export default async function sell(message: message,user: user, args: Array<stri
   const price = Math.floor(parseInt(args[3]))
   const type = args[1]
   switch (type) {
-    case "userconsumable":
-    case "waifuconsumable":
-    case "useritem":
-    case "waifuitem":
+    case "consumableuser":
+    case "consumablewaifu":
+    case "equipmentuser":
+    case "equipmentwaifu":
     case "materials":
 
       if(!testArg(message, user, index, "validItem", type)) return true;

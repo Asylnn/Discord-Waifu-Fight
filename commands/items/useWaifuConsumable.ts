@@ -1,14 +1,14 @@
 import message from '../../class/message'
 import user from '../../class/user'
 import testArg from '../util/testArguments'
-import effectType from '../../class/types/effectType'
+import effect from '../../class/types/effect'
 import {modificator} from '../../class/types/modificator'
 
 export default async function useWaifuConsumable(message: message, user: user, args: Array<string>){
   const itemIndex = Math.floor(parseInt(args[1]) - 1)
   const waifuIndex = Math.floor(parseInt(args[2]) - 1)
 
-  if(!testArg(message, user, itemIndex, "validItem", "waifuconsumable")){return true;}
+  if(!testArg(message, user, itemIndex, "validItem", "consumablewaifu")){return true;}
   const item = user.items.consumableWaifu[itemIndex].item
   if(!testArg(message, user, waifuIndex, "validWaifu")){return true;}
 
@@ -16,7 +16,7 @@ export default async function useWaifuConsumable(message: message, user: user, a
   const effects = item.effects // Collection des effets de l'item usedItem
   const waifu = user.waifus[waifuIndex]// Soit waifu, soit undefined
   let itemUsed = false
-  effects.forEach((valueAndEffectType /*OR valueAndType*/: {effectType:effectType, value:any}) => {
+  effects.forEach((valueAndEffectType /*OR valueAndType*/: effect) => {
     const {value, effectType} = {...valueAndEffectType}
 
     switch(effectType){
@@ -71,26 +71,6 @@ export default async function useWaifuConsumable(message: message, user: user, a
         }
         else{
           message.reply(eval(getLoc)("lvl_upper_lvl_max"))
-        }
-        break;
-      case 'extract_item':
-        const hasAtLeastOneItem = waifu.equipedItems.some(item => item.id != "-1")
-        if(hasAtLeastOneItem){
-          const allItemTierBellowExtractorTier = !waifu.equipedItems.some(item => item.tier > value)
-          if(allItemTierBellowExtractorTier){
-            waifu.equipedItems.forEach((equipedItem, i) => {
-              user.items.addItem(equipedItem)
-              waifu.equipedItems[i] = new item()
-            })
-            message.reply(eval(getLoc)("extracted_item"))
-            itemUsed = true
-          }
-          else{
-            message.reply(eval(getLoc)("extractor_level_too_low_equiped"))
-          }
-        }
-        else{
-          message.reply(eval(getLoc)("waifu_no_item_equiped"))
         }
         break;
     }

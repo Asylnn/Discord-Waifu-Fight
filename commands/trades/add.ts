@@ -49,10 +49,10 @@ export default async function add(message: message, user: user, args:Array<strin
         }
       }
       break;
-    case "userconsumable":
-    case "waifuconsumable":
-    case "useritem":
-    case "waifuitem":
+    case "consumablewaifu":
+    case "consumableuser":
+    case "equipmentwaifu":
+    case "equipmentuser":
     case "materials":
       const itemIndex = Math.floor(parseInt(args[2]) - 1)
       if(testArg(message, user, itemIndex, "validItem")){

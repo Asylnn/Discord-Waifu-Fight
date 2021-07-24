@@ -1,13 +1,16 @@
 import templateWaifu from './templateWaifu'
 import message from './message'
 import { modificator } from './types/modificator'
-import item from './item'
+import equipmentWaifu from './item/equipmentWaifu'
 import {action, actionType} from './types/action'
 import {EXP_DIFFICULTY, PAR_DIFFICULTY, TIME_ANALYSE, TIME_DECRYPTION} from '../files/config.json'
 import Discord from 'discord.js'
 import getModificators from '../genericFunctions/getModificators'
 import {milliToHours} from '../genericFunctions/timeConversion'
 import user from './user'
+
+
+
 
 export default class waifu extends templateWaifu{
   public readonly objectType = "waifu"
@@ -18,7 +21,11 @@ export default class waifu extends templateWaifu{
   public b_exp:number
   public stars:number
   public modificators: Array<modificator> = []
-  public equipedItems: Array<item> = [new item()]
+  public equipedItems: {
+    "outfit": equipmentWaifu | null,
+    "accessory" : equipmentWaifu | null,
+    "weapon":equipmentWaifu | null
+  } = {"outfit": null, "accessory": null, "weapon": null}
   public action: action = {isDoingAction:false, lvl:0, timeWaiting:-1, createdTimestamp:-1, type:"analyse"}
   public owner: user
 
@@ -164,12 +171,17 @@ export default class waifu extends templateWaifu{
     let addLuck = this.luck - this.b_luck
     let multEX = this.exp / this.b_exp
     let multInt = this.int / this.b_int
-    let itemContent = ""
-    this.equipedItems.forEach((item, i) => {
-      itemContent += `${eval(getLoc)("item")} ${i+1}: `
-      if(item.id != "-1") itemContent += `${eval(getLoc)("equiped_item")} : ${eval(getLoc)(item.name) + "★".repeat(this.equipedItems[0].tier)} \n`
-      else itemContent += eval(getLoc)("no_item") + "\n"
-    })
+
+
+
+    const outfit = this.equipedItems.outfit
+    const showOutfit = {name: eval(getLoc)("outfit"), value: outfit != null ? `${eval(getLoc)(outfit.name)} ${"★".repeat(outfit.rarity)} Lvl: ${outfit.lvl}`: eval(getLoc)("no_item_in_this_slot"), inLine: true}
+
+    const weapon = this.equipedItems.weapon
+    const showWeapon = {name: eval(getLoc)("sword"), value: weapon != null ? `${eval(getLoc)(weapon.name)} ${"★".repeat(weapon.rarity)} Lvl: ${weapon.lvl}`: eval(getLoc)("no_item_in_this_slot"), inLine: true}
+
+    const accessory = this.equipedItems.accessory
+    const showAccessory = {name: eval(getLoc)("outfit"), value: accessory != null ? `${eval(getLoc)(accessory.name)} ${"★".repeat(accessory.rarity)} Lvl: ${accessory.lvl}`: eval(getLoc)("no_item_in_this_slot"), inLine: true}
 
     embed.setColor(this.rarityColor as any)
     embed.addField("Stats", //the title of the embed
@@ -179,9 +191,11 @@ export default class waifu extends templateWaifu{
       EX : ${Math.round(this.exp)} (+${Math.round((multEX - 1)*100)}%)
       LUCK : ${this.luck} (+${addLuck})
       INT : ${Math.round(this.int)} (+${Math.round((multInt - 1)*100)}%)
-      ${eval(getLoc)("rarity")} : ${this.rarityName(message)} \n
-      ${itemContent} \n
-      ${eval(getLoc)("modificators")} : \n${modificators}`)
+      ${eval(getLoc)("rarity")} : ${this.rarityName(message)} \n`)
+      embed.addFields(showOutfit, showWeapon, showAccessory)
+
+      embed.addField(eval(getLoc)("modificators"),  modificators)
+
 
     message.reply(embed as any)
   }

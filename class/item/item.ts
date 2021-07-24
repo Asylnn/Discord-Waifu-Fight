@@ -1,4 +1,4 @@
-type itemType = "materials" | "equipmentUser" | "equipmentWaifu" | "consumableUser" | "consumableWaifu"
+import itemType from '../types/itemType'
 
 export default abstract class item {
   public readonly objectType: itemType

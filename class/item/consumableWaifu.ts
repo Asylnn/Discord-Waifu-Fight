@@ -1,12 +1,11 @@
-
-import {modificator} from "../types/modificator";
+import effect from '../types/effect'
 import item from './item'
 
 export default class consumableWaifu extends item {
-  public effects: Array<modificator>
+  public effects: Array<effect>
 
   //Generating a new instance
-  constructor(id: string, name: string, description:string, rarity: number, value: number, img:string, effects: Array<modificator>){
+  constructor(id: string, name: string, description:string, rarity: number, value: number, img:string, effects: Array<effect>){
       super(id, name, description, rarity, value, img)
       this.effects = effects
   }

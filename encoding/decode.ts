@@ -3,10 +3,15 @@ import user from '../class/user'
 import questManager from '../class/questManager'
 import waifuManager from '../class/waifuManager'
 import itemManager from '../class/itemManager'
-import item from '../class/item'
+import item from '../class/item/item'
+import equipmentWaifu from '../class/item/equipmentWaifu'
+import equipmentUser from '../class/item/equipmentUser'
+import consumableUser from '../class/item/consumableUser'
+import consumableWaifu from '../class/item/consumableWaifu'
+import materials from '../class/item/materials'
 
 
-eval(""); waifuManager; questManager; user; waifu; item; itemManager;
+eval(""); waifuManager; questManager; user; waifu; item; itemManager; materials; consumableWaifu; consumableUser; equipmentUser; equipmentWaifu;
 
 
 export default function decode(data: string): any{

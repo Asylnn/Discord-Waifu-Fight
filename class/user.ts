@@ -1,6 +1,6 @@
 import waifu from "./waifu"
 import itemManager from "./itemManager"
-import item from "./item"
+import equipmentUser from "./item/equipmentUser"
 import questManager from "./questManager"
 import gamemode from "./types/gamemode"
 import {PAR_LEVEL, ANA_LEVEL, BOX_LEVEL} from '../files/config.json'
@@ -27,7 +27,7 @@ export default class user{
   public beMentionned = true
   public boxs: Array<number> = []
   public items: itemManager = new itemManager()
-  public equipedItems: Array<item> = [new item()]
+  public equipedItems: Array<equipmentUser | null> = [null]
   public milestone: bigint = 0n
   public playedMapsIds: Array<number> = []
   public verified = true

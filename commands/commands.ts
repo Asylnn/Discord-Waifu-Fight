@@ -2,14 +2,16 @@ import message from '../class/message'
 import userClass from '../class/user'
 import {PREFIX, ASYLN_DISCORD_ID} from '../files/config.json'
 import truncate from '../genericFunctions/truncate'
-import item from '../class/item'
-import itemManager from '../class/itemManager'
+//import item from '../class/item'
+//import itemManager from '../class/itemManager'
 import save from '../save'
 
+/*
+ Do a command that unequip item
 
+
+*/
 var w = (nb:number) => BigInt(Math.pow(2, nb))
-itemManager;
-item;
 
 import setOsuId from './variableModification/setOsuId'
 import setOsuName from './variableModification/setOsuName'

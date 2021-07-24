@@ -28,10 +28,10 @@ export default async function accept(message: message, user: user){
         deal.accepter.reserveWaifu.push(reserveWaifu)
         deal.proposer.reserveWaifu.splice(object.reference)
         break;
-      case "userconsumable":
-      case "waifuconsumable":
-      case "useritem":
-      case "waifuitem":
+      case "consumablewaifu":
+      case "consumableuser":
+      case "equipmentuser":
+      case "equipmentwaifu":
       case "materials":
         const item = deepCopy(deal.proposer.items[MAJ[object.type]][object.reference].item)
         deal.accepter.items.addItem(item, object.complement as number)
@@ -56,10 +56,10 @@ export default async function accept(message: message, user: user){
         deal.proposer.reserveWaifu.push(reserveWaifu)
         deal.accepter.reserveWaifu.splice(object.reference)
         break;
-      case "userconsumable":
-      case "waifuconsumable":
-      case "useritem":
-      case "waifuitem":
+      case "consumablewaifu":
+      case "consumableuser":
+      case "equipmentuser":
+      case "equipmentwaifu":
       case "materials":
         const item = deepCopy(deal.proposer.items[MAJ[object.type]][object.reference].item)
         deal.proposer.items.addItem(item, object.complement as number)

@@ -7,10 +7,11 @@ import waifuClass from '../../class/waifu'
 export default async function useUserConsumable(message: message, user: user, args: Array<string>){
   const itemIndex = Math.floor(parseInt(args[1]) - 1)
 
-  if(!testArg(message, user, itemIndex, "validItem" , "userconsumable")){return true;}
+  if(!testArg(message, user, itemIndex, "validItem" , "consumableuser")){return true;}
 
   const item = user.items.consumableUser[itemIndex].item
   let itemUsed = false
+  item.effects
   item.effects.forEach((valueAndEffectType /*OR valueAndType*/: {effectType:effectType, value:any}) => {
     const {value, effectType} = {...valueAndEffectType}
 
@@ -36,7 +37,7 @@ export default async function useUserConsumable(message: message, user: user, ar
         itemUsed = true
         break;
       case 'summon_nagisa':
-        let dangoNumber = user.items[item.type].find((itemAndQty:  any) => itemAndQty.item.id == item.id)
+        let dangoNumber = user.items.consumableWaifu.find((itemAndQty:  any) => itemAndQty.item.id == item.id)
 
         if(!dangoNumber) return false;
         if(dangoNumber.qty >= 7){

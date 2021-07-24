@@ -61,7 +61,7 @@ var spirit_crystal = new item("spirit_crystal", [{effect:'add_modificator', valu
 var spirit_gem = new item("spirit_gem", [{effect:'add_modificator', value:[{origin:"spirit_gem", type:'mult_XP', value:1.10}]}], 50, "spirit_gem_description", "59", "waifuConsumable")
 var pure_gem = new item("pure_gem", [{effect:'add_modificator', value:[{origin:"pure_gem_int", type:'mult_int', value:1.1}, {origin:"pure_gem_lvl", type:'add_max_level', value:10, expirationTimestamp:-1}, {origin:"pure_gem_EX", type:'mult_EX', value:1.1, expirationTimestamp:-1}]}], 100, "pure_gem_description", "23", "waifuConsumable")
 
-
+//ITEM 64 : BOX ITEM
 //var xp_box_quest1 = new item("xp_box", [{effect:'earn_XP', value:1000}['earn_XP', 1000]], 0, "xp_box_description", "8")
 //var xp_box_quest2 = new item("xp_box", [{effect:'earn_XP', value:1500}['earn_XP', 1500]], 0, "xp_box_description", "9") /*N*/
 //var xp_box_quest3 = new item("xp_box", [{effect:'earn_XP', value:2200}['earn_XP', 2200/*3375*/]], 0, "xp_box_description", "10") /*N*/

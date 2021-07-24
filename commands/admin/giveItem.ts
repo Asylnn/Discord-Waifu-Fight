@@ -1,5 +1,5 @@
 import message from '../../class/message'
-import item from '../../class/item'
+import item from '../../class/item/item'
 
 //import Discord from 'discord.js'
 import {deepCopy} from '../../genericFunctions/copy'

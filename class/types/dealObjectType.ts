@@ -1,2 +1,3 @@
-type dealObjectType = "yens" | "waifu" | "reservewaifu" | "userconsumable" | "waifuconsumable" | "useritem" | "waifuitem" | "materials"
+
+type dealObjectType = "yens" | "waifu" | "reservewaifu" | "equipmentwaifu" | "equipmentuser" | "consumablewaifu" | "consumableuser" | "materials"
 export default dealObjectType

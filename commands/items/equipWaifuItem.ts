@@ -6,9 +6,9 @@ export default async function equipUserItem(message: message, user: user, args: 
   const itemIndex = Math.floor(parseInt(args[1]) - 1)
   const waifuIndex = Math.floor(parseInt(args[2]) - 1)
   const itemSlot = Math.floor(parseInt(args[3]) - 1)
-
-
-  if(!testArg(message, user, itemIndex, "validItem", "waifuitem")){return true;}
+  /* GO LATER
+  */
+  if(!testArg(message, user, itemIndex, "validItem", "equipmentwaifu")){return true;}
   if(!testArg(message, user, waifuIndex, "validWaifu")){return true;}
   if(isNaN(itemSlot)){message.reply(eval(getLoc)("no_item_slot")); return true;}
   if(itemSlot >= user.equipedItems.length || itemSlot < 0){message.reply(eval(getLoc)("invalid_item_slot")); return true;}
