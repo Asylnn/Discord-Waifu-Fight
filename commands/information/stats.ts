@@ -6,7 +6,7 @@ export default async function stats(message: message, user: user){
   let content = ""
   user.equipedItems.forEach((item, i) => {
       content += `${eval(getLoc)("item")} ${i+1}: `
-    if(item != null) content += eval(getLoc)(item.name) + "★".repeat(item.tier) + "\n"
+    if(item != null) content += eval(getLoc)(item.name) + "★".repeat(item.rarity) + "\n"
     else content += eval(getLoc)("no_item") + "\n"
   })
   message.reply(eval(getLoc)("stats_header"))

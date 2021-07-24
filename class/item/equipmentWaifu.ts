@@ -8,12 +8,11 @@ Ca se présente comme ca (exemple type):
 Couronne de lauriers ***** level 15/60
 URL de l'image
 Stat principale : Niveau de box + 1
-Sub stat principale (fixe) : LUCK + 10 (100% de chances de générer un effet fixe aléatoire parmi les possibles ou la stat définie pour les accessoires)
 Sub stat 1 : Chance de drop de box + 15%
 Sub stat 2 : 20% de l'exp du claim est réparti entre les autres waifus équipées
 Sub stat 3 : INT + 12
 Sub stat 4 : Gain de yens + 7%
-
+Sub stat 5 : LUCK + 10
 
 L'XP d'un équipement n'augmentera pas à chaque claim, il faudrait manuellement les améliorer avec des matériaux et une quantité de yen.
 Ils seront revendables selon leur rareté et leur level actuel en échange de yen.

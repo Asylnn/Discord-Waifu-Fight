@@ -5,7 +5,6 @@ B = l'étage du donjon
 (peut se faire avec o!enterDungeon puis une réaction sur un embed)
 o!skipSubmissionScore (raccourci o!sss)
 Skip le temps restant du round
-d
 Un combat contre un boss tour par tour
 Chaque tour ta/tes waifu(s) attaque avec ses dégats et tu peux faire des dégats en plus si tu envoie un score de la map proposée (a la meme manière qu'un osu!br : si une map
 dure 3min tu as genre 4min pour envoyer un score pour éviter le retry)
