@@ -4,7 +4,7 @@ import giveClaimXP from './giveClaimXP'
 
 export default async function maniaClaim(message: message, user: user){
   let mode = "mania"
-  const scores = await osuAPI.getUserScores({userId: user.osuId, type:"recent", gamemode:"osu", limit:10})
+  const scores = await osuAPI.getUserScores({userId: user.osuId, type:"recent", gamemode:"mania", limit:10})
 
   console.log("user found! : " + user.osuName)
 

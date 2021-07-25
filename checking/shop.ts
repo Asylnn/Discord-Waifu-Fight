@@ -4,17 +4,16 @@ export default function checkShopAndUpdateQuests(message: message){
 
   if(day != (new Date()).getDate() || global.forceAuctionCompletion){
     global.forceAuctionCompletion = false
-    if(global.globalAuction.higgestOffer.id != "-1"){
-      users.get(global.globalAuction.higgestOffer.id).then(user => {
-        const userMention = user.beMentionned ? guild.members.cache.get(user.id) : user.osuName
-        user._money -= global.globalAuction.price
-        message.reply(eval(getLoc)("won_auction")); userMention;
-        user.save()
-      })
-    }
-    global.globalAuction.item = getRandItem()
-    global.globalAuction.price = 100
-    global.globalAuction.higgestOffer = {username:eval(getLoc)("nobody"), id:"-1"}
+    users.get(global.globalAuction.higgestOffer.id).then(user => { //If someone participated in the auction
+      const userMention = user.beMentionned ? guild.members.cache.get(user.id) : user.osuName
+      user._money -= global.globalAuction.price
+      message.reply(eval(getLoc)("won_auction")); userMention;
+      user.save()
+    }).finally(() => {
+      global.globalAuction.item = getRandItem()
+      global.globalAuction.price = 100
+      global.globalAuction.higgestOffer = {username:eval(getLoc)("nobody"), id:"-1"}
+    })
   }
   /*if(day != (new Date()).getDate() || global.forceChallengeCompletion){
     global.forceChallengeCompletion = false

@@ -4,7 +4,7 @@ import giveClaimXP from './giveClaimXP'
 
 export default async function claim_catch(message: message, user: user){
   let mode = "catch"
-  const scores = await osuAPI.getUserScores({userId: user.osuId, type:"recent", gamemode:"osu", limit:10})
+  const scores = await osuAPI.getUserScores({userId: user.osuId, type:"recent", gamemode:"fruits", limit:10})
 
   console.log("user found! : " + user.osuName)
 

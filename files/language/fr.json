@@ -378,7 +378,7 @@
   "claim_no_fight":"Vous n'avez pas de fight en cours!",
   "already_has_acc":"Vous avez déjà un compte validé!",
   "in_private":"Vous devez faire cette commande en message privé avec le bot!",
-  "wrong_gamemode":"Vous devez séléctionner un bon mode de jeu (std, catch, taiko, mania)",
+  "wrong_gamemode":"Vous devez séléctionner un bon mode de jeu (osu, fruits, taiko, mania)",
   "buy_inexistant_trade":"Cette échange n'existe pas!",
   "auction_too_low_price":"Le prix que vous proposez est trop bas! (doit être 10% plus haut au minimum que le prix actuel)",
   "auction_propose_success":"Vous proposez désormais le meilleur prix pour l'item",
@@ -452,5 +452,5 @@
   "analyse":"analyse",
   "decryption":"décryptage",
   "no_waifu_is_doing_action":"Aucune waifu ne fait d'action en se moment!",
-  "waifu_is_doing_this_action":"La waifu fait l'action ${actionType}, elle terminera dans ${timeLeft}"
+  "waifu_is_doing_this_action":"${waifu.name} fait l'action ${actionType}, elle terminera dans ${timeLeft}"
 }

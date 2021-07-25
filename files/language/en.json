@@ -390,7 +390,7 @@
   "claim_no_fight":"You don't currently have a fight",
   "already_has_acc":"You already have an account!",
   "in_private":"You have to do this command in dm with the bot",
-  "wrong_gamemode":"You have to specify a valid gamemode (std, catch, taiko, mania)",
+  "wrong_gamemode":"You have to specify a valid gamemode (osu, fruits, taiko, mania)",
   "buy_inexistant_trade":"This object doesn't exist!",
   "auction_too_low_price":"The price you're proposing is too low! (must be at least 10% above the current price)",
   "auction_propose_success":"You are now proposing the best price for the item",
@@ -460,6 +460,12 @@
   "access_command_collection":"You now have access to the command collection!",
   "access_command_shop":"You now have access to the command shop!",
 
+
+
+  "exploration":"exploration",
+  "analyse":"analyse",
+  "decryption":"decryption",
   "gacha_got_waifu":"You got the waifu ${waifu.name}!",
+  "waifu_is_doing_this_action":"${waifu.name} is doing the action ${actionType}, she will finish in ${timeLeft}",
   "buy_not_enough_money":"You don't have enough money! it costs 250yen to do a gacha!"
 }
