@@ -128,12 +128,14 @@ function getColRand(arr: Array<collection<item, number>>, lvl: number){
   let w = 0
   let colWeight = getTotalWeight(col)
   let rand = randInt(colWeight)
-  for(let i = 0; w <= rand; i++) {
+  for(let i = 0; w <= rand; i++){
     w += col.array()[i]
     if (w > rand){randItem = col.keyArray()[i]}
   }
   return randItem
 }
+
+
 
 class globalItemManager<keyType, stringType> extends collection<keyType, stringType>{
   constructor(arr: any[]){

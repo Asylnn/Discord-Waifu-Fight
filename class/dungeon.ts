@@ -124,19 +124,32 @@ const dungeonName = new Map<string, string>([
   ["3", "outfit_dungeon"]
 ])
 
-const raritiesPerStage = new Array(Map<number,number>([
-  [[1,70],[2,30]], //Etage 1
-  [[1,50],[2,50]], //Etage 2
-  [[1,30],[2,65],[3,5]], //Etage 3
-  [[1,10],[2,75],[3,15]], //Etage 4
-  [[2,65],[3,30],[4,5]], //Etage 5
-  [[2,40],[3,55],[4,15]], //Etage 6
-  [[2,20],[3,60],[4,20]], //Etage 7
-  [[3,30],[4,65],[5,5]], //Etage 8
-  [[3,10],[4,75],[5,15]], //Etage 9
-  [[4,75],[5,25]] //Etage 10
-]))
-                                   
+const raritiesPerStage = Array(
+  [1, 70, 30], //Etage 1
+  [1, 50, 50], //Etage 2
+  [1, 30, 65], //Etage 3
+  [1, 10, 75], //Etage 4
+  [2, 65, 30], //Etage 5
+  [2, 40, 55], //Etage 6
+  [2, 20, 60], //Etage 7
+  [3, 30, 65], //Etage 8
+  [3, 10, 75], //Etage 9
+  [3, 0, 75] //Etage 10
+)
+
+
+if(rand - items[1] < 0){
+  rarity = items[0]
+}
+else if (rand - items[1] - items[2] < 0){
+  rarity = items[0] + 1
+}
+else{
+  rarity = items[0] + 2
+}
+
+
+
 const bossHPPerStage = new Array(100,1000,10000,100000,1000000,10000000,100000000,1000000000,10000000000,100000000000) // Valeur des 10 étages
 
 import equipmentWaifu from "./item/equipmentWaifu";
@@ -156,7 +169,7 @@ export default class dungeon {
   gamemode: gamemode
   starRating: number
 
-  constructor(id: string, name: string, stage: stageType, baseBossHP: number, possibleLoots: Array<equipmentWaifu> | Array<materials>, 
+  constructor(id: string, name: string, stage: stageType, baseBossHP: number, possibleLoots: Array<equipmentWaifu> | Array<materials>,
                possibleRarities: Map<number,number>, gamemode : gamemode, starRating: number){
     this.createdTimestamp = Date.now()
     this.id = id
