@@ -1,14 +1,4 @@
 /*
-o!showAllDungeons
-Affiche tous les donjons avec leur numéro assigné
-o!enterDungeon A B C D(raccourci o!ed)
-A = numéro donjon (arme, accessoire ou tenue)
-B = l'étage du donjon
-C = gamemode (optionnel)
-D = star rating (optionnel)
-(peut se faire avec o!enterDungeon puis une réaction sur un embed)
-o!submitScore(raccourci o!ss)
-Submit le score.
 
 ---------------------OLD---------------------
 Un combat contre un boss tour par tour
@@ -69,13 +59,9 @@ avoir une variable defaultStarRating en plus de defaultGamemode
 Changement sur waifu
 
 Ajout de la stat Kawaii
-Ajout de la stat dextérité
+Ajout de la stat Dextérité
 Ajout de la stat Force
 La variable EX devient (dans le fr.json) la stat Agilité
-
-
-
-
 
 Déletion de la stat EX
 Déletion de la stat INT
@@ -138,6 +124,20 @@ const dungeonName = new Map<string, string>([
   ["3", "outfit_dungeon"]
 ])
 
+const raritiesPerStage = new Array(Map<number,number>([
+  [[1,70],[2,30]], //Etage 1
+  [[1,50],[2,50]], //Etage 2
+  [[1,30],[2,65],[3,5]], //Etage 3
+  [[1,10],[2,75],[3,15]], //Etage 4
+  [[2,65],[3,30],[4,5]], //Etage 5
+  [[2,40],[3,55],[4,15]], //Etage 6
+  [[2,20],[3,60],[4,20]], //Etage 7
+  [[3,30],[4,65],[5,5]], //Etage 8
+  [[3,10],[4,75],[5,15]], //Etage 9
+  [[4,75],[5,25]] //Etage 10
+]))
+                                   
+const bossHPPerStage = new Array(100,1000,10000,100000,1000000,10000000,100000000,1000000000,10000000000,100000000000) // Valeur des 10 étages
 
 import equipmentWaifu from "./item/equipmentWaifu";
 import message from "./message"
@@ -151,18 +151,22 @@ export default class dungeon {
   stage: stageType
   baseBossHP: number
   //isUserDoingDungeon: boolean         a mettre dans user
-  possibleLoots: Array<equipmentWaifu> | materials //Soit un donjon a loot d'équipement soit le donjon pour farm la ressource pour upgrade les équipements
+  possibleLoots: Array<equipmentWaifu> | Array<materials> //Soit la liste des équipements des 2 sets soit la ressource pour monter de niveau les équipements
+  possibleRarities: Map<number,number> // Dictionnaire avec en clé la rareté (1 à 5) et en valeur le pourcentage de chances pour la rareté en question
   gamemode: gamemode
   starRating: number
 
-  constructor(id: string, stage: stageType, gamemode : gamemode, starRating: number){
+  constructor(id: string, name: string, stage: stageType, baseBossHP: number, possibleLoots: Array<equipmentWaifu> | Array<materials>, 
+               possibleRarities: Map<number,number>, gamemode : gamemode, starRating: number){
     this.createdTimestamp = Date.now()
     this.id = id
+    this.name = name
     this.stage = stage
-    this.name = dungeonName.get(id) as string
+    this.baseBossHP = baseBossHP
+    this.possibleLoots = possibleLoots
+    this.possibleRarities = possibleRarities
     this.gamemode = gamemode
     this.starRating = starRating
-    this.baseBossHP = this.stage*100
   }
 
 
