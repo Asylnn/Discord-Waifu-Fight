@@ -43,12 +43,91 @@ On stockera le star rating des maps proposées (1*, 2* etc) et le mode de jeu pa
 Un donjon permettra de farmer 2 emsembles entiers.
 Les waifus équipées du user vont l'accompagner à l'intérieur, elles taperont de base toutes les 30 secondes avec une puissance correspondant à leur stat d'attaque et leur type d'attaque.
 Ce montant est réduit par l'agilité (AGI) jusqu'à un minimum de 10 secondes.
-Le boss possède une faiblesse à un type, une résistance à un autre et est neutre au reste.
+Le boss possède des faiblesses et des résistances.
 On peut aussi faire un score sur la map proposée par le boss pour que l'utilisateur aide ses waifus au combat.
 Si un score est envoyé et validé, une autre map sera disponible pour refaire un score.
-Au début du combat, la stat de coup critique pour chaque waifu sera affichée, elle dépendra en partie de la LUCK.
-Si les waifus arrivent à tuer le boss, elles récupèrent le loot.
+Au début du combat, la stat de coup critique pour chaque waifu sera affichée, elle dépendra en partie de la dextérité.
+Si les waifus arrivent à tuer le boss, elles récupèrent le loot. La stat de chance affectera les loots
 Si le temps est écoulé, les waifus repartent bredouille. (Avec des baka)
+
+o!showAllDungeons
+Affiche tous les donjons avec leur numéro assigné
+o!enterDungeon A B C D(raccourci o!ed)
+A = numéro donjon (un des id pris à partir de showAllDungeons)
+B = l'étage du donjon
+C = gamemode (optionnel)
+D = star rating (optionnel)
+(peut se faire avec o!enterDungeon puis une réaction sur un embed)
+o!submitScore(raccourci o!ss)
+Submit le score.
+
+
+Changement sur user
+
+avoir une variable defaultStarRating en plus de defaultGamemode
+
+Changement sur waifu
+
+Ajout de la stat Kawaii
+Ajout de la stat dextérité
+Ajout de la stat Force
+La variable EX devient (dans le fr.json) la stat Agilité
+
+
+
+
+
+Déletion de la stat EX
+Déletion de la stat INT
+Rebalance de toutes les valeurs (potentiellement scale de 20 a 1000)
+
+AGI monte a 500   1:2
+LUCK monte a 100  1:10
+INT monte a 1000
+STG monte a 1000
+KAW monte a 1000
+DEXT monte a 500  1:2
+
+(100%)
+(65%)
+(65%)
+(30%)
+(20%)
+(20%)
+
+65%* 650 < 800
+
+1000+700+700+400+200+200=3000
+
+On confirme que le niveau max (pour le moment) est considéré à 100.
+Chaque rareté a une somme de points égale à un certain nombre au niveau 100.
+Rareté 5 : Légendaire :   3000-3200   NivMax = 100   Niveau1 : 20-100 (-300pts) => (2900 - 2700)/99  => 29.29-27.27
+DIFF 800                  ()
+Rareté 4 : Épique :       2200-2400   NivMax = 90    Niveau1 : 15-73  (-220pts) => (1980 - 1780)/89  => 22.45-20.00
+DIFF 700
+Rareté 3 : Très rare :    1500-1700   NivMax = 80    Niveau1 : 10-50  (-150pts) => (1350 - 1150)/79  => 17.09-14.56
+DIFF 600
+Rareté 2 : Rare :         900-1100    NivMax = 70    Niveau1 : 6-30  (-90pts)   => (1010 - 810)/69  =>  14.64-11.74
+DIFF 500
+Rareté 1 : Commune :      400-600     NivMax = 60    Niveau1 : 3-13 (-40pts)    => (560 - 360)/59   =>  9.49-6.10
+
+BossHP
+
+1 : 2 commune level 20              (+0%)   70% R1 30% R2
+2 : 1 rare 2 commune level 20       (+0%)   50% R1 50% R2
+3 : 2 rares 1 commune level 30      (+20%)  30% R1 65% R2 5% R3
+4 : 3 rares level 40                (+40%)  10% R1 75% R2 15% R3
+5 : 1 très rare 2 rares level 45    (+60%)  65% R2 30% R3 5% R4
+6 : 3 très rares level 60           (+90%)  40% R2 55% R3 15% R4
+7 : 2 épique 1 très rare level 70   (+125%) 20% R2 60% R3 20% R4
+8 : 3 épiques level 80              (+160%) 30% R3 65% R4 5% R5
+9 : 1 légendaire 2 épiques level 90 (+200%) 10% R3 75% R4 15% R5
+10 : 3 légendaire level 100         (+250%) 75% R4 25% R5
+
+10 sets = 30 equipement
+30 équipements "90% parfait" = 100 équipement légendaires x 30 = 3000 *0.66 = 2000 donjons
+
+}
 */
 
 
