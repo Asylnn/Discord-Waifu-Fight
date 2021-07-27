@@ -59,8 +59,8 @@ import {modificator} from "../types/modificator";
 import randInt from '../../genericFunctions/randInt'
 import message from '../../class/message'
 import item from './item'
+import equipmentType from '../types/equipmentType'
 
-type equipmentType = "weapon" | "outfit" | "accessory"
 
 export default class equipmentWaifu extends item {
     public readonly objectType = "equipmentWaifu"
@@ -71,20 +71,12 @@ export default class equipmentWaifu extends item {
     public tabModificators: Array<modificator>;//The list of modificators
 
     //Generating a new instance
-    constructor(id: string, name: string, description:string, rarity: number, value: number, img:string, type: equipmentType, set: string){
+    constructor(id: string, name: string, description:string, rarity: number, img:string, type: equipmentType, set: string){
+        //Générer valeur
         super(id, name, description, rarity, value, img)
         this.type = type;
         this.set = set;
-        if ([1,2,3,4,5].includes(rarity)){//Marche en JS, apparemment aussi en TS
-          //"Vrai" objet à générer
-        }
-        else{
-      
-        }
         this.tabModificators = []
-
-
-
         let numberOfPossibleProcs = [1,2,3,3,4]
         let numberOfModificators = numberOfPossibleProcs[this.rarity] + randInt(2)
         for(var i = 0; i < numberOfModificators; i++){
@@ -94,6 +86,7 @@ export default class equipmentWaifu extends item {
         // this.tabModificators = this.generateModificators(); /* Generating the number of modificators
         // depending on the rarity */
     }
+    // Upgrade an existing effect when the max of stats
     upgradeModificator(){
       if(this.tabModificators.length < 5){
         this.generateModificator()
@@ -103,15 +96,22 @@ export default class equipmentWaifu extends item {
         const upgradeIndex = 1 + randInt(4)
         this.tabModificators[upgradeIndex].value //Générer et le proc et ajouter a la valeur actuelle
       }
-    } // Upgrade an existing effect when the max of stats
+    }
+    // Generate a new effect when reaching a milestone
     generateModificator(){
       // On filtre le tableau pour enlever les modif deja présentes
       let possibleModificators = modificatorsPerPieceMap[this.type].filter(modificator => !this.tabModificators.some(tabModificator => tabModificator.type == modificator.type))
       let randModificatorIndex = randInt(possibleModificators.length) //Generating the modificator
       this.tabModificators.push(possibleModificators[randModificatorIndex])
 
-    } // Generate a new effect when reaching a milestone
-
+    }
+    /*generateModificators(){
+      let numberOfPossibleProcs = [1,2,3,3,4]
+      let numberOfModificators = numberOfPossibleProcs[this.rarity] + randInt(2)
+      for(var i = 0; i < numberOfModificators; i++){
+        this.generateModificator()
+      }
+    }*/
 
     get xpNeededToLevelUp(){
       return 0

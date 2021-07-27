@@ -120,6 +120,11 @@ import equipmentWaifu from "./item/equipmentWaifu";
 import message from "./message"
 import materials from "./item/materials"
 import gamemode from "./types/gamemode"
+import randInt from '../genericFunctions/randInt'
+import equipmentType from '../types/equipmentType'
+/**/
+import Discord from 'discord.js'
+
 
 type stageType = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 
@@ -130,9 +135,16 @@ type equipmentEffect = Array(
 //Dictionnaire des loots pour les donjons d'équipements
 //Clé : id du donjon
 //Valeur : Tableau des equipmentWaifu
-const possibleLootsPerDungeonId = new Map<string,Array<equipmentWaifu> | Array<materials>>([
-  ["1", [arme_princesse,tenue_princesse,accessoire_princesse,arme_tsundere,tenue_tsundere,accessoire_tsundere]]
-   ])
+
+
+arme_princesse = new equipmentWaifu(-1)
+
+
+
+
+const possibleLootsPerDungeonId = new Map<string,Array<[string, string, string, string, string, string]>>([
+ ["1", [["id", "name", "desc", "img", "type", "set"],tenue_princesse,accessoire_princesse,arme_tsundere,tenue_tsundere,accessoire_tsundere, ressource]]
+  ])
 
 const bossHPPerStage = new Array(100,1000,10000,100000,1000000,10000000,100000000,1000000000,10000000000,100000000000) // Valeur des 10 étages
 /*o!enterDungeon A B C D(raccourci o!ed)
@@ -148,7 +160,7 @@ const dungeonName = new Map<string, string>([
   ["3", "outfit_dungeon"]
 ])
 
-const raritiesPerStage = Array(
+const raritiesPerStage : Array<[number, number, number]> = Array(
   [1, 70, 30], //Etage 1
   [1, 50, 50], //Etage 2
   [1, 30, 65], //Etage 3
@@ -178,12 +190,15 @@ export default class dungeon {
   id: string
   name: string
   stage: stageType
-  baseBossHP: number
-  possibleLoots: Array<equipmentWaifu | materials> //Soit la liste des équipements des 2 sets soit la ressource pour monter de niveau les équipements
-  possibleRarities: Map<number,number> // Dictionnaire avec en clé la rareté (1 à 5) et en valeur le pourcentage de chances pour la rareté en question
+  BossHP: number
+  possibleLoots: Array<[string, string, string, string, equipmentType, string] | material> //Soit la liste des équipements des 2 sets et la ressource pour monter de niveau les équipements
+  possibleRarities: [number, number, number] // Tableau de 3 nombres
   gamemode: gamemode
   starRating: number
-  
+  owner: user
+  message: Discord.Message
+
+
   constructor(id: string, stage: stageType, gamemode : gamemode, starRating: number){
     //With the id of the dungeon, you get the name and the possibleLoots
     //With the stage of the dungeon, you get the baseBossHP and the possibleRarities
@@ -191,21 +206,81 @@ export default class dungeon {
     this.id = id
     this.name = dungeonName.get(id) as string
     this.stage = stage
-    this.baseBossHP = bossHPPerStage[stage - 1]
+    this.BossHP = bossHPPerStage[stage - 1]
     this.possibleLoots = possibleLootsPerDungeonId.get(id)
-    this.possibleRarities = raritiesPerStage[parseInt(stage) - 1]
+    this.possibleRarities = raritiesPerStage[stage - 1]
     this.gamemode = gamemode
     this.starRating = starRating
+
+    const embed = new Discord.MessageEmbed()
+    embed.setColor(0x35A7BF)
+    embed.setTitle(`${eval(getLoc)(this.name)} ${this.stage}`)
+
+    discordClient.users.fetch(this.owner.id).then(user => {
+      user.send(embed).then((message) => {
+        this.message = message
+      })
+    })
+
+    this.owner.waifus.forEach((waifu) => {
+      attackSpeed = formulaToCreate(waifu.agi)
+      setInterval(() => {
+        this.
+      }, attackSpeed)
+
+    })
+
+
+    setTimeout(() => {
+      this.deleteDungeon()
+    }, this.createdTimestamp - Date.now())
+
+    setInterval(() => {
+      let dammagePSY, dammagePHY, dammageMAG
+      this.owner.waifus.forEach((waifu) => {
+        dammagePSY += waifu.kaw
+        dammagePHY += waifu.kaw
+        dammageMAG += waifu.kaw
+
+      })
+
+
+
+
+
+
+      if(!this.bossHP <= 0){
+        this.deleteDungeon()
+      }
+    }, 10000)
+
+
+  }
+
+  deleteDungeon(){
+    this.owner.dungeon = null
   }
   collectLoots(){
-    let numberOfEquipments = 5 //Potentiellement genéré avec une formule dépendant du nb de claims? de la rapidité à finir le donjon?
+    let numberOfEquipments = 5, itemRarity //Potentiellement genéré avec une formule dépendant du nb de claims? de la rapidité à finir le donjon?
     for(var i = 0; i < numberEquipments; i++){
-          let equipment = possibleLoots[randInt(possibleLoots.length)]
-          
-        }
-    
-    
-    
+      const rand = randInt(100)
+      if(rand - this.possibleRarities[1] < 0){
+        itemRarity = this.possibleRarities[0]
+      }
+      else if (rand - this.possibleRarities[1] - this.possibleRarities[2] < 0){
+        itemRarity = this.possibleRarities[0] + 1
+      }
+      else{
+        itemRarity = this.possibleRarities[0] + 2
+      }
+      let whichEquipment = this.possibleLoots[randInt(this.possibleLoots.length)]
+
+      let equipment = new equipmentWaifu(whichEquipment[0], whichEquipment[1],  whichEquipment[2], itemRarity, whichEquipment[3], whichEquipment[4], whichEquipment[5])
+
+    }
+
+
+
   }
   showDungeonInfo(){
     "id: " + this.id + " name: " + this.name

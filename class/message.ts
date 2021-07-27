@@ -10,7 +10,6 @@ export default class globalMessage{
   public readonly channel: any
   public id: string
 
-
   constructor(lg: string, content:string, type: messageType, createdTimestamp: number, channel: any, id: string){
     this.lg = lg
     this.content = content
@@ -34,4 +33,5 @@ export default class globalMessage{
   edit(content: Discord.MessageEmbed){
     return this.channel.messages.fetch(this.id).then((message:Discord.Message) => message.edit("", content))
   }
+  send(content)
 }
