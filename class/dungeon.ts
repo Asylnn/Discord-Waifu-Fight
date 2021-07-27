@@ -116,7 +116,31 @@ BossHP
 }
 */
 
+import equipmentWaifu from "./item/equipmentWaifu";
+import message from "./message"
+import materials from "./item/materials"
+import gamemode from "./types/gamemode"
 
+type stageType = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
+
+type equipmentEffect = Array(
+  "+2 luck","+20% STG",
+)
+
+//Dictionnaire des loots pour les donjons d'équipements
+//Clé : id du donjon
+//Valeur : Tableau des equipmentWaifu
+const possibleLootsPerDungeonId = new Map<string,Array<equipmentWaifu> | Array<materials>>([
+  ["1", [arme_princesse,tenue_princesse,accessoire_princesse,arme_tsundere,tenue_tsundere,accessoire_tsundere]]
+   ])
+
+const bossHPPerStage = new Array(100,1000,10000,100000,1000000,10000000,100000000,1000000000,10000000000,100000000000) // Valeur des 10 étages
+/*o!enterDungeon A B C D(raccourci o!ed)
+A = numéro donjon (un des id pris à partir de showAllDungeons)
+B = l'étage du donjon
+C = gamemode (optionnel)
+D = star rating (optionnel)
+*/
 
 const dungeonName = new Map<string, string>([
   ["1", "weapon_dungeon"],
@@ -137,8 +161,7 @@ const raritiesPerStage = Array(
   [3, 0, 75] //Etage 10
 )
 
-
-if(rand - items[1] < 0){
+/*if(rand - items[1] < 0){
   rarity = items[0]
 }
 else if (rand - items[1] - items[2] < 0){
@@ -146,40 +169,46 @@ else if (rand - items[1] - items[2] < 0){
 }
 else{
   rarity = items[0] + 2
-}
-
-
+}*/
 
 const bossHPPerStage = new Array(100,1000,10000,100000,1000000,10000000,100000000,1000000000,10000000000,100000000000) // Valeur des 10 étages
 
-import equipmentWaifu from "./item/equipmentWaifu";
-import message from "./message"
-import materials from "./item/materials"
-import gamemode from "./types/gamemode"
-type stageType = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 export default class dungeon {
   createdTimestamp: number
   id: string
   name: string
   stage: stageType
   baseBossHP: number
-  //isUserDoingDungeon: boolean         a mettre dans user
-  possibleLoots: Array<equipmentWaifu> | Array<materials> //Soit la liste des équipements des 2 sets soit la ressource pour monter de niveau les équipements
+  possibleLoots: Array<equipmentWaifu | materials> //Soit la liste des équipements des 2 sets soit la ressource pour monter de niveau les équipements
   possibleRarities: Map<number,number> // Dictionnaire avec en clé la rareté (1 à 5) et en valeur le pourcentage de chances pour la rareté en question
   gamemode: gamemode
   starRating: number
-
-  constructor(id: string, name: string, stage: stageType, baseBossHP: number, possibleLoots: Array<equipmentWaifu> | Array<materials>,
-               possibleRarities: Map<number,number>, gamemode : gamemode, starRating: number){
+  
+  constructor(id: string, stage: stageType, gamemode : gamemode, starRating: number){
+    //With the id of the dungeon, you get the name and the possibleLoots
+    //With the stage of the dungeon, you get the baseBossHP and the possibleRarities
     this.createdTimestamp = Date.now()
     this.id = id
-    this.name = name
+    this.name = dungeonName.get(id) as string
     this.stage = stage
-    this.baseBossHP = baseBossHP
-    this.possibleLoots = possibleLoots
-    this.possibleRarities = possibleRarities
+    this.baseBossHP = bossHPPerStage[stage - 1]
+    this.possibleLoots = possibleLootsPerDungeonId.get(id)
+    this.possibleRarities = raritiesPerStage[parseInt(stage) - 1]
     this.gamemode = gamemode
     this.starRating = starRating
+  }
+  collectLoots(){
+    let numberOfEquipments = 5 //Potentiellement genéré avec une formule dépendant du nb de claims? de la rapidité à finir le donjon?
+    for(var i = 0; i < numberEquipments; i++){
+          let equipment = possibleLoots[randInt(possibleLoots.length)]
+          
+        }
+    
+    
+    
+  }
+  showDungeonInfo(){
+    "id: " + this.id + " name: " + this.name
   }
 
 
