@@ -11,26 +11,29 @@ import user from './user'
 
 
 
-
+//Déplacer la méthode show de templateWaifu dans waifu et supprimer la classe templateWaifu
 export default class waifu extends templateWaifu{
   public readonly objectType = "waifu"
   public xp:number
   public lvl:number
+  public b_str:number
+  public b_agi:number
   public b_int:number
   public b_luck:number
-  public b_exp:number
+  public b_dext:number
+  public b_kaw:number
   public stars:number
-  public modificators: Array<modificator> = []
+  public modificators: Array<modificator> = [] //A retirer?
   public equipedItems: {
     "outfit": equipmentWaifu | null,
     "accessory" : equipmentWaifu | null,
-    "weapon":equipmentWaifu | null
+    "weapon": equipmentWaifu | null
   } = {"outfit": null, "accessory": null, "weapon": null}
   public action: action = {isDoingAction:false, lvl:0, timeWaiting:-1, createdTimestamp:-1, type:"analyse"}
   public owner: user
 
   constructor(owner: user, template = new templateWaifu()){
-        super(template.id,template.imgURL, template.name, template.diffLvlUp,template.o_exp,template.u_exp,
+        super(template.id,template.imgURL, template.name, template.diffLvlUp,template.o_exp,template.u_exp, 
               template.rarity ,template.value ,template.o_luck ,template.o_int ,template.u_int)
     this.owner = owner
     this.xp = 0
