@@ -16,7 +16,7 @@ export default class user{
   public readonly id: string
   public osuId = 0
   public osuName: string
-  public waifus: Array<waifu>
+  public waifus: Array<waifu | null>
   public quests: questManager
 
   public modificators: Array<modificator> = []
@@ -41,6 +41,7 @@ export default class user{
   public canAddMap = false
   public waifuXP = 0
   public currentDealId = "-1"
+  public isDoingDungeon: boolean = false
 
   constructor(id: string, osuName: string, osuId: number){
     this.waifus = [new waifu(this, ), new waifu(this, ), new waifu(this, )]
