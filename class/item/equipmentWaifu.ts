@@ -75,6 +75,12 @@ export default class equipmentWaifu extends item {
         super(id, name, description, rarity, value, img)
         this.type = type;
         this.set = set;
+        if ([1,2,3,4,5].includes(rarity)){//Marche en JS, apparemment aussi en TS
+          //"Vrai" objet à générer
+        }
+        else{
+      
+        }
         this.tabModificators = []
 
 
