@@ -144,6 +144,14 @@ export default class waifu extends templateWaifu{
     return time
   }
 
+  calculateAttackSpeed(){
+    return this.agi // Calculer l'attackSpeed TODO
+  }
+  
+  getCritRate(){
+    return this.dext // Calculer le taux critique TODO
+  }
+  
   showStats(message: message, number: number){
     var embed = new Discord.MessageEmbed()
     embed.setThumbnail(this.imgURL)
