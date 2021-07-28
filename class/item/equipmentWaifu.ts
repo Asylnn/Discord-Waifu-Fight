@@ -49,9 +49,9 @@ TODO : Tableaux des montants de génération/augmentation
 */
 
 let modificatorArray: Array<modificator> // Modificateurs utilisés dans au moins 1 équipement
-let modificatorsPerPieceMap: { // Modificateurs utilisés par équipement
-  "weapon":Array<modificator>
-  "outfit":Array<modificator>
+let modificatorsPerPiece: { // Modificateurs utilisés par équipement
+  "weapon":Array<modificator>,
+  "outfit":Array<modificator>,
   "accessory":Array<modificator>
 }
 
@@ -86,22 +86,25 @@ export default class equipmentWaifu extends item {
         // this.tabModificators = this.generateModificators(); /* Generating the number of modificators
         // depending on the rarity */
     }
-    // Upgrade an existing effect when the max of stats
-    upgradeModificator(){
-      if(this.tabModificators.length < 5){
+    // Upgrade an existing effect
+    upgradeModificator(modif: modificator){
+      //Aller chercher les tableaux d'améliorations TODO
+      
+      
+      /*if(this.tabModificators.length < 5){
         this.generateModificator()
       }
       else{
         // On filtre le tableau pour garder les modif présentes
         const upgradeIndex = 1 + randInt(4)
         this.tabModificators[upgradeIndex].value //Générer et le proc et ajouter a la valeur actuelle
-      }
+      }*/
     }
     // Generate a new effect when reaching a milestone
     generateModificator(){
       // On filtre le tableau pour enlever les modif deja présentes
-      let possibleModificators = modificatorsPerPieceMap[this.type].filter(modificator => !this.tabModificators.some(tabModificator => tabModificator.type == modificator.type))
-      let randModificatorIndex = randInt(possibleModificators.length) //Generating the modificator
+      let possibleModificators = modificatorsPerPiece[this.type].filter(modificator => !this.tabModificators.some(tabModificator => tabModificator.type == modificator.type))
+      let randModificatorIndex = randInt(possibleModificators.length) //Generating the modificator index
       this.tabModificators.push(possibleModificators[randModificatorIndex])
 
     }
@@ -118,7 +121,15 @@ export default class equipmentWaifu extends item {
     }
 
     levelUp(){
-
+      //Aller chercher les tableaux d'améliorations pour augmenter la valeur de la mainStat (tabModificators[0]) TODO
+      
+      
+      //Tous les levels, upgrade la main stat
+      //Tous les X levels, lancez la procédure upgradeModificator
+      if ([3,6,9,12,15].includes(this.lvl)){
+        const upgradeIndex = 1 + randInt(4)
+        this.upgradeModificator(this.tabModificators[1 + randInt(5)]) //on upgrade le modificator avec la position 1 à 5 (comme on a 5 stats upgradables)
+      }
     }
 
     giveXP(message: message, amount:number){
