@@ -113,6 +113,9 @@ BossHP
 10 sets = 30 equipement
 30 équipements "90% parfait" = 100 équipement légendaires x 30 = 3000 *0.66 = 2000 donjons
 
+Il faut certainement créer des variables globales au projet entier pour les informations "hard-coded qui pourraient changer" tels que :
+- Le temps d'un donjon
+- La valeur d'un coup critique
 }
 */
 
@@ -139,7 +142,7 @@ type equipmentEffect = Array(
 //Valeur : Tableau des equipmentWaifu
 
 
-arme_princesse = new equipmentWaifu(-1)
+//arme_princesse = new equipmentWaifu(-1)
 
 
 
@@ -160,7 +163,7 @@ const dungeonName = new Map<string, string>([
   ["1", "weapon_dungeon"],
   ["2", "accessory_dungeon"],
   ["3", "outfit_dungeon"]
-])
+  ])
 
 const raritiesPerStage : Array<[number, number, number]> = Array(
   [1, 70, 30], //Etage 1
@@ -187,9 +190,12 @@ else{
 
 const bossHPPerStage = new Array(100,1000,10000,100000,1000000,10000000,100000000,1000000000,10000000000,100000000000) // Valeur des 10 étages
 
+const dungeonDurationInSeconds = 3600
+const intervalChecksInMilliseconds = 10000
+const critDamageMultiplier = 1.5
 
 export default class dungeon {
-  timeRemaining = 360
+  timeRemaining = dungeonDurationInSeconds / 10
   id: string
   name: string
   stage: stageType
@@ -238,24 +244,31 @@ export default class dungeon {
       const waifu = waifuAndDamage[0]
       const damage = waifuAndDamage[1]
 
-      attackSpeed = formulaToCreate(waifu.agi)
+      attackSpeed = waifu.calculateAttackSpeed()
       setInterval(() => {
-
-        const critMultiplier = randInt(100) < createFormulaForCritChance(waifu.dext) ? 1 : 1.5
+        const critMultiplier = randInt(100) + 1 > waifu.getCritRate() ? 1 : critDamageMultiplier
         const totalDamage = Math.floor(critMultiplier*damage*(0.9 + Math.random()*0.2))
         this.bossHP -= totalDamage
-        const attackType = ""
+        let mostImpactfulType = "phy"
+        if (waifu.psy >= waifu.phy || waifu.mag >= waifu.phy){
+          //mostImpactfulType != "phy"
+          if (waifu.psy >= waifu.mag){
+            mostImpactfulType = "psy"
+          }
+          else{
+            mostImpactfulType = "mag"
+          }
+        /*const attackType = "" //On ne modifie pas la valeur d'une constante, changer le "" en "phy" reste une modificitation de valeur et non une assignation
         if(waifu.phy >= waifu.psy && waifu.phy >= waifu.mag){
-          attackType "phy"
+          attackType = "phy"
         }
         else if(waifu.psy >= waifu.phy && waifu.psy >= waifu.mag){
-          attackType "psy"
+          attackType = "psy"
         }
         else{
-          attackType "mag"
-
-        }
-        const attackSentence = eval(getLoc)(`attackSentences.${critMultiplier == 1 ? "normal" : "crit"}_${attackType}_${randInt(eval(`${lg}attackSentences.length`))}`)
+          attackType = "mag"
+        }*/
+        const attackSentence = eval(getLoc)(`attackSentences.${critMultiplier == 1 ? "normal" : "crit"}_${mostImpactfulType}_${randInt(eval(`${lg}attackSentences.length`))}`)
         //const attackSentence = eval("`" + eval(`${lg}attackSentences.${critMultiplier == 1 ? "normal" : "crit"}_${randInt(eval(`${lg}attackSentences.length`))}`) + "`")
         fr.attackSentences.crit_12 =>
         `${waifu.name} a machin, vous avez infligé ${totalDamage} de dégats`
@@ -263,16 +276,27 @@ export default class dungeon {
         `Asuna-sama à jailli son épée, l'a levée au ciel et elle s'est servie des rayons du soleil pour infliger 727 de dégats !`
         `Haruhi s'est concentrée sur la formule de son sort pour ne pas vous decevoir et grâce à sa détermination, elle à reussi a infliger 249 de dégats !`
         edit(attackLine)
+        if(!this.bossHP >= 0){//Si le boss n'a plus de vie "positive"
+          this.collectLoots()
+          //this.deleteDungeon()
+        }
+          
       }, attackSpeed)
 
     })
 
-
-    setTimeout(() => {
-      this.deleteDungeon()
-    }, this.createdTimestamp - Date.now())
-
     setInterval(() => {
+      this.timeRemaining --
+      if (!timeRemaining > 0) {
+        this.deleteDungeon()
+      }
+    }, intervalChecksInMilliseconds)
+                
+    /*setTimeout(() => {
+      this.deleteDungeon()
+    }, this.createdTimestamp - Date.now())*/
+
+    /*setInterval(() => {//????????????????????????
       let dammagePSY, dammagePHY, dammageMAG
       this.owner.waifus.forEach((waifu) => {
         dammagePSY += waifu.kaw
@@ -280,22 +304,13 @@ export default class dungeon {
         dammageMAG += waifu.kaw
 
       })
-
-
-
-
-
-
-      if(!this.bossHP <= 0){
-        this.deleteDungeon()
-      }
-    }, 10000)
+    }, 10000)*/
 
 
   }
 
   deleteDungeon(){
-    this.owner.dungeon = null
+    this.owner.dungeon = null //TODO
   }
   collectLoots(){
     let numberOfEquipments = 5, itemRarity //Potentiellement genéré avec une formule dépendant du nb de claims? de la rapidité à finir le donjon?
