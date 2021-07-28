@@ -118,7 +118,9 @@ BossHP
 
 import equipmentWaifu from "./item/equipmentWaifu";
 import message from "./message"
-import materials from "./item/materials"
+import material from "./item/materials"
+import user from "./user"
+import waifu from "./waifu"
 import gamemode from "./types/gamemode"
 import randInt from '../genericFunctions/randInt'
 import equipmentType from '../types/equipmentType'
@@ -185,47 +187,82 @@ else{
 
 const bossHPPerStage = new Array(100,1000,10000,100000,1000000,10000000,100000000,1000000000,10000000000,100000000000) // Valeur des 10 étages
 
+
 export default class dungeon {
-  createdTimestamp: number
+  timeRemaining = 360
   id: string
   name: string
   stage: stageType
-  BossHP: number
+  bossHP: number //Vie actuelle
   possibleLoots: Array<[string, string, string, string, equipmentType, string] | material> //Soit la liste des équipements des 2 sets et la ressource pour monter de niveau les équipements
   possibleRarities: [number, number, number] // Tableau de 3 nombres
   gamemode: gamemode
   starRating: number
-  owner: user
+  ownerId: string
+  waifus: Array<[waifu, number]> = []
   message: Discord.Message
 
 
-  constructor(id: string, stage: stageType, gamemode : gamemode, starRating: number){
+
+  constructor(id: string, stage: stageType, gamemode : gamemode, starRating: number, user: user){
     //With the id of the dungeon, you get the name and the possibleLoots
     //With the stage of the dungeon, you get the baseBossHP and the possibleRarities
-    this.createdTimestamp = Date.now()
     this.id = id
     this.name = dungeonName.get(id) as string
     this.stage = stage
-    this.BossHP = bossHPPerStage[stage - 1]
+    this.bossHP = bossHPPerStage[stage - 1]
     this.possibleLoots = possibleLootsPerDungeonId.get(id)
     this.possibleRarities = raritiesPerStage[stage - 1]
     this.gamemode = gamemode
     this.starRating = starRating
+    this.ownerId = user.id
+    let lg = ""
+
+    user.waifus.forEach((waifu) => {
+      this.waifus.push([waifu, waifu.phy*(100 - bossRes.phy) + waifu.psy*(100 - bossRes.psy) + waifu.mag*(100 - bossRes.mag)])
+    })
+
 
     const embed = new Discord.MessageEmbed()
     embed.setColor(0x35A7BF)
     embed.setTitle(`${eval(getLoc)(this.name)} ${this.stage}`)
 
-    discordClient.users.fetch(this.owner.id).then(user => {
+    discordClient.users.fetch(this.ownerId).then(user => {
       user.send(embed).then((message) => {
         this.message = message
+        lg = user.lg
       })
     })
 
-    this.owner.waifus.forEach((waifu) => {
+    this.waifus.forEach(waifuAndDamage => {
+      const waifu = waifuAndDamage[0]
+      const damage = waifuAndDamage[1]
+
       attackSpeed = formulaToCreate(waifu.agi)
       setInterval(() => {
-        this.
+
+        const critMultiplier = randInt(100) < createFormulaForCritChance(waifu.dext) ? 1 : 1.5
+        const totalDamage = Math.floor(critMultiplier*damage*(0.9 + Math.random()*0.2))
+        this.bossHP -= totalDamage
+        const attackType = ""
+        if(waifu.phy >= waifu.psy && waifu.phy >= waifu.mag){
+          attackType "phy"
+        }
+        else if(waifu.psy >= waifu.phy && waifu.psy >= waifu.mag){
+          attackType "psy"
+        }
+        else{
+          attackType "mag"
+
+        }
+        const attackSentence = eval(getLoc)(`attackSentences.${critMultiplier == 1 ? "normal" : "crit"}_${attackType}_${randInt(eval(`${lg}attackSentences.length`))}`)
+        //const attackSentence = eval("`" + eval(`${lg}attackSentences.${critMultiplier == 1 ? "normal" : "crit"}_${randInt(eval(`${lg}attackSentences.length`))}`) + "`")
+        fr.attackSentences.crit_12 =>
+        `${waifu.name} a machin, vous avez infligé ${totalDamage} de dégats`
+        `Yui-chan à utilisé la technique de supplier en pleurant, et de sa cuteness infinie à infligé 150 de dégats !`
+        `Asuna-sama à jailli son épée, l'a levée au ciel et elle s'est servie des rayons du soleil pour infliger 727 de dégats !`
+        `Haruhi s'est concentrée sur la formule de son sort pour ne pas vous decevoir et grâce à sa détermination, elle à reussi a infliger 249 de dégats !`
+        edit(attackLine)
       }, attackSpeed)
 
     })

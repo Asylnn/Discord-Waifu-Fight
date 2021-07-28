@@ -33,7 +33,7 @@ export default class waifu extends templateWaifu{
   public owner: user
 
   constructor(owner: user, template = new templateWaifu()){
-        super(template.id,template.imgURL, template.name, template.diffLvlUp,template.o_exp,template.u_exp, 
+        super(template.id,template.imgURL, template.name, template.diffLvlUp,template.o_exp,template.u_exp,
               template.rarity ,template.value ,template.o_luck ,template.o_int ,template.u_int)
     this.owner = owner
     this.xp = 0
