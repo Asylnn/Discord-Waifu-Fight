@@ -10,6 +10,9 @@ import checking from './checking/checking'
 import collection from './class/collection'
 //import convert from './convert'
 
+
+
+
 export default async function load(){
   global.fr = fr
   global.en = en

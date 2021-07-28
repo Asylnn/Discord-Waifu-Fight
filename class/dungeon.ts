@@ -1,5 +1,4 @@
 /*
-
 ---------------------OLD---------------------
 Un combat contre un boss tour par tour
 Chaque tour ta/tes waifu(s) attaque avec ses dégats et tu peux faire des dégats en plus si tu envoie un score de la map proposée (a la meme manière qu'un osu!br : si une map
@@ -133,9 +132,6 @@ import Discord from 'discord.js'
 
 type stageType = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 
-type equipmentEffect = Array(
-  "+2 luck","+20% STG",
-)
 
 //Dictionnaire des loots pour les donjons d'équipements
 //Clé : id du donjon
@@ -280,7 +276,7 @@ export default class dungeon {
           this.collectLoots()
           //this.deleteDungeon()
         }
-          
+
       }, attackSpeed)
 
     })
@@ -291,7 +287,7 @@ export default class dungeon {
         this.deleteDungeon()
       }
     }, intervalChecksInMilliseconds)
-                
+
     /*setTimeout(() => {
       this.deleteDungeon()
     }, this.createdTimestamp - Date.now())*/

@@ -1,9 +1,14 @@
 import Discord from 'discord.js'
 import waifu from "./class/waifu"
 import item from './class/item/item'
-import api from './osuAPI/Api'
+import osuAPI from './osuAPI/Api'
 import collection from './class/collection'
 import pageEmbed from './class/types/pageEmbed'
+import dungeon from './class/'
+
+
+
+
 
 type deal = {proposer:{id:string, username:string}, price:number, object:waifu | item, amount: number}
 
@@ -26,8 +31,9 @@ declare global {
   var discordClient: Discord.Client
   var getLoc: string
   var allPagesEmbed: collection<string, pageEmbed>
-  var osuAPI: api
+  var osuAPI: osuAPI
   var beatmapIds: {"osu":{[key:string]: [number, number][]}, "mania":{[key:string]: [number, number][]}, "fruits":{[key:string]: [number, number][]}, "taiko":{[key:string]: [number, number][]}}
+  var activeDungeons: Map<string,dungeon>
 }
 
 

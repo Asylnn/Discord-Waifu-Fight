@@ -1,57 +1,49 @@
 import message from './message'
 import Discord from 'discord.js'
 
+
 export default class templateWaifu {
   public readonly id: string
   public imgURL: string
   public name: string
   public readonly diffLvlUp: number
-  public readonly o_exp: number
+  public readonly o_str: number
+  public readonly o_agi: number
   public readonly o_int: number
   public readonly o_luck: number
-  public readonly u_exp: number
+  public readonly o_dext: number
+  public readonly o_kaw: number
+  public readonly u_str: number
+  public readonly u_agi: number
   public readonly u_int: number
+  public readonly u_luck: number
+  public readonly u_dext: number
+  public readonly u_kaw: number
   public readonly rarity: number
   public readonly value: number
   public readonly isTradable: boolean
 
-  static whichNakano(waifu: templateWaifu){
-    if(waifu.id == "23"){return 1}
-    else if(waifu.id == "24"){return 2}
-    else if(waifu.id == "25"){return 4}
-    else if(waifu.id == "26"){return 8}
-    else if(waifu.id == "28"){return 16}
-    else{return 0}
-  }
-
-  static whichOsu(waifu: templateWaifu){
-    if(waifu.id == "30"){return 1}
-    else if(waifu.id == "31"){return 2}
-    else if(waifu.id == "32"){return 4}
-    else if(waifu.id == "33"){return 8}
-    else{return 0}
-  }
-
-  static whichBase(waifu: templateWaifu){
-    if(waifu.id == "1"){return 1}
-    else if(waifu.id == "12"){return 2}
-    else if(waifu.id == "13"){return 4}
-    else{return 0}
-  }
-
-  constructor(id: string = "-1", imgURL: string = "", name: string = "za true waifu", diffLvlUp: number = 69, o_exp: number = 0, u_exp:number = 0, rarity:number = 5, value:number = -10000, o_luck:number = 0, o_int:number = 0, u_int:number = 0, isTradable:boolean = false){
-    this.id = id
-    this.imgURL = imgURL
-    this.name = name
-	  this.diffLvlUp = diffLvlUp
-    this.o_exp = o_exp
-    this.u_exp = u_exp
-    this.rarity = rarity
-    this.value = value
-    this.o_luck = o_luck
-    this.o_int = o_int
-    this.u_int = u_int
-    this.isTradable = isTradable
+  constructor(args: {id: string, imgURL: string, name: string, diffLvlUp: number, o_str: number, o_agi: number, o_int: number, o_luck: number, o_dext: number, o_kaw: number,
+    u_str: number, u_agi: number, u_int: number, u_luck: number, u_dext: number, u_kaw: number, rarity:number, value:number, isTradable:boolean}){
+    this.id = args.id
+    this.imgURL = args.imgURL
+    this.name = args.name
+	  this.diffLvlUp = args.diffLvlUp
+    this.o_str = args.o_str
+    this.o_agi = args.o_agi
+    this.o_int = args.o_int
+    this.o_luck = args.o_luck
+    this.o_dext = args.o_dext
+    this.o_kaw = args.o_kaw
+    this.u_str = args.u_str
+    this.u_agi = args.u_agi
+    this.u_int = args.u_int
+    this.u_luck = args.u_luck
+    this.u_dext = args.u_dext
+    this.u_kaw = args.u_kaw
+    this.rarity = args.rarity
+    this.value = args.value
+    this.isTradable = args.isTradable
   }
 
   get whichNakano(){

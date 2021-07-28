@@ -48,102 +48,148 @@ TODO : Tableaux des montants de génération/augmentation
 
 */
 
-let modificatorArray: Array<modificator> // Modificateurs utilisés dans au moins 1 équipement
-let modificatorsPerPiece: { // Modificateurs utilisés par équipement
-  "weapon":Array<modificator>,
-  "outfit":Array<modificator>,
-  "accessory":Array<modificator>
-}
+//Object{"weapon"} clé : equipmentWaifu.type valeur : Array<Array<[string, number, number]> x 5>
+/*"weapon" : Array(//Liste des modificateurs
+["add_luck",[]]
+//Pour aller chercher le tableau pour augmenter la mainStat add_luck d'un equipement de rareté 2 -> [10, 2]
+weapon.add_luck.rarity[2].mainStat <- [10, 2] -> +2 +2 +2 +3 +3 +3 +4 +4 +5 +6 +8 +10 +15
+weapon.add_luck.rarity.statSecondaire <- tableau avec la fourchette [valeur_min,différence_avec_valeur_max]
+
+
+)
+*/
+
+
+
+
 
 import {modificator} from "../types/modificator";
 import randInt from '../../genericFunctions/randInt'
 import message from '../../class/message'
 import item from './item'
 import equipmentType from '../types/equipmentType'
+import {modificatorType} from '../types/modificator'
+
+
+const procsPerPiece: {
+  "generic":Array</*rarity*/Array<[modificatorType, number, number]>>
+  "weapon":Array</*rarity*/Array<[modificatorType, number, number]>>
+  "outfit":Array</*rarity*/Array<[modificatorType, number, number]>>
+  "accessory":Array</*rarity*/Array<[modificatorType, number, number]>>
+} = {
+  "generic": [],
+  "weapon": [],
+  "outfit": [],
+  "accessory": []
+}
+
+const mainStatPerPiece: {
+  "weapon":Array</*rarity*/Array<[modificatorType, number, number]>>
+  "outfit":Array</*rarity*/Array<[modificatorType, number, number]>>
+  "accessory":Array</*rarity*/Array<[modificatorType, number, number]>>
+} = {
+  "weapon": [],
+  "outfit": [],
+  "accessory": []
+}
+
+const maxProcs = 5
 
 
 export default class equipmentWaifu extends item {
-    public readonly objectType = "equipmentWaifu"
-    public lvl = 0;
-    public xp = 0
-    public readonly type: equipmentType; // Helmet,chestplate,boots ...
-    public readonly set: string;// Maybe add a class for the set of equipment for different checks
-    public tabModificators: Array<modificator>;//The list of modificators
+  public readonly objectType = "equipmentWaifu"
+  public lvl = 0;
+  public xp = 0
+  public readonly type: equipmentType; // Helmet,chestplate,boots ...
+  public readonly set: string;// Maybe add a class for the set of equipment for different checks
+  public tabModificators: Array<modificator>;//The list of modificators
 
-    //Generating a new instance
-    constructor(id: string, name: string, description:string, rarity: number, img:string, type: equipmentType, set: string){
-        //Générer valeur
-        super(id, name, description, rarity, value, img)
-        this.type = type;
-        this.set = set;
-        this.tabModificators = []
-        let numberOfPossibleProcs = [1,2,3,3,4]
-        let numberOfModificators = numberOfPossibleProcs[this.rarity] + randInt(2)
-        for(var i = 0; i < numberOfModificators; i++){
+  constructor(id: string, name: string, description:string, rarity: number, img:string, type: equipmentType, set: string){
+    //Générer valeur
+    super(id, name, description, rarity, rarity*100, img)
+
+    this.type = type;
+    this.set = set;
+    this.tabModificators = []
+    const modificatorInfo = mainStatPerPiece[this.type][rarity - 1][randInt(mainStatPerPiece[this.type][rarity - 1].length)]
+    this.tabModificators = [{
+      origin: `${this.type}_${this.rarity}_${modificatorInfo[0]}`,
+      value: modificatorInfo[1],
+      type:modificatorInfo[0],
+      valueIncrease:[modificatorInfo[2], 0]
+    }]
+
+    let numberOfPossibleProcs = [1,2,3,3,4]
+    let numberOfModificators = numberOfPossibleProcs[this.rarity] + randInt(2)
+    for(var i = 0; i < numberOfModificators; i++){
+      this.generateModificator()
+    }
+  }
+
+  generateModificator(){
+
+    const possibleProcs = procsPerPiece[this.type][this.rarity - 1].concat(procsPerPiece.generic[this.rarity- 1])
+    possibleProcs.filter(proc => !this.tabModificators.some(tabModificator => tabModificator.type == proc[0]))
+
+    let randProcIndex = randInt(possibleProcs.length) //Generating the modificator index
+    const procInfo = possibleProcs[randProcIndex]
+    const proc : modificator = {
+      origin: `${this.type}_${this.rarity}_${procInfo[0]}`,
+      value: procInfo[1] + randInt(procInfo[2] + 1),
+      type:procInfo[0],
+      valueIncrease: [procInfo[1], procInfo[2]]
+    }
+
+    this.tabModificators.push(proc)
+
+  }
+
+  get xpNeededToLevelUp(){
+    return 0
+  }
+
+  giveXP(message: message, amount:number){
+    this.xp += amount
+    let tempXP
+    if(this.xpNeededToLevelUp >= this.xp && this.lvl < 15){ //Enough XP to level up and have not reached level max
+      this.value += this.rarity*10
+      this.xp -= this.xpNeededToLevelUp
+      tempXP = this.xp
+      this.xp = 0
+      message.reply(eval(getLoc)("equipment_waifu_lvl_up"))
+      const mainStat = this.tabModificators[0]
+      if(mainStat.valueIncrease){
+        mainStat.value += mainStat.valueIncrease[0]*(1 + Math.pow(this.lvl, 3)/2000)
+      }
+      else {
+        message.reply("there is an error, mainStat.valueIncrease is undefined (equipmentWaifu.ts)")
+      }
+      if(this.lvl % 3 == 0){
+        if(this.tabModificators.length < maxProcs + 1){ // If there is still available procs slots
           this.generateModificator()
         }
-
-        // this.tabModificators = this.generateModificators(); /* Generating the number of modificators
-        // depending on the rarity */
-    }
-    // Upgrade an existing effect
-    upgradeModificator(modif: modificator){
-      //Aller chercher les tableaux d'améliorations TODO
-      
-      
-      /*if(this.tabModificators.length < 5){
-        this.generateModificator()
+        else {
+          const modificator = this.tabModificators[randInt(maxProcs + 1)]
+          if(modificator.valueIncrease){
+          modificator.value += modificator.valueIncrease[0] + randInt(1 + modificator.valueIncrease[0])
+          }
+          else {
+            message.reply("there is an error, modificator.valueIncrease is undefined (equipmentWaifu.ts)")
+          }
+        }
       }
-      else{
-        // On filtre le tableau pour garder les modif présentes
-        const upgradeIndex = 1 + randInt(4)
-        this.tabModificators[upgradeIndex].value //Générer et le proc et ajouter a la valeur actuelle
-      }*/
+      this.giveXP(message, tempXP)
+      message.reply(eval(getLoc)("equipment_waifu_lvl_up"))
     }
-    // Generate a new effect when reaching a milestone
-    generateModificator(){
-      // On filtre le tableau pour enlever les modif deja présentes
-      let possibleModificators = modificatorsPerPiece[this.type].filter(modificator => !this.tabModificators.some(tabModificator => tabModificator.type == modificator.type))
-      let randModificatorIndex = randInt(possibleModificators.length) //Generating the modificator index
-      this.tabModificators.push(possibleModificators[randModificatorIndex])
-
-    }
-    /*generateModificators(){
-      let numberOfPossibleProcs = [1,2,3,3,4]
-      let numberOfModificators = numberOfPossibleProcs[this.rarity] + randInt(2)
-      for(var i = 0; i < numberOfModificators; i++){
-        this.generateModificator()
-      }
-    }*/
-
-    get xpNeededToLevelUp(){
-      return 0
-    }
-
-    levelUp(){
-      //Aller chercher les tableaux d'améliorations pour augmenter la valeur de la mainStat (tabModificators[0]) TODO
-      
-      
-      //Tous les levels, upgrade la main stat
-      //Tous les X levels, lancez la procédure upgradeModificator
-      if ([3,6,9,12,15].includes(this.lvl)){
-        const upgradeIndex = 1 + randInt(4)
-        this.upgradeModificator(this.tabModificators[1 + randInt(5)]) //on upgrade le modificator avec la position 1 à 5 (comme on a 5 stats upgradables)
-      }
-    }
-
-    giveXP(message: message, amount:number){
-      this.xp += amount
-      if(this.xpNeededToLevelUp >= this.xp && this.lvl < this.rarity*3){
-        this.xp -= this.xpNeededToLevelUp
-        this.levelUp()
-        message.reply(eval(getLoc)("equipmentWaifu_level_up"))
-      }
-    }
-
-    /*toString(){
-        "id: " + this.id + " name: " + this.name + " level: " + this.lvl + " rarity: " +
-        this.rarity + " type: " + this.type + " set: " + this.set + " img : " + this.img +
-        " tabModificators: " + this.tabModificators;
-    }*/
+  }
 }
+
+
+
+
+
+/*toString(){
+    "id: " + this.id + " name: " + this.name + " level: " + this.lvl + " rarity: " +
+    this.rarity + " type: " + this.type + " set: " + this.set + " img : " + this.img +
+    " tabModificators: " + this.tabModificators;
+}*/

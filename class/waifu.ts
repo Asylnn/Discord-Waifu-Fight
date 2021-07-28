@@ -10,8 +10,17 @@ import {milliToHours} from '../genericFunctions/timeConversion'
 import user from './user'
 
 
-
 //Déplacer la méthode show de templateWaifu dans waifu et supprimer la classe templateWaifu
+
+
+function test(a:number, b:number, c:number){
+
+}
+
+test(1,2,3)
+test() as {a:1, b:2, c:3}
+
+
 export default class waifu extends templateWaifu{
   public readonly objectType = "waifu"
   public xp:number
@@ -32,9 +41,8 @@ export default class waifu extends templateWaifu{
   public action: action = {isDoingAction:false, lvl:0, timeWaiting:-1, createdTimestamp:-1, type:"analyse"}
   public owner: user
 
-  constructor(owner: user, template = new templateWaifu()){
-        super(template.id,template.imgURL, template.name, template.diffLvlUp,template.o_exp,template.u_exp,
-              template.rarity ,template.value ,template.o_luck ,template.o_int ,template.u_int)
+  constructor(owner: user, template: templateWaifu){
+    super(template)
     this.owner = owner
     this.xp = 0
     this.lvl = 1
@@ -147,11 +155,11 @@ export default class waifu extends templateWaifu{
   calculateAttackSpeed(){
     return this.agi // Calculer l'attackSpeed TODO
   }
-  
+
   getCritRate(){
     return this.dext // Calculer le taux critique TODO
   }
-  
+
   showStats(message: message, number: number){
     var embed = new Discord.MessageEmbed()
     embed.setThumbnail(this.imgURL)

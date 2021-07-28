@@ -8,7 +8,7 @@ export default abstract class item {
   /*public effects: Array<{effect:effectType, value:any}> = []
   public modificators: Array<modificator> = []*/
   public readonly rarity: number
-  public readonly value: number
+  public value: number
   public readonly img: string
 
   constructor(id = "-1", name = "noName", description = "noDesc", rarity = 0, value = -69, img = "", objectType: itemType = "materials"){
