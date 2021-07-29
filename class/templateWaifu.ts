@@ -23,19 +23,19 @@ export default class templateWaifu {
   public readonly value: number
   public readonly isTradable: boolean
 
-  constructor(args: {id: string, imgURL: string, name: string, diffLvlUp: number, o_str: number, o_agi: number, o_int: number, o_luck: number, o_dext: number, o_kaw: number,
-    u_str: number, u_agi: number, u_int: number, u_luck: number, u_dext: number, u_kaw: number, rarity:number, value:number, isTradable:boolean}){
+  constructor(args: {id: string, imgURL: string, name: string, diffLvlUp: number, o_stg: number, o_agi: number, o_int: number, o_luck: number, o_dext: number, o_kaw: number,
+    u_stg: number, u_agi: number, u_int: number, u_luck: number, u_dext: number, u_kaw: number, rarity:number, value:number, isTradable:boolean}){
     this.id = args.id
     this.imgURL = args.imgURL
     this.name = args.name
 	  this.diffLvlUp = args.diffLvlUp
-    this.o_str = args.o_str
+    this.o_stg = args.o_stg
     this.o_agi = args.o_agi
     this.o_int = args.o_int
     this.o_luck = args.o_luck
     this.o_dext = args.o_dext
     this.o_kaw = args.o_kaw
-    this.u_str = args.u_str
+    this.u_stg = args.u_stg
     this.u_agi = args.u_agi
     this.u_int = args.u_int
     this.u_luck = args.u_luck

@@ -23,34 +23,35 @@ test() as {a:1, b:2, c:3}
 
 export default class waifu extends templateWaifu{
   public readonly objectType = "waifu"
-  public xp:number
-  public lvl:number
-  public b_str:number
+  public xp = 0
+  public lvl = 1
+  public stars = 1
+  public b_stg:number
   public b_agi:number
   public b_int:number
   public b_luck:number
   public b_dext:number
   public b_kaw:number
-  public stars:number
+
   public modificators: Array<modificator> = [] //A retirer?
   public equipedItems: {
     "outfit": equipmentWaifu | null,
     "accessory" : equipmentWaifu | null,
     "weapon": equipmentWaifu | null
   } = {"outfit": null, "accessory": null, "weapon": null}
-  public action: action = {isDoingAction:false, lvl:0, timeWaiting:-1, createdTimestamp:-1, type:"analyse"}
+  public action: action | null = null
   public owner: user
-
   constructor(owner: user, template: templateWaifu){
     super(template)
     this.owner = owner
     this.xp = 0
     this.lvl = 1
     this.stars = 1
-    this.b_exp = template.o_exp
+    this.b_agi = template.o_agi
     this.b_luck = template.o_luck
     this.b_int = template.o_int
   }
+
 
   get xplvlup(){
     return Math.floor(((1 + this.diffLvlUp)*this.lvl*this.lvl + 5*this.lvl + 20)*this.diffLvlUp)
@@ -60,19 +61,49 @@ export default class waifu extends templateWaifu{
     return 20 + 10*(this.stars-1) + getModificators(this, 'add_max_level')
   }
 
-  get exp(){ // Renvoie la valeur avec modifs
-    const mult = getModificators(this, 'mult_EX')
-    return this.b_exp*mult
+  get stg(){
+    const mult = getModificators(this, 'mult_stg')
+    return this.b_stg*mult
   }
 
-  get luck(){ // Renvoie la valeur avec modifs
-    const addluck = getModificators(this, 'add_luck')
-    return this.b_luck + addluck
+  get agi(){ // Renvoie la valeur avec modifs
+    const mult = getModificators(this, 'mult_agi')
+    return this.b_exp*mult
   }
 
   get int(){
     const mult = getModificators(this, 'mult_int')
     return this.b_int*mult
+  }
+
+  get luck(){ // Renvoie la valeur avec modifs
+    const mult = getModificators(this, 'mult_luck')
+    return this.b_luck*mult
+  }
+
+  get dext(){
+    const mult = getModificators(this, 'mult_dext')
+    return this.b_dext*mult
+  }
+
+  get kaw(){
+    const mult = getModificators(this, 'mult_kaw')
+    return this.b_kaw*mult
+  }
+
+  get phy(){
+    const mult = getModificators(this, 'mult_phy')
+    return this.stg*mult
+  }
+
+  get psy(){
+    const mult = getModificators(this. 'mult_psy')
+    return this.kaw*mult
+  }
+
+  get mag(){
+    const mult = getModificators(this. 'mult_mag')
+    return this.int*mult
   }
 
   giveXP(xp: number, message: message, useModificators = true, first = true){
@@ -152,13 +183,20 @@ export default class waifu extends templateWaifu{
     return time
   }
 
-  calculateAttackSpeed(){
-    return this.agi // Calculer l'attackSpeed TODO
+  get attackSpeed(){
+    return 30000*(Math.pow(Math.log(this.agi), 2.5) * 0.419)
   }
 
-  getCritRate(){
+  get critRate(){
+
     return this.dext // Calculer le taux critique TODO
   }
+
+  get explorationSpeed()
+
+  get analyseSpeed()
+
+  get decryptSpeed()
 
   showStats(message: message, number: number){
     var embed = new Discord.MessageEmbed()

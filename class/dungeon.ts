@@ -119,41 +119,22 @@ Il faut certainement créer des variables globales au projet entier pour les inf
 */
 
 import equipmentWaifu from "./item/equipmentWaifu";
-import message from "./message"
 import material from "./item/materials"
 import user from "./user"
 import waifu from "./waifu"
 import gamemode from "./types/gamemode"
 import randInt from '../genericFunctions/randInt'
 import equipmentType from '../types/equipmentType'
-/**/
+import {ATTACK_LINE_NUMBER_IN_EMBED} = '../files/config.json'
 import Discord from 'discord.js'
 
 
 type stageType = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 
-
-//Dictionnaire des loots pour les donjons d'équipements
-//Clé : id du donjon
-//Valeur : Tableau des equipmentWaifu
-
-
-//arme_princesse = new equipmentWaifu(-1)
-
-
-
-
 const possibleLootsPerDungeonId = new Map<string,Array<[string, string, string, string, string, string]>>([
  ["1", [["id", "name", "desc", "img", "type", "set"],tenue_princesse,accessoire_princesse,arme_tsundere,tenue_tsundere,accessoire_tsundere, ressource]]
   ])
 
-const bossHPPerStage = new Array(100,1000,10000,100000,1000000,10000000,100000000,1000000000,10000000000,100000000000) // Valeur des 10 étages
-/*o!enterDungeon A B C D(raccourci o!ed)
-A = numéro donjon (un des id pris à partir de showAllDungeons)
-B = l'étage du donjon
-C = gamemode (optionnel)
-D = star rating (optionnel)
-*/
 
 const dungeonName = new Map<string, string>([
   ["1", "weapon_dungeon"],
@@ -174,17 +155,15 @@ const raritiesPerStage : Array<[number, number, number]> = Array(
   [3, 0, 75] //Etage 10
 )
 
-/*if(rand - items[1] < 0){
-  rarity = items[0]
-}
-else if (rand - items[1] - items[2] < 0){
-  rarity = items[0] + 1
-}
-else{
-  rarity = items[0] + 2
-}*/
-
 const bossHPPerStage = new Array(100,1000,10000,100000,1000000,10000000,100000000,1000000000,10000000000,100000000000) // Valeur des 10 étages
+const bossResPerId  = new Map<string, [number, number, number]>([
+  ["1", [10,10,10]],
+  ["2", [10,10,10]],
+  ["3", [10,10,10]],
+  ["4", [10,10,10]],
+  ["5", [10,10,10]],
+  ["6", [10,10,10]]
+])
 
 const dungeonDurationInSeconds = 3600
 const intervalChecksInMilliseconds = 10000
@@ -196,121 +175,127 @@ export default class dungeon {
   name: string
   stage: stageType
   bossHP: number //Vie actuelle
-  possibleLoots: Array<[string, string, string, string, equipmentType, string] | material> //Soit la liste des équipements des 2 sets et la ressource pour monter de niveau les équipements
+  possibleLoots: Array<[string, string, string, string, equipmentType, string]> //Soit la liste des équipements des 2 sets et la ressource pour monter de niveau les équipements (dans une autre variable)
   possibleRarities: [number, number, number] // Tableau de 3 nombres
+  bossRes: [number, number, number]
   gamemode: gamemode
   starRating: number
   ownerId: string
   waifus: Array<[waifu, number]> = []
-  message: Discord.Message
+  message: Discord.Message = "" as unknown as Discord.Message //Quick fix for the ts error message is not defined in constructor (because probably assigned in a async function), should not stay like that
+  visibleAttackSentences: Array<string> = []
+  timers: Array<NodeJS.Timeout> = []
+  mapId:number
 
 
 
   constructor(id: string, stage: stageType, gamemode : gamemode, starRating: number, user: user){
     //With the id of the dungeon, you get the name and the possibleLoots
     //With the stage of the dungeon, you get the baseBossHP and the possibleRarities
+    this.mapId = 
     this.id = id
     this.name = dungeonName.get(id) as string
     this.stage = stage
     this.bossHP = bossHPPerStage[stage - 1]
-    this.possibleLoots = possibleLootsPerDungeonId.get(id)
+    this.possibleLoots = possibleLootsPerDungeonId.get(id) as Array<[string, string, string, string, string, string]>
+    this.bossRes = bossResPerId.get(id) as [number, number, number]
     this.possibleRarities = raritiesPerStage[stage - 1]
     this.gamemode = gamemode
     this.starRating = starRating
     this.ownerId = user.id
-    let lg = ""
+    let lg : string
 
     user.waifus.forEach((waifu) => {
-      this.waifus.push([waifu, waifu.phy*(100 - bossRes.phy) + waifu.psy*(100 - bossRes.psy) + waifu.mag*(100 - bossRes.mag)])
+      if(waifu)
+      this.waifus.push([waifu, waifu.phy*(100 - this.bossRes[0]) + waifu.psy*(100 - this.bossRes[1]) + waifu.mag*(100 - this.bossRes[2])])
     })
 
 
-    const embed = new Discord.MessageEmbed()
-    embed.setColor(0x35A7BF)
-    embed.setTitle(`${eval(getLoc)(this.name)} ${this.stage}`)
+
 
     discordClient.users.fetch(this.ownerId).then(user => {
-      user.send(embed).then((message) => {
-        this.message = message
-        lg = user.lg
+      users.get(user.id).then((wfUser) => {
+        lg = wfUser.lg
+
+        const embed = new Discord.MessageEmbed()
+        embed.setColor(0x35A7BF)
+        embed.setTitle(`${eval(lg + this.name)} ${this.stage}`)
+
+        user.send(embed).then((message) => {
+          this.message = message
+        })
+
       })
     })
 
     this.waifus.forEach(waifuAndDamage => {
       const waifu = waifuAndDamage[0]
       const damage = waifuAndDamage[1]
+      const attackSpeed = waifu.calculateAttackSpeed()
 
-      attackSpeed = waifu.calculateAttackSpeed()
-      setInterval(() => {
+      this.timers.push(setInterval(() => {
         const critMultiplier = randInt(100) + 1 > waifu.getCritRate() ? 1 : critDamageMultiplier
         const totalDamage = Math.floor(critMultiplier*damage*(0.9 + Math.random()*0.2))
         this.bossHP -= totalDamage
         let mostImpactfulType = "phy"
         if (waifu.psy >= waifu.phy || waifu.mag >= waifu.phy){
-          //mostImpactfulType != "phy"
           if (waifu.psy >= waifu.mag){
             mostImpactfulType = "psy"
           }
           else{
             mostImpactfulType = "mag"
           }
-        /*const attackType = "" //On ne modifie pas la valeur d'une constante, changer le "" en "phy" reste une modificitation de valeur et non une assignation
-        if(waifu.phy >= waifu.psy && waifu.phy >= waifu.mag){
-          attackType = "phy"
         }
-        else if(waifu.psy >= waifu.phy && waifu.psy >= waifu.mag){
-          attackType = "psy"
-        }
-        else{
-          attackType = "mag"
-        }*/
-        const attackSentence = eval(getLoc)(`attackSentences.${critMultiplier == 1 ? "normal" : "crit"}_${mostImpactfulType}_${randInt(eval(`${lg}attackSentences.length`))}`)
-        //const attackSentence = eval("`" + eval(`${lg}attackSentences.${critMultiplier == 1 ? "normal" : "crit"}_${randInt(eval(`${lg}attackSentences.length`))}`) + "`")
-        fr.attackSentences.crit_12 =>
-        `${waifu.name} a machin, vous avez infligé ${totalDamage} de dégats`
-        `Yui-chan à utilisé la technique de supplier en pleurant, et de sa cuteness infinie à infligé 150 de dégats !`
-        `Asuna-sama à jailli son épée, l'a levée au ciel et elle s'est servie des rayons du soleil pour infliger 727 de dégats !`
-        `Haruhi s'est concentrée sur la formule de son sort pour ne pas vous decevoir et grâce à sa détermination, elle à reussi a infliger 249 de dégats !`
-        edit(attackLine)
-        if(!this.bossHP >= 0){//Si le boss n'a plus de vie "positive"
+        const possibleAttackSentences = eval(`${lg}attackSentences.${mostImpactfulType}.${critMultiplier == 1 ? "normal" : "crit"}`)
+        const attackSentence = eval("`" + possibleAttackSentences[randInt(possibleAttackSentences.length)] + "`")
+        //const attackSentence = eval("`" + eval(`${lg}attackSentences.${critMultiplier == 1 ? "normal" : "crit"}_${mostImpactfulType}_${randInt(eval(`${lg}attackSentences.length`))}`) + "`")
+
+        this.editEmbed(attackSentence)
+
+        if(this.bossHP <= 0){
+          this.bossHP = 99999999999999 //used to avoid firing the function collectLoots two times if two waifu attacks at the same time
           this.collectLoots()
-          //this.deleteDungeon()
         }
 
-      }, attackSpeed)
+      }, attackSpeed))
 
     })
 
-    setInterval(() => {
+    this.timers.push(setInterval(() => {
       this.timeRemaining --
-      if (!timeRemaining > 0) {
-        this.deleteDungeon()
+      dungeons.put(this.ownerId, this)
+      if(this.timeRemaining < 600){
+        this.message.channel.send(eval(lg + 'dungeon_10_minute_left'))
       }
-    }, intervalChecksInMilliseconds)
-
-    /*setTimeout(() => {
-      this.deleteDungeon()
-    }, this.createdTimestamp - Date.now())*/
-
-    /*setInterval(() => {//????????????????????????
-      let dammagePSY, dammagePHY, dammageMAG
-      this.owner.waifus.forEach((waifu) => {
-        dammagePSY += waifu.kaw
-        dammagePHY += waifu.kaw
-        dammageMAG += waifu.kaw
-
-      })
-    }, 10000)*/
-
+      else if (this.timeRemaining <= 0) {
+        this.message.channel.send(eval(lg + 'dungeon_not_defeated'))
+        this.delete()
+      }
+    }, intervalChecksInMilliseconds))
 
   }
 
-  deleteDungeon(){
-    this.owner.dungeon = null //TODO
+  editEmbed(attackSentence:string){
+    this.visibleAttackSentences.unshift(attackSentence)
+    this.visibleAttackSentences.length = ATTACK_LINE_NUMBER_IN_EMBED
+    const embed = this.message.embeds[0]
+    const attackLines = this.visibleAttackSentences.join('\r\n')
+    embed.setDescription(attackLines)
+    this.message.edit(embed).then((message) => {
+      this.message = message
+    })
   }
+
+  delete(){
+    this.timers.forEach(timer => {
+      clearInterval(timer)
+    })
+    dungeons.del(this.ownerId)
+  }
+
   collectLoots(){
-    let numberOfEquipments = 5, itemRarity //Potentiellement genéré avec une formule dépendant du nb de claims? de la rapidité à finir le donjon?
-    for(var i = 0; i < numberEquipments; i++){
+    let numberOfEquipments = 5, itemRarity, equipments: Array<equipmentWaifu> = []//Potentiellement genéré avec une formule dépendant du nb de claims? de la rapidité à finir le donjon?
+    for(var i = 0; i < numberOfEquipments; i++){
       const rand = randInt(100)
       if(rand - this.possibleRarities[1] < 0){
         itemRarity = this.possibleRarities[0]
@@ -323,17 +308,22 @@ export default class dungeon {
       }
       let whichEquipment = this.possibleLoots[randInt(this.possibleLoots.length)]
 
-      let equipment = new equipmentWaifu(whichEquipment[0], whichEquipment[1],  whichEquipment[2], itemRarity, whichEquipment[3], whichEquipment[4], whichEquipment[5])
+      equipments.push(new equipmentWaifu(whichEquipment[0], whichEquipment[1],  whichEquipment[2], itemRarity, whichEquipment[3], whichEquipment[4], whichEquipment[5]))
 
     }
+    users.get(this.ownerId).then((user ) => {
+      user.items.equipmentWaifu.push(...equipments)
+      /*
 
+      user.items.materials.push ...
 
-
+      */
+      user.save()
+      this.delete()
+    })
   }
+
   showDungeonInfo(){
     "id: " + this.id + " name: " + this.name
   }
-
-
-
 }

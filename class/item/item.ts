@@ -1,7 +1,6 @@
 import itemType from '../types/itemType'
 
 export default abstract class item {
-  public readonly objectType: itemType
   public readonly id: string
   public readonly name: string
   public readonly description: string
@@ -11,14 +10,13 @@ export default abstract class item {
   public value: number
   public readonly img: string
 
-  constructor(id = "-1", name = "noName", description = "noDesc", rarity = 0, value = -69, img = "", objectType: itemType = "materials"){
+  constructor(id = "-1", name = "noName", description = "noDesc", rarity = 0, value = -69, img = ""){
     this.id = id
     this.name = name
     this.description = description
     this.rarity = rarity
     this.value = value
     this.img = img
-    this.objectType = objectType
   }
 }
 

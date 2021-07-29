@@ -4,6 +4,15 @@ import user from '../../class/user'
 import testArg from '../util/testArguments'
 
 //J'imagine que args contiendra [0,A,B,C,D]
+
+
+/*o!enterDungeon A B C D(raccourci o!ed)
+A = numéro donjon (un des id pris à partir de showAllDungeons)
+B = l'étage du donjon
+C = gamemode (optionnel)
+D = star rating (optionnel)
+*/
+
 export default async function enterDungeon(message: message, user: user, args: Array<string>){
 
   //Ici les checks : si le donjon existe, si l'étage existe, si le star rating et le gamemode existe.

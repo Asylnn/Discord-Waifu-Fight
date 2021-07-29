@@ -2,6 +2,7 @@ import effect from '../types/effect'
 import item from './item'
 
 export default class consumableUser extends item {
+  public readonly objectType = "consumableUser"
   public effects: Array<effect>
 
   //Generating a new instance
