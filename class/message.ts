@@ -33,5 +33,4 @@ export default class globalMessage{
   edit(content: Discord.MessageEmbed){
     return this.channel.messages.fetch(this.id).then((message:Discord.Message) => message.edit("", content))
   }
-  send(content)
 }

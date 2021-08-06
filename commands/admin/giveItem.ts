@@ -1,6 +1,4 @@
 import message from '../../class/message'
-import item from '../../class/item/item'
-
 //import Discord from 'discord.js'
 import {deepCopy} from '../../genericFunctions/copy'
 import testAdmin from './testAdmin'
@@ -20,7 +18,7 @@ export default async function giveItem(message: message, args: Array<string>, di
 
 
   const user = await users.get(discordMessage.mentions.users.first().id)
-  user.items.addItem(deepCopy(items.get(args[2]) as item), parseInt(args[3]) | 1)
+  user.items.addItem(deepCopy(items.get(args[2])), parseInt(args[3]) | 1)
   message.reply("The item was given")
   user.save()
   return true

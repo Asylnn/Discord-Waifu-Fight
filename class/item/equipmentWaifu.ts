@@ -77,11 +77,11 @@ const procsPerPiece: {
   "outfit":Array</*rarity*/Array<[modificatorType, number, number]>>,
   "accessory":Array</*rarity*/Array<[modificatorType, number, number]>>
 } = {
-  "generic": [/*Rareté 1*/[["mult_stg",1,2],["mult_int",1,2],["mult_kaw",1,2],["mult_agi",1,2],["mult_dext",1,2],["mult_luck",1,2],["mult_xp",3,3]],
-              /*Rareté 2*/[["mult_stg",2,2],["mult_int",2,2],["mult_kaw",2,2],["mult_agi",2,2],["mult_dext",2,2],["mult_luck",2,2],["mult_xp",5,3]],
-              /*Rareté 3*/[["mult_stg",3,3],["mult_int",3,3],["mult_kaw",3,3],["mult_agi",3,3],["mult_dext",3,3],["mult_luck",3,3],["mult_xp",7,4]],
-              /*Rareté 4*/[["mult_stg",5,4],["mult_int",5,4],["mult_kaw",5,4],["mult_agi",5,4],["mult_dext",5,4],["mult_luck",5,4],["mult_xp",9,6]],
-              /*Rareté 5*/[["mult_stg",6,5],["mult_int",6,5],["mult_kaw",6,5],["mult_agi",6,5],["mult_dext",6,5],["mult_luck",6,5],["mult_xp",11,7]]
+  "generic": [/*Rareté 1*/[["mult_stg",1,2],["mult_int",1,2],["mult_kaw",1,2],["mult_agi",1,2],["mult_dext",1,2],["mult_luck",1,2],["mult_XP",3,3]],
+              /*Rareté 2*/[["mult_stg",2,2],["mult_int",2,2],["mult_kaw",2,2],["mult_agi",2,2],["mult_dext",2,2],["mult_luck",2,2],["mult_XP",5,3]],
+              /*Rareté 3*/[["mult_stg",3,3],["mult_int",3,3],["mult_kaw",3,3],["mult_agi",3,3],["mult_dext",3,3],["mult_luck",3,3],["mult_XP",7,4]],
+              /*Rareté 4*/[["mult_stg",5,4],["mult_int",5,4],["mult_kaw",5,4],["mult_agi",5,4],["mult_dext",5,4],["mult_luck",5,4],["mult_XP",9,6]],
+              /*Rareté 5*/[["mult_stg",6,5],["mult_int",6,5],["mult_kaw",6,5],["mult_agi",6,5],["mult_dext",6,5],["mult_luck",6,5],["mult_XP",11,7]]
              ],
   "weapon": [],
   "outfit": [],

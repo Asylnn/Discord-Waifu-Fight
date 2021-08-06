@@ -43,19 +43,14 @@ import message from '../../class/message'
 export default async function addmapset(message: message, args: Array<string>){
   const beatmapset = await osuAPI.getBeatmapSet({beatmapsetId:parseInt(args[1])})
   if(!beatmapset) {message.reply("Le set de map n'a pas été trouvé :/"); return true};
-  beatmapset.beatmaps.forEach(beatmap => {
+  beatmapset.beatmaps.forEach(async beatmap =>  {
     const beatmapId = beatmap.id
     const beatmapStarRating = Math.floor(beatmap.difficulty_rating)
 
-    let beatmapAlreadyHere = false
+    const beatmapArray = await beatmaps.get(beatmap.mode + beatmapStarRating)
 
-    beatmapIds[beatmap.mode][beatmapStarRating].forEach(ids => {
-      if(ids[1] == beatmapId)
-        beatmapAlreadyHere = true
-    })
-
-    if(!beatmapAlreadyHere){
-      beatmapIds[beatmap.mode][beatmapStarRating].push([beatmapset.id, beatmapId])
+    if(!beatmapArray.some(beatmapInfo => beatmapInfo.id == beatmapId)){ //If the map already exists
+      beatmapArray.push({beatmapSetId:beatmap.beatmapset_id, id: beatmap.id, genre:beatmapset.genre.name, language: beatmapset.language.name, mapGenre:"no_genre"})
     }
     else {
       console.log("Cette beatmap est déja ajoutée!")

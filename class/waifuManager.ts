@@ -12,7 +12,7 @@ export default class waifuManager {
   get haveAllNakano(){
     let nakano = 0
     this.owner.reserveWaifu.forEach(waifu => {
-      nakano = nakano | templateWaifu.whichNakano(waifu)
+      nakano = nakano | waifu.whichNakano
     })
     return (nakano | 0x1F) == nakano
   }

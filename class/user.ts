@@ -9,6 +9,7 @@ import { modificator } from './types/modificator'
 import getModificators from '../genericFunctions/getModificators'
 import waifuManager from './waifuManager'
 import {deepCopy} from '../genericFunctions/copy'
+import randInt from '../genericFunctions/randInt'
 
 export default class user{
   public readonly waifuManager: waifuManager
@@ -44,7 +45,9 @@ export default class user{
   public isDoingDungeon: boolean = false
 
   constructor(id: string, osuName: string, osuId: number){
-    this.waifus = [new waifu(this, ), new waifu(this, ), new waifu(this, )]
+
+
+    this.waifus = [new waifu(this, waifus.get(["1", "12", "13"][randInt(3)])), null, null]
     this.id = id
     this.osuName = osuName
     this.osuId = osuId

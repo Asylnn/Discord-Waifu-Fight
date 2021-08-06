@@ -17,7 +17,7 @@ export default async function claim_std(message: message, user: user){
     length:allScoreInfo.beatmap.total_length,
     accuracy:allScoreInfo.accuracy,
     maxCombo:allScoreInfo.max_combo,
-    maxComboMap:allScoreInfo.beatmap.count_circles + allScoreInfo.beatmap.count_sliders + allScoreInfo.beatmap.count_spinners,
+    maxComboMap:allScoreInfo.beatmap.count_circles + allScoreInfo.beatmap.count_sliders*2 + allScoreInfo.beatmap.count_spinners,
     stars:allScoreInfo.beatmap.difficulty_rating
   }
   console.log(scoreDetails)

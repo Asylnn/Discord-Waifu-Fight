@@ -1,5 +1,6 @@
 import {quest} from './class/types/quest'
 import item from './class/item'
+import dungeon from './class/dungeon'
 import collection from './class/collection'
 import randInt from './genericFunctions/randInt'
 import templateWaifu from './class/templateWaifu'
@@ -160,6 +161,7 @@ declare global {
   var items: globalItemManager<string, item>
   var itemShop: Array<{item:item, price:number}>
   var quests: Array<quest>
+  var dungeons: Map<string, dungeon>
 }
 
 global.quests = [quest1, quest2, quest3, quest4, quest5, quest6 /*quest7 OOPS!*/, quest8, quest9, quest10, quest11, quest12, quest13, quest14, quest15, quest16, quest17, quest18, quest19, quest20, quest21, quest22, quest23, quest24]

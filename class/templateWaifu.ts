@@ -7,13 +7,13 @@ export default class templateWaifu {
   public imgURL: string
   public name: string
   public readonly diffLvlUp: number
-  public readonly o_str: number
+  public readonly o_stg: number
   public readonly o_agi: number
   public readonly o_int: number
   public readonly o_luck: number
   public readonly o_dext: number
   public readonly o_kaw: number
-  public readonly u_str: number
+  public readonly u_stg: number
   public readonly u_agi: number
   public readonly u_int: number
   public readonly u_luck: number
@@ -89,9 +89,12 @@ export default class templateWaifu {
     embed.setThumbnail(this.imgURL) //the pfp
     embed.setTitle(`${this.name} ${userHaveWaifu ? "✅" : ""}` )
     embed.addField("Stats", //the title of the embed
-      `EX : ${this.o_exp} \n
+      `AGI : ${this.o_agi} \n
       LUCK : ${this.o_luck}% \n
       INT : ${this.o_int} \n
+      STG : ${this.o_stg} \n
+      DEXT : ${this.o_dext} \n
+      KAWAIINESS : ${this.o_kaw} \n
       ${eval(getLoc)("rarity")} : ${this.rarityName(message)} \n
       ${eval(getLoc)("rarity")} : ${this.value}¥`)
     message.reply(embed as any)

@@ -117,8 +117,14 @@ export default class waifu extends templateWaifu{
       if(this.lvl < this.maxLvl){
         this.xp -= this.xplvlup
         this.lvl++
-        this.b_exp += this.u_exp
+        this.b_agi += this.u_agi
+        this.b_luck += this.u_luck
+        this.b_stg += this.u_stg
+        this.b_kaw += this.u_kaw
+        this.b_dext += this.u_dext
         this.b_int += this.u_int
+
+
         let tempxp = this.xp
         this.xp = 0
         if(first) message.reply(eval(getLoc)("level_up"))
@@ -143,7 +149,7 @@ export default class waifu extends templateWaifu{
   }
 
   testSendMesAction(message: message, sendMes:string | boolean = false){
-    if(this.action.isDoingAction && sendMes){
+    if(this.action && sendMes){
       let actionType
       if(this.action.type == 'exploration'){
         actionType = eval(getLoc)("an_exploration"); actionType;
@@ -157,7 +163,7 @@ export default class waifu extends templateWaifu{
       let timeLeft = milliToHours(this.action.createdTimestamp + this.action.timeWaiting - message.createdTimestamp)
       message.reply(eval(getLoc)(sendMes)); timeLeft;
     }
-    return this.action.isDoingAction
+    return !!this.action
   }
 
   timeWaiting(type: actionType, lvl: number){
@@ -226,7 +232,7 @@ export default class waifu extends templateWaifu{
     if(XPtaikoMult != 1){modificators += `${eval(getLoc)("incr_xp_gain_taiko")} : ${Math.round(XPtaikoMult*100 - 100)}% \n`}
 
     let addLuck = this.luck - this.b_luck
-    let multEX = this.exp / this.b_exp
+    let multSTG = this.stg / this.b_stg
     let multInt = this.int / this.b_int
 
 
@@ -245,7 +251,7 @@ export default class waifu extends templateWaifu{
       `${eval(getLoc)("number")} : ${number + 1} \n
       Level : ${this.lvl}/${this.maxLvl}
       XP : ${Math.round(this.xp)}/${this.lvl != this.maxLvl ? this.xplvlup : "-"} (+${Math.round((multXP - 1)*100)}%)
-      EX : ${Math.round(this.exp)} (+${Math.round((multEX - 1)*100)}%)
+      AGI : ${Math.round(this.stg)} (+${Math.round((multSTG - 1)*100)}%)
       LUCK : ${this.luck} (+${addLuck})
       INT : ${Math.round(this.int)} (+${Math.round((multInt - 1)*100)}%)
       ${eval(getLoc)("rarity")} : ${this.rarityName(message)} \n`)

@@ -1,5 +1,3 @@
-import itemType from '../types/itemType'
-
 export default abstract class item {
   public readonly id: string
   public readonly name: string

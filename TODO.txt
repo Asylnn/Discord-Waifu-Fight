@@ -1,25 +1,24 @@
-Ajouter les propriétés de waifu stg, phy, mag, psy, int, luck, ----Fait
+Ajouter les propriétés de waifu stg, phy, mag, psy, int, luck, ----Done
 Ajouter la formule critChance et attackSpeed
-Mettre a jour la fonction upgrade (est dans commands/managment/waifuUpgrade.ts)
-Mettre a jour la fonction levelUP
-BDD dungeons
+Mettre a jour la fonction upgrade (est dans commands/managment/waifuUpgrade.ts) ----Done
+Mettre a jour la fonction levelUP ----Done
 faire la commande enterDungeon
-faire la commande submitsocre
+faire la commande submitscore
 faire la commande abandon dungeon
 Mettre a jour les modificateurs
-commande claim pour les donjons
+commande claim pour les donjons ----Done
 ajouter des quêtes par completer un donjon
 faire showstats et show (waifu et templatewaifu)
+
+
+Soon
 faire un wiki avec un tutoriel
 
-stg = force
 
-phy = attaque physique
-
-waifu.get(psy)
-
-waifu.psy
-
-get psy(){
-  return 0
-}
+Next Update
+base star Rating
+Add new waifus
+make waifu upgrade based on rarity, max level and copies
+Make 'defaultWaifu' usable on every commands
+waifu teams
+no confirm boolean

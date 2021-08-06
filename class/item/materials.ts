@@ -1,4 +1,3 @@
-import {modificator} from "../types/modificator";
 import item from './item'
 
 export default class material extends item {

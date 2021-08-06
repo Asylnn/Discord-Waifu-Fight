@@ -4,7 +4,7 @@ import item from './class/item/item'
 import osuAPI from './osuAPI/Api'
 import collection from './class/collection'
 import pageEmbed from './class/types/pageEmbed'
-import dungeon from './class/'
+import dungeon from './class/dungeon'
 
 
 
@@ -32,7 +32,6 @@ declare global {
   var getLoc: string
   var allPagesEmbed: collection<string, pageEmbed>
   var osuAPI: osuAPI
-  var beatmapIds: {"osu":{[key:string]: [number, number][]}, "mania":{[key:string]: [number, number][]}, "fruits":{[key:string]: [number, number][]}, "taiko":{[key:string]: [number, number][]}}
   var activeDungeons: Map<string,dungeon>
 }
 

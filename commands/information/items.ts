@@ -13,7 +13,7 @@ export default async function items(message: message, user: user, args: Array<st
   if(!testArg(message, user, 0, "validItemType", itemType)) return true;
   //REALLY UGLY CODE
 
-  seeItems(message, user.items[MAJ[itemType as 'materials']], 1, user.id, true)
+  seeItems(message, user.items[MAJ[itemType as 'material']], 1, user.id, true)
 
   return true
 }
