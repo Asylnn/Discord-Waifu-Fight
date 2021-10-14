@@ -19,7 +19,7 @@ export default function checkQuests(user: user, message: message, userMention: a
             reward = 100 + user.lvl*2
             user.money = reward
             user.giveXP((3 + randInt(3)), message)
-            message.reply(eval(getLoc)("quest_completed_1")); userMention;
+            message.addResponse(eval(getLoc)("quest_completed_1")); userMention;
             rand = randInt(100)
             break;
           case 2:
@@ -28,7 +28,7 @@ export default function checkQuests(user: user, message: message, userMention: a
             user.money = reward
 
             user.waifuXP += 750*((user.lvl+50)/50)
-            message.reply(eval(getLoc)("quest_completed_2"))
+            message.addResponse(eval(getLoc)("quest_completed_2"))
             rand = 50 + randInt(50)
             break;
           case 3:
@@ -38,7 +38,7 @@ export default function checkQuests(user: user, message: message, userMention: a
             user.waifuXP += 1500*((user.lvl+50)/50)
             const item = items.randItem(user.boxLevel, "box")
             if(item) user.items.addItem(item)
-            message.reply(eval(getLoc)("quest_completed_3"))
+            message.addResponse(eval(getLoc)("quest_completed_3"))
             rand = 75 + randInt(25)
             break;
           default:
@@ -51,14 +51,14 @@ export default function checkQuests(user: user, message: message, userMention: a
               const itemArtifact = items.randItem(user.anaLevel, "ana")
 
               if(itemArtifact) user.items.addItem(itemArtifact)
-              message.reply(eval(getLoc)("quest_completed_bonus_1"))
+              message.addResponse(eval(getLoc)("quest_completed_bonus_1"))
               break;
             case 2:
             case 3:
               let itemPar = items.randItem(user.parLevel, "par")
 
               if(itemPar) user.items.addItem(itemPar)
-              message.reply(eval(getLoc)("quest_completed_bonus_2"))
+              message.addResponse(eval(getLoc)("quest_completed_bonus_2"))
               break;
             case 4:
               rand = randInt(3)
@@ -70,7 +70,7 @@ export default function checkQuests(user: user, message: message, userMention: a
                 obtainedWaifu = waifus.get("40") //Asada Shino
               }
               user.reserveWaifu.push(new waifu(user, obtainedWaifu))
-              message.reply(eval(getLoc)("quest_completed_bonus_3"))
+              message.addResponse(eval(getLoc)("quest_completed_bonus_3"))
               break;
             default:
 
@@ -78,6 +78,7 @@ export default function checkQuests(user: user, message: message, userMention: a
         }
         user.quests.activeQuests[index].name = "completed"
         user.save()
+        message.reply()
       }
     }
   });

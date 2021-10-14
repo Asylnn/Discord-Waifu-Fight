@@ -1,4 +1,4 @@
-import message from '../../class/message'
+/*import message from '../../class/message'
 import user from '../../class/user'
 import {MAJ} from '../../class/types/itemType'
 
@@ -11,14 +11,14 @@ export default function testArg(message: message, user: user, arg: number , test
     case "validWaifu" :
       switch (true) {
         case isNaN(arg):
-          message.reply(eval(getLoc)("waifu_invalid_no_arg"))
+          message.addResponse(eval(getLoc)("waifu_invalid_no_arg"))
           break;
         case arg < 0:
         case arg >= user.waifus.length:
-          message.reply(eval(getLoc)("waifu_invalid"))
+          message.addResponse(eval(getLoc)("waifu_invalid"))
           break;
         case user.waifus[arg].id == "-1":
-          message.reply(eval(getLoc)("waifu_invalid_no_waifu"))
+          message.addResponse(eval(getLoc)("waifu_invalid_no_waifu"))
           break;
         default:
           isValid = true
@@ -28,11 +28,11 @@ export default function testArg(message: message, user: user, arg: number , test
     case "validReserveWaifu":
       switch(true) {
         case isNaN(arg):
-          message.reply(eval(getLoc)("reservewaifu_invalid_no_arg"))
+          message.addResponse(eval(getLoc)("reservewaifu_invalid_no_arg"))
           break;
         case 0 > arg:
         case arg >= user.reserveWaifu.length:
-          message.reply(eval(getLoc)("reservewaifu_invalid"))
+          message.addResponse(eval(getLoc)("reservewaifu_invalid"))
           break;
         default:
           isValid = true
@@ -43,11 +43,11 @@ export default function testArg(message: message, user: user, arg: number , test
       switch(true) {
         case isNaN(arg):
         case itemType == undefined:
-          message.reply(eval(getLoc)("item_invalid_no_arg"))
+          message.addResponse(eval(getLoc)("item_invalid_no_arg"))
           break;
         case 0 > arg:
         case arg >= user.items[MAJ[itemType as itemTypeLowerCase]].length:
-          message.reply(eval(getLoc)("item_invalid"))
+          message.addResponse(eval(getLoc)("item_invalid"))
           break;
         default:
 
@@ -60,12 +60,13 @@ export default function testArg(message: message, user: user, arg: number , test
         isValid = true
       }
       else{
-        message.reply(eval(getLoc)("invalid_item_type"))
+        message.addResponse(eval(getLoc)("invalid_item_type"))
       }
       break;
     default:
-      message.reply("A error Happened (testArguments.ts)")
+      message.addResponse("A error Happened (testArguments.ts)")
       break;
   }
   return isValid
 }
+*/

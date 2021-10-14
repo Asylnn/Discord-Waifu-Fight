@@ -13,7 +13,7 @@ export default function giveClaimXP(message: message, user: user, rawXP: number,
   /*let claim = lb.has(user.id) ? lb.get(user.id) : 0
   lb.set(user.id, ++claim)*/
 
-  let waifu = user.waifus[user.fight.indexWaifu]
+  let waifu = user.waifus[user.fight.indexWaifu]!
   let mult = getModificators(waifu, 'mult_XP_' + mode as modificatorType)
   let gainXP = waifu.giveXP(rawXP*mult, message)
   user.giveXP(1 + randInt(1), message)
@@ -25,13 +25,13 @@ export default function giveClaimXP(message: message, user: user, rawXP: number,
     const probability = getModificators(waifu, 'mult_XP_' + mode as modificatorType)
     if(Math.random() <= probability){
       user.items.addItem("18") //quest re roll
-      message.reply(eval(getLoc)("win_quest_reroll"))
+      message.addResponse(eval(getLoc)("win_quest_reroll"))
     }
   }
-  message.reply(eval(getLoc)("earn_xp_fight"))
+  message.addResponse(eval(getLoc)("earn_xp_fight"))
   if(Math.random() <= waifu.luck/300){
     user.boxs.push(user.boxLevel)
-    message.reply(eval(getLoc)("win_lootbox"))
+    message.addResponse(eval(getLoc)("win_lootbox"))
   }
   user.fight.isInAFight = false
 }

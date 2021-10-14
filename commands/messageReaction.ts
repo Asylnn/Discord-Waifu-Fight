@@ -5,7 +5,7 @@ import seeLeaderboard from './information/seelb'
 import seeHelp from './information/seeHelp'
 import seeUserShop from './information/seeUserShop'
 
-export default async function messageReaction(reaction:Discord.MessageReaction, userId:string){
+export default async function messageReaction(reaction:Discord.MessageReaction | Discord.PartialMessageReaction, userId:string){
   allPagesEmbed.forEach(pageEmbed => {
     reaction.users.remove(userId)
     if(pageEmbed.id != userId || pageEmbed.message.id != reaction.message.id){return;}

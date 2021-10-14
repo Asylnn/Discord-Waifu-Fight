@@ -1,5 +1,11 @@
 import {quest} from './class/types/quest'
-import item from './class/item'
+import consumableUser from './class/item/consumableUser'
+import consumableWaifu from './class/item/consumableWaifu'
+import equipmentUser from './class/item/equipmentUser'
+import equipmentWaifu from './class/item/equipmentWaifu'
+import item from './class/item/item'
+import material from './class/item/materials'
+
 import dungeon from './class/dungeon'
 import collection from './class/collection'
 import randInt from './genericFunctions/randInt'
@@ -31,25 +37,25 @@ const quest10: quest = {name:"get_claims", type:"mania", objective:4, difficulty
 const quest11: quest = {name:"get_claims", type:"mania", objective:8, difficulty:2, generalType:"claim", state:0}
 const quest12: quest = {name:"get_claims", type:"mania", objective:16, difficulty:3, generalType:"claim", state:0}
 
-var artifact = new item("artifact", [], 50, "artifact_description", "1", "materials")
-var par1 = new item("par1", [], 50, "par1_description", "2", "materials")
-var par2 = new item("par2", [], 100, "par2_description", "3", "materials")
+var artifact = new material("1", "artifact", "artifact_description", 1, 50, "")
+var par1 = new material("2", "par1", "par1_description", 1, 50, "")
+var par2 = new material("3", "par2", "par2_description", 1, 100, "")
+
+var purse = new consumableUser("5", "purse", "purse_description", 1, 100, "", [{effectType:'earn_money', value:350}])
+var trans_sparkle = new consumableUser("14", "trans_sparkle", "trans_sparkle_description", 1, 100, "", [{effectType:'set_multxp', value:10}])
+var quest_reroll = new consumableUser("18", "quest_reroll", "quest_reroll_description", 1, 150, "", [{effectType:'quest_reroll', value:null}])
 
 
-var purse = new item("purse", [{effect:'earn_money', value:350}], 100, "purse_description", "4", "userConsumable")
-var trans_sparkle = new item("trans_sparkle", [{effect:'set_multxp', value:10}], 100, "trans_sparkle_description", "14", "userConsumable")
-var dedoubling = new item("dedoubling", [{effect:'set_multxp', value:2}], 100, "dedoubling_description", "15", "userConsumable")
-var quest_reroll = new item("quest_reroll", [{effect:'quest_reroll', value:null}], 150, "quest_reroll_description", "18", "userConsumable")
 
 
-var xp_box = new item("xp_box", [{effect:'earn_XP', value:1500}], 75, "xp_box_description", "5", "waifuConsumable")
+/*var xp_box = new item("xp_box", [{effect:'earn_XP', value:1500}], 75, "xp_box_description", "5", "waifuConsumable")
 var xp_box2 = new item("xp_box", [{effect:'earn_XP', value:2300}], 150, "xp_box_description", "6", "waifuConsumable")
-var xp_box3 = new item("xp_box", [{effect:'earn_XP', value:3400}], 225, "xp_box_description", "7", "waifuConsumable")
-var item_extractor = new item("item_extractor", [{effect:'extract_item', value:1}], 150, "item_extractor_description", "16", "waifuConsumable")
-var item_extractor2 = new item("item_extractor2", [{effect:'extract_item', value:2}], 150, "item_extractor2_description", "17", "waifuConsumable")
-var lvl_upper = new item("lvl_upper", [{effect:'level_up', value:1}], 150, "lvl_upper_description", "13", "waifuConsumable")
+var xp_box3 = new item("xp_box", [{effect:'earn_XP', value:3400}], 225, "xp_box_description", "7", "waifuConsumable")*/
+var item_extractor = new consumableWaifu("16", "item_extractor", "item_extractor_description", 1 , 150, "", [{effectType:'extract_item', value:1}])
+var item_extractor2 = new consumableWaifu("17", "item_extractor2", "item_extractor2_description", 1 , 150, "", [{effectType:'extract_item', value:1}])
+var lvl_upper = new consumableWaifu("13", "lvl_upper", "lvl_upper_description", 1 , 150, "", [{effectType:'level_up', value:1}])
 
-
+/*
 var luck_crystal = new item("luck_crystal", [{effect:'add_modificator', value:[{origin:"luck_crystal", type:'add_luck', value:5}]}], 50, "luck_crystal_description", "19", "waifuConsumable")
 var luck_gem = new item("luck_gem", [{effect:'add_modificator', value:[{origin:"luck_gem", type:'add_luck', value:5}]}], 50, "luck_gem_description", "60", "waifuConsumable")
 var exploration_crystal = new item("exploration_crystal", [{effect:'add_modificator', value:[{origin:"exploration_crystal", type:'mult_EX', value:1.10}]}], 50, "exploration_crystal_description", "20", "waifuConsumable")
@@ -64,8 +70,8 @@ var pure_gem = new item("pure_gem", [{effect:'add_modificator', value:[{origin:"
 
 //ITEM 64 : BOX ITEM
 //var xp_box_quest1 = new item("xp_box", [{effect:'earn_XP', value:1000}['earn_XP', 1000]], 0, "xp_box_description", "8")
-//var xp_box_quest2 = new item("xp_box", [{effect:'earn_XP', value:1500}['earn_XP', 1500]], 0, "xp_box_description", "9") /*N*/
-//var xp_box_quest3 = new item("xp_box", [{effect:'earn_XP', value:2200}['earn_XP', 2200/*3375*/]], 0, "xp_box_description", "10") /*N*/
+//var xp_box_quest2 = new item("xp_box", [{effect:'earn_XP', value:1500}['earn_XP', 1500]], 0, "xp_box_description", "9")
+//var xp_box_quest3 = new item("xp_box", [{effect:'earn_XP', value:2200}['earn_XP', 2200 - 3375]], 0, "xp_box_description", "10")
 //var xp_box_extract 11
 //var xp_box_moderator 12
 
@@ -88,11 +94,11 @@ var cesar_manuscript2 = new item("cesar_manuscript2", [{origin:"cesar_manuscript
 var philosophical_papers = new item("philosophical_papers", [{origin:"philosophical_papers", type:'mult_int', value:1.2}], 300,"philosophical_papers_description", "48", "waifuItem", 1)
 var philosophical_papers2 = new item("philosophical_papers2", [{origin:"philosophical_papers2", type:'mult_int', value:1.4}], 500,"philosophical_papers2_description", "49", "waifuItem", 2)
 
-var xp_amplificator = new item("xp_amplificator", [{origin:"xp_amplificator", type:'mult_XP', value:1.1}], 300, "xp_amplificator_description", "33", "userItem", 1) /*M*/
-var xp_amplificator2 = new item("xp_amplificator2", [{origin:"xp_amplificator2", type:'mult_XP', value:1.2}], 500, "xp_amplificator2_description", "34", "userItem", 2) /*N*/
-var xp_amplificator3 = new item("xp_amplificator3", [{origin:"xp_amplificator3", type:'mult_XP', value:1.3}], 800, "xp_amplificator3_description", "35", "userItem", 3) /*N*/
-var fraud_parchment = new item("fraud_parchment", [{origin:"fraud_parchment", type:'mult_money_earned', value:1.1}], 300, "fraud_parchment_description", "41", "userItem", 1) /*M*/
-var fraud_parchment2 = new item("fraud_parchment2", [{origin:"fraud_parchment2", type:'mult_money_earned', value:1.2}], 500, "fraud_parchment2_description", "42", "userItem", 2) /*N*/
+var xp_amplificator = new item("xp_amplificator", [{origin:"xp_amplificator", type:'mult_XP', value:1.1}], 300, "xp_amplificator_description", "33", "userItem", 1)
+var xp_amplificator2 = new item("xp_amplificator2", [{origin:"xp_amplificator2", type:'mult_XP', value:1.2}], 500, "xp_amplificator2_description", "34", "userItem", 2)
+var xp_amplificator3 = new item("xp_amplificator3", [{origin:"xp_amplificator3", type:'mult_XP', value:1.3}], 800, "xp_amplificator3_description", "35", "userItem", 3)
+var fraud_parchment = new item("fraud_parchment", [{origin:"fraud_parchment", type:'mult_money_earned', value:1.1}], 300, "fraud_parchment_description", "41", "userItem", 1)
+var fraud_parchment2 = new item("fraud_parchment2", [{origin:"fraud_parchment2", type:'mult_money_earned', value:1.2}], 500, "fraud_parchment2_description", "42", "userItem", 2)
 var old_script = new item("old_script", [{origin:"old_script", type:'add_artifact_level', value:1}], 300, "old_script_description", "43", "userItem", 1)
 var old_script2 = new item("old_script2", [{origin:"old_script2", type:'add_artifact_level', value:1}, {origin:"old_script2", type:'mult_int', value:1.05}], 500, "old_script_description_2", "64", "userItem", 1)
 var se_clover = new item("se_clover", [{origin:"se_clover", type:'add_box_level', value:1}], 300, "se_clover_description", "36", "userItem", 1)
@@ -112,7 +118,7 @@ var memory_extractor = new item("memory_extractor", [{effect:'extract_XP', value
 //var Coronavirus = new item("coronavirus", [['equip_item', [['mult_EX', 0.7], ['add_luck', -15], ['mult_XP', 0.75], ['reduce_Action_time', 0.4]]]], true , 500, "coronavirus_description")
 var consciousness_key = new item("consciousness_key", [{effect:'upgrade_base', value:null}] as any , 500, "consciousness_key_description", "50", "waifuConsumable")
 var perfect_circle = new item("perfect_circle", [{effect:'upgrade_pippi', value:null}] as any, 500, "perfect_circle_description", "51", "waifuConsumable")
-var dango = new item("dango", [{effect:'summon_nagisa', value:null}], 225, "dango_description", "52", "userConsumable")
+var dango = new item("dango", [{effect:'summon_nagisa', value:null}], 225, "dango_description", "52", "userConsumable")*/
 
 // Collection des items
 
@@ -125,15 +131,13 @@ function getTotalWeight(col: collection<item, number>){
 
 function getColRand(arr: Array<collection<item, number>>, lvl: number){
   const col = arr[lvl - 1]
-  let randItem: item = new item()
   let w = 0
   let colWeight = getTotalWeight(col)
   let rand = randInt(colWeight)
   for(let i = 0; w <= rand; i++){
     w += col.array()[i]
-    if (w > rand){randItem = col.keyArray()[i]}
+    if (w > rand){return col.keyArray()[i]}
   }
-  return randItem
 }
 
 
@@ -156,26 +160,29 @@ class globalItemManager<keyType, stringType> extends collection<keyType, stringT
   }
 }
 
+type itemAll = equipmentUser | equipmentWaifu | consumableUser | consumableWaifu | material
 
 declare global {
-  var items: globalItemManager<string, item>
-  var itemShop: Array<{item:item, price:number}>
+  var items: globalItemManager<string, itemAll>
+  var itemShop: Array<{item:itemAll,  price:number}>
   var quests: Array<quest>
   var dungeons: Map<string, dungeon>
+  var waifus: collection<string, templateWaifu>
+  var gachaWaifus: Array<[templateWaifu, number]>
 }
 
 global.quests = [quest1, quest2, quest3, quest4, quest5, quest6 /*quest7 OOPS!*/, quest8, quest9, quest10, quest11, quest12, quest13, quest14, quest15, quest16, quest17, quest18, quest19, quest20, quest21, quest22, quest23, quest24]
-global.items = new globalItemManager<string, item>([]) // 52 items
+global.items = new globalItemManager<string, itemAll>([]) // 52 items
 global.itemShop = [{item:item_extractor, price:1000}, {item:item_extractor2, price:2000}]
 
-items.set("-1", new item())
+//items.set("-1", new item())
 items.set(artifact.id,artifact)
 items.set(par1.id,par1)
 items.set(par2.id,par2)
 items.set(purse.id,purse)
-items.set(xp_box.id,xp_box)
+/*items.set(xp_box.id,xp_box)
 items.set(xp_box2.id,xp_box2)
-items.set(xp_box3.id,xp_box3)
+items.set(xp_box3.id,xp_box3)*/
 /*items.set(xp_box_quest1.id,xp_box_quest1)
 items.set(xp_box_quest2.id,xp_box_quest2)
 items.set(xp_box_quest3.id,xp_box_quest3)
@@ -183,10 +190,10 @@ items.set(xp_box_extract.id,xp_box_extract)
 items.set(xp_box_moderator.id,xp_box_moderator)*/
 items.set(lvl_upper.id,lvl_upper)
 items.set(trans_sparkle.id,trans_sparkle)
-items.set(luck_crystal.id,luck_crystal)
-items.set(dedoubling.id,dedoubling)
+/*items.set(luck_crystal.id,luck_crystal)
+items.set(dedoubling.id,dedoubling)*/
 
-items.set(exploration_crystal.id,exploration_crystal)
+/*items.set(exploration_crystal.id,exploration_crystal)
 items.set(evolution_crystal.id,evolution_crystal)
 items.set(intelligence_crystal.id,intelligence_crystal)
 items.set(evolution_gem.id,evolution_gem)
@@ -195,9 +202,9 @@ items.set(absolute_vision2.id,absolute_vision2)
 items.set(chunchunmaru.id, chunchunmaru)
 items.set(chunchunmaru2.id, chunchunmaru2)
 items.set(magnifying_glass.id, magnifying_glass)
-items.set(magnifying_glass2.id, magnifying_glass2)
+items.set(magnifying_glass2.id, magnifying_glass2)*/
 
-items.set(xp_amplificator.id, xp_amplificator)
+/*items.set(xp_amplificator.id, xp_amplificator)
 items.set(xp_amplificator2.id, xp_amplificator2)
 items.set(fraud_parchment.id, fraud_parchment)
 items.set(fraud_parchment2.id, fraud_parchment2)
@@ -206,41 +213,50 @@ items.set(soul_extractor.id, soul_extractor)
 items.set(essence_extractor.id, essence_extractor)
 items.set(memory_extractor.id, memory_extractor)
 items.set(old_script.id, old_script)
-items.set(philosophical_papers.id, philosophical_papers)
+items.set(philosophical_papers.id, philosophical_papers)*/
 
-items.set(old_map.id, old_map)
+/*items.set(old_map.id, old_map)
 items.set(old_map2.id , old_map2)
 items.set(cesar_manuscript.id, cesar_manuscript)
 items.set(cesar_manuscript2.id, cesar_manuscript2)
 items.set(philosophical_papers2.id, philosophical_papers2)
 items.set(consciousness_key.id , consciousness_key)
 items.set(perfect_circle.id , perfect_circle)
-items.set(dango.id, dango)
+items.set(dango.id, dango)*/
 items.set(quest_reroll.id, quest_reroll)
 items.set(item_extractor.id, item_extractor)
 items.set(item_extractor2.id, item_extractor2)
 
-
+/*
 items.set(luck_gem.id,luck_gem)
 items.set(spirit_gem.id,spirit_gem)
 items.set(exploration_gem.id,exploration_gem)
 items.set(intelligence_gem.id,intelligence_gem)
 items.set(pure_gem.id,pure_gem)
+*/
 
 
-
-let itemsBoxL1 = new collection<item, number>([[par1, 12], [purse, 1], [trans_sparkle, 1], [evolution_crystal, 1], [intelligence_crystal, 1], [exploration_crystal, 1], [luck_crystal, 1], [lvl_upper, 1]])
+/*let itemsBoxL1 = new collection<item, number>([[par1, 12], [purse, 1], [trans_sparkle, 1], [evolution_crystal, 1], [intelligence_crystal, 1], [exploration_crystal, 1], [luck_crystal, 1], [lvl_upper, 1]])
 let itemsBoxL2 = new collection<item, number>([[par2, 12], [purse, 1], [trans_sparkle, 1], [evolution_crystal, 1], [intelligence_crystal, 1], [exploration_crystal, 1], [luck_crystal, 1], [lvl_upper, 1]])
-let itemsBoxL3 = new collection<item, number>([[par2, 12], [purse, 1], [trans_sparkle, 1], [evolution_crystal, 1], [intelligence_crystal, 1], [exploration_crystal, 1], [luck_crystal, 1], [lvl_upper, 1]])
+let itemsBoxL3 = new collection<item, number>([[par2, 12], [purse, 1], [trans_sparkle, 1], [evolution_crystal, 1], [intelligence_crystal, 1], [exploration_crystal, 1], [luck_crystal, 1], [lvl_upper, 1]])*/
 
+let itemsBoxL1 = new collection<item, number>([])
+let itemsBoxL2 = new collection<item, number>([])
+let itemsBoxL3 = new collection<item, number>([])
 
 var itemsBox = [itemsBoxL1, itemsBoxL2, itemsBoxL3]
 
-let itemsAnalyseL1 = new collection<item, number>([[xp_box, 12], [lvl_upper, 12], [exploration_crystal, 12] , [luck_crystal, 12], [intelligence_crystal, 12], [exploration_crystal, 12], [trans_sparkle, 12], [absolute_vision, 12],
+
+/*let itemsAnalyseL1 = new collection<item, number>([[xp_box, 12], [lvl_upper, 12], [exploration_crystal, 12] , [luck_crystal, 12], [intelligence_crystal, 12], [exploration_crystal, 12], [trans_sparkle, 12], [absolute_vision, 12],
                                              [chunchunmaru, 12], [magnifying_glass, 12], [xp_amplificator, 4], [se_clover, 4], [essence_extractor, 4]])
 let itemsAnalyseL2 = new collection<item, number>([[xp_box2, 12], [lvl_upper, 12],[exploration_crystal, 12] , [luck_crystal, 12], [intelligence_crystal, 12], [exploration_crystal, 12], [trans_sparkle, 12], [absolute_vision, 12],
                                              [chunchunmaru, 12], [magnifying_glass, 12], [xp_amplificator, 4], [se_clover, 4], [absolute_vision2, 6], [chunchunmaru2, 6], [magnifying_glass2, 6], [xp_amplificator2, 2],
-                                             [se_clover2, 2], [memory_extractor, 2], [soul_extractor, 2]])
+                                             [se_clover2, 2], [memory_extractor, 2], [soul_extractor, 2]])*/
+
+
+
+let itemsAnalyseL1 = new collection<item, number>([])
+let itemsAnalyseL2 = new collection<item, number>([])
 /*let itemsAnalyseL3 = new collection([[xp_box2, 12], [lvl_upper, 12],[exploration_crystal, 12] , [luck_crystal, 12], [intelligence_crystal, 12], [exploration_crystal, 12], [trans_sparkle, 12], [absolute_vision, 12],
                                             [chunchunmaru, 12], [magnifying_glass, 12], [xp_amplificator, 4], [se_clover, 4], [absolute_vision2, 6], [chunchunmaru2, 6], [magnifying_glass2, 6], [xp_amplificator2, 2],
                                             [absolute_vision3, 3], [chunchunmaru3, 3], [magnifying_glass3, 3], [se_clover2, 2], [se_clover3, 1], [xp_amplificator3, 1], [memory_extractor, 2], [soul_extractor, 2]])
@@ -258,10 +274,15 @@ let itemsAnalyseL7 = new collection([[xp_box2, 12], [lvl_upper, 12],[exploration
                                             [absolute_vision7, 3], [chunchunmaru7, 3], [magnifying_glass7, 3], [se_clover6, 2], [se_clover7, 1], [xp_amplificator7, 1], [memory_extractor, 2], [soul_extractor, 2]])*/
 var itemsAnalyse = [itemsAnalyseL1, itemsAnalyseL2]
 
+let itemsParchementL1 = new collection<item, number>([])
+let itemsParchementL2 = new collection<item, number>([])
 
+/*
 let itemsParchementL1 = new collection<item, number>([[old_script, 4], [fraud_parchment, 4], [old_map, 12], [cesar_manuscript, 12], [philosophical_papers, 12]])
 let itemsParchementL2 = new collection<item, number>([[old_script, 4], [fraud_parchment, 4], [old_map, 12], [cesar_manuscript, 12], [philosophical_papers, 12], [old_script2, 2], [fraud_parchment2, 2], [old_map2, 6], [cesar_manuscript2, 6],
                                               [philosophical_papers2, 6]])
+*/
+
 /*let itemsParchementL3 = new collection([[old_script, 4], [fraud_parchment, 4], [old_map, 12], [cesar_manuscript, 12], [philosophical_papers, 12], [old_script2, 2], [fraud_parchment2, 2], [old_map2, 6], [cesar_manuscript2, 6],
                                               [philosophical_papers2, 6], [old_script3, 4], [fraud_parchment3, 4], [old_map3, 12], [cesar_manuscript3, 12], [philosophical_papers3, 12]])
 let itemsParchementL4 = new collection([[old_script2, 4], [fraud_parchment2, 4], [old_map2, 12], [cesar_manuscript2, 12], [philosophical_papers2, 12], [old_script3, 2], [fraud_parchment3, 2], [old_map3, 6], [cesar_manuscript3, 6],
@@ -274,10 +295,16 @@ let itemsParchementL7 = new collection([[old_script5, 4], [fraud_parchment5, 4],
                                               [philosophical_papers6, 6], [old_script7, 4], [fraud_parchment7, 4], [old_map7, 12], [cesar_manuscript7, 12], [philosophical_papers7, 12]])*/
 var itemsParchement = [itemsParchementL1, itemsParchementL2]
 
+global.waifus = new collection<string, templateWaifu>()
 
+var createTemplateWaifu = (id: string, imgURL: string, name: string, diffLvlUp: number, o_stg: number, o_agi: number, o_int: number, o_luck: number, o_dext: number, o_kaw: number,
+  u_stg: number, u_agi: number, u_int: number, u_luck: number, u_dext: number, u_kaw: number, rarity:number, value:number, isTradable:boolean = true) => {
+  waifus.set(id, new templateWaifu({id, imgURL,name,diffLvlUp, o_stg, o_agi, o_int, o_luck, o_dext, o_kaw, u_stg, u_agi, u_int, u_luck, u_dext, u_kaw, rarity, value, isTradable}))
+}
 
-var custom = new templateWaifu("0", "",'custom',0.8,39,2,1,250,20,21,1) //Creation)
-
+createTemplateWaifu("1",'https://cdn.discordapp.com/attachments/504676515414540289/683320377929105415/43e236eaee120b8e57183428fcd50a98.jpg', "Shouko Nishimiya", 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
+/*
+//var custom = new templateWaifu("0", "",'custom',0.8,39,2,1,250,20,21,1) //Creation)
 var bwaifu1 = new templateWaifu("1",'https://cdn.discordapp.com/attachments/504676515414540289/683320377929105415/43e236eaee120b8e57183428fcd50a98.jpg'
 ,'Shouko Nishimiya',0.7,50,4,1,250,20,20,1) //Starter
 var bwaifu12 = new templateWaifu("12",'https://cdn.discordapp.com/attachments/613549071009054732/680208171826020414/Louise.Francoise.de.La.Baume.Le.Blanc.de.La.Valliere.600.2640243.jpg'
@@ -381,18 +408,14 @@ var nakano = new templateWaifu("1002",'https://cdn.discordapp.com/attachments/50
 
 
 
-declare global {
-  var waifus: collection<string, templateWaifu>
-  var gachaWaifus: Array<[templateWaifu, number]>
-}
 
-global.gachaWaifus = [[bwaifu44, 4], [bwaifu38, 2 /*very rare*/], [bwaifu1, 2], [bwaifu12, 2] ,[bwaifu13, 2], [bwaifu27, 4], [bwaifu2, 2], [bwaifu3, 2], [bwaifu5, 2], [bwaifu9, 2], [bwaifu28, 4], [bwaifu22, 2], [bwaifu21, 2], [bwaifu20, 2], [bwaifu26, 2], [bwaifu25, 2], [bwaifu24, 2], [bwaifu23, 2]]
-global.waifus = new collection<string, templateWaifu>()
+//global.gachaWaifus = [[bwaifu44, 4], [bwaifu38, 2 /*very rare], [bwaifu1, 2], [bwaifu12, 2] ,[bwaifu13, 2], [bwaifu27, 4], [bwaifu2, 2], [bwaifu3, 2], [bwaifu5, 2], [bwaifu9, 2], [bwaifu28, 4], [bwaifu22, 2], [bwaifu21, 2], [bwaifu20, 2], [bwaifu26, 2], [bwaifu25, 2], [bwaifu24, 2], [bwaifu23, 2]]
+
 
 for (var i = 1; i < 45; i++) {
   waifus.set(i.toString(), eval("bwaifu"+i))
 }
 waifus.set("1000", Yui)
 waifus.set("0", custom)
-/*waifus.set("1001", ultimate)
+waifus.set("1001", ultimate)
 waifus.set("1002", nakano)*/

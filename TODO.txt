@@ -1,24 +1,40 @@
-Ajouter les propriétés de waifu stg, phy, mag, psy, int, luck, ----Done
-Ajouter la formule critChance et attackSpeed
-Mettre a jour la fonction upgrade (est dans commands/managment/waifuUpgrade.ts) ----Done
-Mettre a jour la fonction levelUP ----Done
-faire la commande enterDungeon
-faire la commande submitscore
-faire la commande abandon dungeon
-Mettre a jour les modificateurs
-commande claim pour les donjons ----Done
-ajouter des quêtes par completer un donjon
-faire showstats et show (waifu et templatewaifu)
+Add waifu's properties stg, phy, mag, psy, int, luck, ----Done
+Add critChance and attackSpeed formula
+Update upgrade function (is in commands/managment/waifuUpgrade.ts) ----Done
+Update level up function ----Done
+Do the command enter dungeon
+Do the Button abandon dungeon
+Update All Modificator names (fruits instead of catch, stg instead of EX...)
+claim command for dungeon (should now be a button) ----To be Reworked
+Add quests for completing a dungeon
+Add the new actions (maid cafe... )
+finish "use user consumable" in commands/items
+Add boutons to confirm instead of adding c to the end of the command
+Create converter from old profile to new profiles
+Add mapping genre to beatmaps database
+sort waifu new criteria with new stats (dext, kaw...)
+add language files ----Done
+Add everything in showstats (new stats, new modifiers...)
+Reaction Collector ----No Longer Needed
+Look closer into message.edit(...) ----Done
+Ephemeral property in user (make user be able to choose if his slash commands are ephemeral or not)
+skip score submission for dungeon with button omg big brain
+Make impossible to equip two same waifus based by id
+Bug /gamemode part of response message is 'undefined'
 
-
-Soon
+ ------ Soon -------
 faire un wiki avec un tutoriel
 
 
 Next Update
-base star Rating
+make information embed with collumns
+base starRating property in user
 Add new waifus
 make waifu upgrade based on rarity, max level and copies
 Make 'defaultWaifu' usable on every commands
 waifu teams
-no confirm boolean
+add property in user that remove the no confirm boolean
+
+
+Possible optimisation
+return true in every information command

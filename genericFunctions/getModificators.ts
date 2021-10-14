@@ -1,6 +1,6 @@
 import user from '../class/user'
 import waifu from '../class/waifu'
-import item from '../class/item'
+import equipmentUser from '../class/item/equipmentUser'
 import { modificator } from '../class/types/modificator'
 import {modificatorType} from '../class/types/modificator'
 import hasModificators from './hasModificators'
@@ -11,21 +11,22 @@ function getUserModificators(user: user){
 
   let itemModificators: Array<modificator> = []
 
-  user.equipedItems.forEach((item: item) => {
-    itemModificators = itemModificators.concat(item.modificators)
+  user.equipedItems.forEach(item => {
+    if(item) itemModificators = itemModificators.concat(item.modificators)
   })
 
   return itemModificators.concat(user.modificators)
 }
 
 export default function(object: user | waifu, modificatorType: modificatorType): number{
-  let mult: number, modificatorArray: Array<modificator> = [], user:user, waifu:waifu | undefined
+  let mult: number, modificatorArray: Array<modificator> = [], user:user | undefined, waifu:waifu | undefined
   if(object.objectType == "waifu"){
-    user = object.owner
+    user = object.owner //Should always be defined normally
     waifu = object
-    object.equipedItems.forEach(item => {
-      modificatorArray = modificatorArray.concat(item.modificators)
-    })
+    for(const item of Object.values(object.equipedItems)){
+      if(item) modificatorArray = modificatorArray.concat(item.modificators)
+    }
+
     modificatorArray = modificatorArray.concat(object.modificators)
   }
   else{
@@ -33,15 +34,17 @@ export default function(object: user | waifu, modificatorType: modificatorType):
     waifu = undefined
   }
 
-  modificatorArray = modificatorArray.concat(getUserModificators(user))
-
-  if(hasModificators(user, 'nakano_bonus')){
-    if(waifu){
-      if(waifu.whichNakano != 0) {
-        modificatorArray.push({origin:'', type:'mult_EX', value:1.4}, {origin:'', type:'mult_XP', value:1.4}, {origin:'', type:'mult_int', value:1.2}, {origin:'', type:'add_luck', value:5})
+  if(user){ //Should always be defined normally
+    modificatorArray = modificatorArray.concat(getUserModificators(user))
+    if(hasModificators(user, 'nakano_bonus')){
+      if(waifu){
+        if(waifu.whichNakano != 0) {
+          modificatorArray.push({origin:'', type:'mult_EX', value:1.4}, {origin:'', type:'mult_XP', value:1.4}, {origin:'', type:'mult_int', value:1.2}, {origin:'', type:'mult_luck', value:5})
+        }
       }
     }
   }
+
 
   const actionModificator = modificatorArray.find((mod) => mod.type == "reduce_action_time")
   if(actionModificator){

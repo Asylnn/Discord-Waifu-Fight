@@ -6,19 +6,43 @@ import messageClass from "./class/message"
 import Discord from 'discord.js'
 import addbeatmapset from './commands/osu/addMapSet'
 
+
+
+
+
+
+
+
+
+
+
+discordClient.on('interactionCreate', async (interaction) => {
+  if(!interaction.isCommand()) return;
+  const message = new messageClass(defaultLanguage, "interaction no content", "interaction", interaction.createdTimestamp, interaction, interaction.id)
+
+  let userObj: user = {currentDealId:"-1", lg:defaultLanguage, id:interaction.user.id, verified:false, osuName:"Asyln"} as any
+
+   if(await users.exists(interaction.user.id)){
+    userObj = await users.get(interaction.user.id)
+  }
+  commands(message, userObj, [], interaction)
+})
+
 discordClient.on('messageReactionAdd', (reaction, user) => {
-  if(!user.bot){
-    if(reaction.message.channel.id == '709807051060019270' || reaction.message.channel.id == '672515818025779220' || reaction.message.channel.id == '689575655704100941' ||  reaction.message.channel.id == '688415622601638010' || reaction.message.channel.id == '705907776135757914' || reaction.message.channel.id == '705907805210542201'){
-      messageReaction(reaction, user.id).catch(err => {
-        console.log(err)
-        reaction.message.channel.send(`ERROR : ${err.toString()} <@${ASYLN_DISCORD_ID}>`)
-      })
-    }
+  console.log("0")
+  if(!user.bot) return;
+
+
+  if(reaction.message.channel.id == '709807051060019270' || reaction.message.channel.id == '672515818025779220' || reaction.message.channel.id == '689575655704100941' ||  reaction.message.channel.id == '688415622601638010' || reaction.message.channel.id == '705907776135757914' || reaction.message.channel.id == '705907805210542201'){
+    messageReaction(reaction, user.id).catch(err => {
+      console.log(err)
+      reaction.message.channel.send(`ERROR : ${err.toString()} <@${ASYLN_DISCORD_ID}>`)
+    })
   }
 });
 
 
-discordClient.on('message', async function(discordMessage: Discord.Message) {
+discordClient.on('messageCreate', async function(discordMessage: Discord.Message) {
   if(discordMessage.author.bot) return;
   const message = new messageClass(defaultLanguage, discordMessage.content, discordMessage.channel.type, discordMessage.createdTimestamp, discordMessage.channel, discordMessage.id)
   const np = message.content.split('/b/')

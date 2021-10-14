@@ -10,7 +10,7 @@ function recursiveCheckForUser(object:any){
     }
     else if(object.objectType == "user"){
       object.waifus.forEach((waifu: any) =>{
-        waifu.owner = undefined
+        if(waifu) waifu.owner = undefined
       })
       object.reserveWaifu.forEach((waifu: any) =>{
         waifu.owner = undefined

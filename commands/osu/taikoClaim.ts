@@ -9,7 +9,7 @@ export default async function claim_taiko(message: message, user: user){
   console.log("user found! : " + user.osuName)
 
   const allScoreInfo = scores.find(score => score.beatmap.id == user.fight.beatmapId)
-  if(!allScoreInfo){message.reply(eval(getLoc)("beatmap_not_done")); return true;}
+  if(!allScoreInfo){message.addResponse(eval(getLoc)("beatmap_not_done")); return true;}
 
   user.playCount.taiko++
   const scoreDetails = {
@@ -30,7 +30,7 @@ export default async function claim_taiko(message: message, user: user){
   if(allScoreInfo.mods.includes("DT")){multiplicator *= 1.7}
   if(allScoreInfo.mods.includes("HT")){multiplicator *= 0.66}
   if(allScoreInfo.mods.includes("SO")){
-    message.reply("SPUNOUT ? wut")
+    message.addResponse("SPUNOUT ? wut")
   }
 
 
@@ -38,7 +38,7 @@ export default async function claim_taiko(message: message, user: user){
   console.log("multiplicator : " + multiplicator)
   /*if(scoreDetails.accuracy >= 0.999 && (2 & user.milestone) == 0){
     user.reserveWaifu.add(new userWaifu(getWaifuByName("Tanya Degurechaff")))
-    message.reply(eval(getLoc)("milestone_2"))
+    message.addResponse(eval(getLoc)("milestone_2"))
     user.milestone = (user.milestone | 2)
   }*/
   let rawXP = Math.floor(25*Math.pow(1.7, scoreDetails.stars - 1)*scoreDetails.maxCombo*Math.pow(scoreDetails.accuracy, 2)*multiplicator/scoreDetails.maxComboMap)

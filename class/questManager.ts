@@ -10,7 +10,6 @@ export default class questManager{
   public date: number
   public owner: user
   public maxQuests: number
-
   constructor(owner: user){
     this.maxQuests = 3 //NEW
     this.owner = owner

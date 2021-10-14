@@ -21,22 +21,19 @@ export default async function load(){
   global.forceAuctionCompletion = false
 
 
+
   global.allPagesEmbed = new collection()
   global.getLoc = GETLOC
   global.osuBancho = new Banchojs.BanchoClient({ username: USERNAME, password: IRC_PASSWORD, limiterTimespan:60000, port: 6667, apiKey:OSU_API_KEY, limiterPrivate:270 });
-  global.discordClient = new Discord.Client();
+  global.discordClient = new Discord.Client({partials:["REACTION"], intents:["GUILD_MESSAGE_REACTIONS", "GUILD_MESSAGES", "GUILDS", "GUILD_EMOJIS_AND_STICKERS"]});
   global.discordClient.login(TOKEN)
   global.osuAPI = new api(OSU_CLIENT_ID, OSU_CLIENT_SECRET)
   global.day = (new Date()).getDate()
 
+global.discordClient
   fs.readFile('./files/beatmapsIds.json', (err, data) => {
     if(err) console.log(err)
-    global.beatmapIds = JSON.parse(data.toString())
-  })
-
-  fs.readFile('./files/dealIdGenerator.json', (err, data) => {
-    if(err) console.log(err)
-    global.dealIdGenerator = parseInt(JSON.parse(data.toString()) + 100000)
+    global.beatmaps = JSON.parse(data.toString())
   })
   fs.readFile('./files/globalAuction.json', (err, data) => {
     if(err) console.log(err)
@@ -54,14 +51,16 @@ export default async function load(){
 
   discordClient.on('ready', async () => {
     console.log(`Logged in as ${(discordClient.user as Discord.ClientUser).tag}!`);
-    global.guild = await discordClient.guilds.fetch(GUILD_ID)
-    global.eventDiscordChannel = guild.channels.cache.get(EVENT_CHANNEL_ID) as Discord.Channel
+    global.guild = discordClient.guilds.cache.get(GUILD_ID)!
+    global.eventDiscordChannel = guild.channels.cache.get(EVENT_CHANNEL_ID)!
+    global.commandManager = guild.commands
     checking()
+    require("./messageListener")
   });
 
   require('./objectCreation')
   require('./database')
-  require("./messageListener")
+
 
   //convert()
 }

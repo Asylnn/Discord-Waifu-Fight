@@ -1,6 +1,5 @@
 import message from '../../class/message'
 import user from '../../class/user'
-import effect from '../../class/types/effect'
 import randInt from '../../genericFunctions/randInt'
 import consumableUserClass from '../../class/item/consumableUser'
 
@@ -83,7 +82,7 @@ function boxLootTable(level: number){
 
 
 export default async function box(message: message, user: user){
-  if(user.boxs.length == 0){message.reply(eval(getLoc)("no_lootbox")); return true;}
+  if(user.boxs.length == 0){message.addResponse(eval(getLoc)("no_lootbox")); return true;}
   user.quests.updateQuest("quest_box", 1)
   user.items.addItem(boxLootTable(user.boxs.pop() as number))
 }

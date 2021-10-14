@@ -1,0 +1,7 @@
+you can now do o!explore instead of o!exp
+Slash commands bla bla bla...
+language now cannot be done from osu (that will for sure cause issue for a lot of users (0 out of 0 is a lot kekw))
+same for o!setmode
+can now do o!defaultwaifu instead of o!default
+can now fo o!gamemode instead of o!setmode
+renamed command osuid to setosuid

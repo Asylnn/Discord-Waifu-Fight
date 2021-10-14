@@ -7,11 +7,11 @@ export const MAJ: {
 "equipmentuser": "equipmentUser",
 "consumablewaifu": "consumableWaifu",
 "equipmentwaifu": "equipmentWaifu",
-"materials":"materials"
+"material":"material"
 } =  {
   "consumableuser": "consumableUser",
   "equipmentuser": "equipmentUser",
   "consumablewaifu": "consumableWaifu",
   "equipmentwaifu": "equipmentWaifu",
-  "materials":"materials"
+  "material":"material"
 }

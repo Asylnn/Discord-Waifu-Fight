@@ -42,18 +42,18 @@ export default async function fight(message: message, user: user, args:Array<str
   const waifu = testWaifu(message, user.waifus, waifuIndex)
   if(waifu != null){
     if(!waifu.testSendMesAction(message, "waifu_already_doing_action")){
-      if(!between(star,0,11)){message.reply(eval(getLoc)("invalid_star")); return true;}
+      if(!between(star,0,11)){message.addResponse(eval(getLoc)("invalid_star")); return true;}
       if(user.fight.isInAFight){
         const timeLeft = milliToHours(user.fight.time + TIME_FIGHT - message.createdTimestamp); timeLeft
-        if(user.fight.time + TIME_FIGHT >= message.createdTimestamp){message.reply(eval(getLoc)("already_in_fight")); return true;}
+        if(user.fight.time + TIME_FIGHT >= message.createdTimestamp){message.addResponse(eval(getLoc)("already_in_fight")); return true;}
       }
       const beatmap = await getMap(gamemode, star, user.playedMapsIds)
-      if(beatmap == null){message.reply(eval(getLoc)('did_all_maps'));return true;}
+      if(beatmap == null){message.addResponse(eval(getLoc)('did_all_maps'));return true;}
       const URL = `https://osu.ppy.sh/beatmapsets/${beatmap.beatmapSetId}#${gamemode}/${beatmap.id}`; URL
       user.fight = {isInAFight:true, beatmapId:beatmap.id, indexWaifu:waifuIndex, mode:gamemode, time:message.createdTimestamp}
       user.playedMapsIds.unshift(beatmap.id)
       user.playedMapsIds.length = BEATMAP_HISTORY_SIZE
-      message.reply(eval(getLoc)("fight_map"))
+      message.addResponse(eval(getLoc)("fight_map"))
     }
   }
 }

@@ -18,7 +18,7 @@ export default async function shop(message: message, user: user, args: Array<str
       seeUserShop(message, 1, user.id, true)
       break;
     case "auction":
-      message.reply(`Item : ${eval(getLoc)(globalAuction.item.name)} ${globalAuction.item.tier != 0 ? "(★ = max tier)" : ""} \n${eval(getLoc)("auction_biggest_offer")}`)
+      message.reply(`Item : ${eval(getLoc)(globalAuction.item.name)} ${globalAuction.item.rarity != 0 ? "(★ = max tier)" : ""} \n${eval(getLoc)("auction_biggest_offer")}`)
       break;
     default:
       message.reply(eval(getLoc)("shop_missing_argument"))

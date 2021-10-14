@@ -17,12 +17,12 @@
       }
     if(!hasMap(gameMode, Math.floor(beatmap[0].difficulty.rating).toString(), beatmap[0].id)){
       beatmapsids[gameMode][(Math.floor(beatmap[0].difficulty.rating)).toString()].push([beatmap[0].beatmapSetId, beatmap[0].id])
-      message.reply("Beatmap ajoutée !")
+      message.addResponse("Beatmap ajoutée !")
     }
     else {
-      message.reply("La beatmap est déjà ajoutée")
+      message.addResponse("La beatmap est déjà ajoutée")
     }
-  }).catch(function(){message.reply("La map n'a pas été trouvé :/")})
+  }).catch(function(){message.addResponse("La map n'a pas été trouvé :/")})
 }
 
 function removemap(message, user, Smessage){
@@ -31,7 +31,7 @@ function removemap(message, user, Smessage){
       for (var k = 0; k < beatmapsids[i.toString()][j.toString()].length; k++) {
         if(beatmapsids[i.toString()][j.toString()][k][1] == Smessage[1]){
           beatmapsids[i.toString()][j.toString()].splice(k, 1)
-          message.reply("La beatmap à été enlevé")
+          message.addResponse("La beatmap à été enlevé")
         }
       }
     }
@@ -42,7 +42,7 @@ import message from '../../class/message'
 
 export default async function addmapset(message: message, args: Array<string>){
   const beatmapset = await osuAPI.getBeatmapSet({beatmapsetId:parseInt(args[1])})
-  if(!beatmapset) {message.reply("Le set de map n'a pas été trouvé :/"); return true};
+  if(!beatmapset) {message.addResponse("Le set de map n'a pas été trouvé :/"); return true};
   beatmapset.beatmaps.forEach(async beatmap =>  {
     const beatmapId = beatmap.id
     const beatmapStarRating = Math.floor(beatmap.difficulty_rating)
@@ -56,7 +56,7 @@ export default async function addmapset(message: message, args: Array<string>){
       console.log("Cette beatmap est déja ajoutée!")
     }
   });
-  message.reply("Beatmaps ajoutées !")
+  message.addResponse("Beatmaps ajoutées !")
   return true
 }
 
@@ -71,5 +71,5 @@ export default async function addmapset(message: message, args: Array<string>){
       }
     }
   }
-  message.reply("Le set à bien été enlevé!")
+  message.addResponse("Le set à bien été enlevé!")
 }*/

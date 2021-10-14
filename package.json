@@ -5,13 +5,13 @@
   "main": "pwfMain.js",
   "dependencies": {
     "@types/level": "^6.0.0",
-    "@types/level-js": "^4.0.1",
+    "@types/level-js": "^4.0.2",
     "bancho.js": "^0.9.7",
-    "discord.js": "^12.5.3",
-    "level": "^7.0.0",
-    "level-js": "^6.0.0",
-    "level-ts": "^2.0.6",
-    "typescript": "^4.2.4"
+    "discord.js": "^13.2.0",
+    "level": "^7.0.1",
+    "level-js": "^6.1.0",
+    "level-ts": "^2.1.0",
+    "typescript": "^4.4.3"
   },
   "scripts": {
     "comp": "start runtsc.bat",

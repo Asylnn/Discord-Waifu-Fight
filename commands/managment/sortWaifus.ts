@@ -3,8 +3,8 @@ import user from '../../class/user'
 import {LEVEL_PERMISSIONS} from '../../files/config.json'
 
 export default async function sortWaifu(message: message, user: user, args: Array<string>){
-  if(user.lvl < LEVEL_PERMISSIONS.sortWaifu){message.reply(eval(getLoc)("lvl_too_low")); return true;}
-  if(!["int", "luck", "ex", "lvl", "stars", "rarity","name"].includes(args[1])){message.reply(eval(getLoc)("sort_waifu_missing_argument")); return true;}
+  if(user.lvl < LEVEL_PERMISSIONS.sortWaifu){message.addResponse(eval(getLoc)("lvl_too_low")); return true;}
+  if(!["int", "luck", "ex", "lvl", "stars", "rarity","name"].includes(args[1])){message.addResponse(eval(getLoc)("sort_waifu_missing_argument")); return true;}
   switch(args[1]){
     case "name":
       user.reserveWaifu.sort((waifuA, waifuB) =>{
@@ -22,9 +22,6 @@ export default async function sortWaifu(message: message, user: user, args: Arra
     case "lvl":
       user.reserveWaifu.sort((waifuA, waifuB) => waifuA.lvl - waifuB.lvl)
       break;
-    case "ex":
-      user.reserveWaifu.sort((waifuA, waifuB) => waifuA.exp - waifuB.exp)
-      break;
     case "int":
       user.reserveWaifu.sort((waifuA, waifuB) => waifuA.int - waifuB.int)
       break;
@@ -32,5 +29,5 @@ export default async function sortWaifu(message: message, user: user, args: Arra
       user.reserveWaifu.sort((waifuA, waifuB) => waifuA.luck - waifuB.luck)
       break;
   }
-  message.reply(eval(getLoc)("waifus_sorted"))
+  message.addResponse(eval(getLoc)("waifus_sorted"))
 }

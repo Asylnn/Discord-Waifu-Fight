@@ -3,15 +3,6 @@ import fs from 'fs'
 
 export default async function save(){
 
-
-
-  const beatmapsIdsData = JSON.stringify(beatmapIds)
-
-  fs.writeFile('./files/beatmapsIds.json', beatmapsIdsData, (err) => {
-    if(err) console.log(err)
-
-  })
-
   const dealIdGeneratorData = JSON.stringify(dealIdGenerator)
 
   fs.writeFile('./files/dealIdGenerator.json', dealIdGeneratorData, (err) => {

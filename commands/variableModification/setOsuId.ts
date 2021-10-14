@@ -1,11 +1,29 @@
 import message from '../../class/message'
 import user from '../../class/user'
+import Discord from  'discord.js'
 
+commandManager?.create({
+  name:"setosuid",
+  type:"CHAT_INPUT",
+  description:"linking your profile to your osu id",
+  options:[{
+      name:"id",
+      description:"your osu id (the number in the url of your profile on the osu website)",
+      required:true,
+      type:"NUMBER"
+    }],
+})
 
+export default async function setOsuId(message:message, user:user, args: Array<string>, interaction:Discord.CommandInteraction){
+  let osuid: number
+  if(message.type != "interaction"){
+    osuid = parseInt(args[1])
+  }
+  else{
+    osuid = interaction.options.getInteger('id')!
+  }
 
-export default async function setOsuId(message:message, user:user, args: Array<string>){
-  const osuId = parseInt(args[1])
-  if(isNaN(osuId)){message.reply(eval(getLoc)('nan_osu_id')); return true}
-  user.osuId = osuId
-  message.reply(eval(getLoc)("set_osu_id"))
+  if(isNaN(osuid)){message.addResponse(eval(getLoc)('nan_osu_id')); return true}
+  user.osuId = osuid
+  message.addResponse(eval(getLoc)("set_osu_id"))
 }

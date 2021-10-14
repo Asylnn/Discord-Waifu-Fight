@@ -1,24 +1,26 @@
 import message from '../../class/message'
 import user from '../../class/user'
-import testArg from '../util/testArguments'
+import testItem from '../util/testItem'
+import testWaifu from '../util/testWaifu'
 
-export default async function equipUserItem(message: message, user: user, args: Array<string>){
+
+export default async function equipWaifuItem(message: message, user: user, args: Array<string>){
   const itemIndex = Math.floor(parseInt(args[1]) - 1)
   const waifuIndex = Math.floor(parseInt(args[2]) - 1)
-  const itemSlot = Math.floor(parseInt(args[3]) - 1)
+  const itemSlot = args[3]
   /* GO LATER
   */
-  if(!testArg(message, user, itemIndex, "validItem", "equipmentwaifu")){return true;}
-  if(!testArg(message, user, waifuIndex, "validWaifu")){return true;}
-  if(isNaN(itemSlot)){message.reply(eval(getLoc)("no_item_slot")); return true;}
-  if(itemSlot >= user.equipedItems.length || itemSlot < 0){message.reply(eval(getLoc)("invalid_item_slot")); return true;}
-  if(user.waifus[waifuIndex].equipedItems[itemSlot] == undefined){return true;}
+  const item = testItem(message, user.items.equipmentWaifu, itemIndex)
+  if(!item){return true;}
+  const waifu = testWaifu(message, user.waifus, waifuIndex)
+  if(!waifu){return true;}
 
-  const item = user.items.waifuItem[itemIndex].item
+  if(!itemSlot){message.addResponse(eval(getLoc)("no_item_slot")); return true;}
+  if(!["weapon", "outfit", "accessory"].includes(itemSlot)){  message.addResponse(eval(getLoc)("invalid_item_slot")); return true;}
+
   /*const equipedItem = user.equipedItems[itemSlot]
   user.items.addItem(equipedItem)*/
-  const waifu = user.waifus[waifuIndex]
-  waifu.equipedItems[itemSlot] = item
+  waifu.equipedItems[itemSlot as "weapon"] = item
   user.items.removeItem(item.id)
-  message.reply(eval(getLoc)("waifu_equiping_item"))
+  message.addResponse(eval(getLoc)("waifu_equiping_item"))
 }

@@ -7,8 +7,8 @@ import taikoClaim from './taikoClaim'
 
 
 export default async function claim(message: message, user: user){
-  if(user.osuId == 0 || user.osuId == undefined){message.reply(eval(getLoc)("no_osu_id")); return true;}
-  if(!user.fight.isInAFight){message.reply(eval(getLoc)("claim_no_fight")); return true;}
+  if(user.osuId == 0 || user.osuId == undefined){message.addResponse(eval(getLoc)("no_osu_id")); return true;}
+  if(!user.fight.isInAFight){message.addResponse(eval(getLoc)("claim_no_fight")); return true;}
   console.log("CLAIM // username : " + user.osuName)
   switch(user.fight.mode){
     case "osu":

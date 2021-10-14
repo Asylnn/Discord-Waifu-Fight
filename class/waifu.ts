@@ -3,23 +3,11 @@ import message from './message'
 import { modificator } from './types/modificator'
 import equipmentWaifu from './item/equipmentWaifu'
 import {action, actionType} from './types/action'
-import {EXP_DIFFICULTY, PAR_DIFFICULTY, TIME_ANALYSE, TIME_DECRYPTION} from '../files/config.json'
+import {EXP_DIFFICULTY, PAR_DIFFICULTY, TIME_ANALYSE, TIME_DECRYPTION, TEST_BUILD} from '../files/config.json'
 import Discord from 'discord.js'
 import getModificators from '../genericFunctions/getModificators'
 import {milliToHours} from '../genericFunctions/timeConversion'
 import user from './user'
-
-
-//Déplacer la méthode show de templateWaifu dans waifu et supprimer la classe templateWaifu
-
-
-function test(a:number, b:number, c:number){
-
-}
-
-test(1,2,3)
-test() as {a:1, b:2, c:3}
-
 
 export default class waifu extends templateWaifu{
   public readonly objectType = "waifu"
@@ -40,8 +28,8 @@ export default class waifu extends templateWaifu{
     "weapon": equipmentWaifu | null
   } = {"outfit": null, "accessory": null, "weapon": null}
   public action: action | null = null
-  public owner: user
-  constructor(owner: user, template: templateWaifu){
+  public owner: user | undefined //undefined when having no owner in deal transfer, sold in user shop or when converted to JSON format
+  constructor(owner: user, template: templateWaifu = waifus.get("1")){
     super(template)
     this.owner = owner
     this.xp = 0
@@ -50,6 +38,9 @@ export default class waifu extends templateWaifu{
     this.b_agi = template.o_agi
     this.b_luck = template.o_luck
     this.b_int = template.o_int
+    this.b_stg = template.o_stg
+    this.b_dext = template.o_dext
+    this.b_kaw = template.o_kaw
   }
 
 
@@ -68,7 +59,7 @@ export default class waifu extends templateWaifu{
 
   get agi(){ // Renvoie la valeur avec modifs
     const mult = getModificators(this, 'mult_agi')
-    return this.b_exp*mult
+    return this.b_agi*mult
   }
 
   get int(){
@@ -97,12 +88,12 @@ export default class waifu extends templateWaifu{
   }
 
   get psy(){
-    const mult = getModificators(this. 'mult_psy')
+    const mult = getModificators(this, 'mult_psy')
     return this.kaw*mult
   }
 
   get mag(){
-    const mult = getModificators(this. 'mult_mag')
+    const mult = getModificators(this, 'mult_mag')
     return this.int*mult
   }
 
@@ -127,11 +118,11 @@ export default class waifu extends templateWaifu{
 
         let tempxp = this.xp
         this.xp = 0
-        if(first) message.reply(eval(getLoc)("level_up"))
+        if(first) message.addResponse(eval(getLoc)("level_up"))
         this.giveXP(tempxp, message, false, false)
       }
       else {
-        message.reply(eval(getLoc)("max_lvl"))
+        message.addResponse(eval(getLoc)("max_lvl"))
       }
     }
     return Math.floor(totalXP)
@@ -139,7 +130,7 @@ export default class waifu extends templateWaifu{
 
   get totalXP(){
     let totalXP = this.xp
-    let virginWaifu = new waifu(this.owner, waifus.get(this.id))
+    let virginWaifu = new waifu(this.owner!, waifus.get(this.id))
 
     for (var j = 1; j < this.lvl; j++) {
       totalXP += virginWaifu.xplvlup
@@ -161,7 +152,7 @@ export default class waifu extends templateWaifu{
         actionType = eval(getLoc)("an_decrypt")
       }
       let timeLeft = milliToHours(this.action.createdTimestamp + this.action.timeWaiting - message.createdTimestamp)
-      message.reply(eval(getLoc)(sendMes)); timeLeft;
+      message.addResponse(eval(getLoc)(sendMes)); timeLeft;
     }
     return !!this.action
   }
@@ -186,6 +177,7 @@ export default class waifu extends templateWaifu{
         time = TIME_DECRYPTION/(mult*(1 + 2*(this.int/difficulty)))
         break;
     }
+    if(TEST_BUILD) time = 10000
     return time
   }
 
@@ -198,11 +190,17 @@ export default class waifu extends templateWaifu{
     return this.dext // Calculer le taux critique TODO
   }
 
-  get explorationSpeed()
+  get explorationSpeed(){
+    return 0
+  }
 
-  get analyseSpeed()
+  get analyseSpeed(){
+    return 0
+  }
 
-  get decryptSpeed()
+  get decryptSpeed(){
+    return 0
+  }
 
   showStats(message: message, number: number){
     var embed = new Discord.MessageEmbed()
@@ -260,7 +258,7 @@ export default class waifu extends templateWaifu{
       embed.addField(eval(getLoc)("modificators"),  modificators)
 
 
-    message.reply(embed as any)
+    message.addResponse(embed as any)
   }
 
 }

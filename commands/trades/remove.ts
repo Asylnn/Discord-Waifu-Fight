@@ -6,8 +6,8 @@ export default async function remove(message: message, user: user, args: Array<s
   if(!testUserDeal(user, message)) return true;
   let deal = await deals.get(user.currentDealId)
   const dealIndex = Math.floor(parseInt(args[1]) - 1)
-  if(dealIndex < 1 || dealIndex > deal[deal.turn].length){message.reply(eval(getLoc)("deal_remove_invalid")); return true;}
+  if(dealIndex < 1 || dealIndex > deal[deal.turn].length){message.addResponse(eval(getLoc)("deal_remove_invalid")); return true;}
   deal.valid = false
   deal[deal.turn].splice(dealIndex - 1, 1)
-  message.reply(eval(getLoc)("deal_remove"))
+  message.addResponse(eval(getLoc)("deal_remove"))
 }

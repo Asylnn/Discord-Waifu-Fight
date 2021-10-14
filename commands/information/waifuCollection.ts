@@ -9,7 +9,7 @@ export default async function waifuCollection(message: message, user: user){
   let col = ""
   waifus.each((templateWaifu: templateWaifu) => {
     let foundId = false
-    user.waifus.forEach(waifu => {if(waifu.id == templateWaifu.id){foundId = true}})
+    user.waifus.forEach(waifu => {if(waifu != null && waifu.id == templateWaifu.id){foundId = true}})
     user.reserveWaifu.forEach(waifu => {if(waifu.id == templateWaifu.id){foundId = true}})
     if(foundId){
       col += `\*\*${templateWaifu.name}\*\* ${templateWaifu.rarityName(message)} ✅ \r\n`

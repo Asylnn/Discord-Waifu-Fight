@@ -103,21 +103,21 @@ const maxProcs = 5
 
 export default class equipmentWaifu extends item {
   public readonly objectType = "equipmentWaifu"
-  public lvl = 0;
+  public lvl = 0
   public xp = 0
-  public readonly type: equipmentType; // Helmet,chestplate,boots ...
-  public readonly set: string;// Maybe add a class for the set of equipment for different checks
-  public tabModificators: Array<modificator>;//The list of modificators
+  public readonly type: equipmentType // Helmet,chestplate,boots ...
+  public readonly set: string// Maybe add a class for the set of equipment for different checks
+  public modificators: Array<modificator>//The list of modificators
 
   constructor(id: string, name: string, description:string, rarity: number, img:string, type: equipmentType, set: string){
     //Générer valeur
     super(id, name, description, rarity, rarity*100, img)
 
-    this.type = type;
-    this.set = set;
-    this.tabModificators = []
+    this.type = type
+    this.set = set
+    this.modificators = []
     const modificatorInfo = mainStatPerPiece[this.type][rarity - 1][randInt(mainStatPerPiece[this.type][rarity - 1].length)]
-    this.tabModificators = [{
+    this.modificators = [{
       origin: `${this.type}_${this.rarity}_${modificatorInfo[0]}`,
       value: modificatorInfo[1],
       type:modificatorInfo[0],
@@ -134,7 +134,7 @@ export default class equipmentWaifu extends item {
   generateModificator(){
 
     const possibleProcs = procsPerPiece[this.type][this.rarity - 1].concat(procsPerPiece.generic[this.rarity- 1])
-    possibleProcs.filter(proc => !this.tabModificators.some(tabModificator => tabModificator.type == proc[0]))
+    possibleProcs.filter(proc => !this.modificators.some(modificator => modificator.type == proc[0]))
 
     let randProcIndex = randInt(possibleProcs.length) //Generating the modificator index
     const procInfo = possibleProcs[randProcIndex]
@@ -145,7 +145,7 @@ export default class equipmentWaifu extends item {
       valueIncrease: [procInfo[1], procInfo[2]]
     }
 
-    this.tabModificators.push(proc)
+    this.modificators.push(proc)
 
   }
 
@@ -161,30 +161,30 @@ export default class equipmentWaifu extends item {
       this.xp -= this.xpNeededToLevelUp
       tempXP = this.xp
       this.xp = 0
-      message.reply(eval(getLoc)("equipment_waifu_lvl_up"))
-      const mainStat = this.tabModificators[0]
+      message.addResponse(eval(getLoc)("equipment_waifu_lvl_up"))
+      const mainStat = this.modificators[0]
       if(mainStat.valueIncrease){
         mainStat.value += mainStat.valueIncrease[0]*(1 + Math.pow(this.lvl, 3)/2000)
       }
       else {
-        message.reply("there is an error, mainStat.valueIncrease is undefined (equipmentWaifu.ts)")
+        message.addResponse("there is an error, mainStat.valueIncrease is undefined (equipmentWaifu.ts)")
       }
       if(this.lvl % 3 == 0){
-        if(this.tabModificators.length < maxProcs + 1){ // If there is still available procs slots
+        if(this.modificators.length < maxProcs + 1){ // If there is still available procs slots
           this.generateModificator()
         }
         else {
-          const modificator = this.tabModificators[randInt(maxProcs + 1)]
+          const modificator = this.modificators[randInt(maxProcs + 1)]
           if(modificator.valueIncrease){
           modificator.value += modificator.valueIncrease[0] + randInt(1 + modificator.valueIncrease[0])
           }
           else {
-            message.reply("there is an error, modificator.valueIncrease is undefined (equipmentWaifu.ts)")
+            message.addResponse("there is an error, modificator.valueIncrease is undefined (equipmentWaifu.ts)")
           }
         }
       }
       this.giveXP(message, tempXP)
-      message.reply(eval(getLoc)("equipment_waifu_lvl_up"))
+      message.addResponse(eval(getLoc)("equipment_waifu_lvl_up"))
     }
   }
 }

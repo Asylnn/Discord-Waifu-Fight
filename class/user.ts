@@ -44,14 +44,13 @@ export default class user{
   public currentDealId = "-1"
   public isDoingDungeon: boolean = false
 
-  constructor(id: string, osuName: string, osuId: number){
+  constructor(id: string, osuName: string){
 
 
     this.waifus = [new waifu(this, waifus.get(["1", "12", "13"][randInt(3)])), null, null]
     this.id = id
     this.osuName = osuName
-    this.osuId = osuId
-    this.quests = new questManager(this) //{count:0, day:-1, actives:[]}
+    this.quests = new questManager(this)
     this.waifuManager = new waifuManager(this)
   }
 
@@ -112,34 +111,34 @@ export default class user{
       this.lvl++
       let tempxp = this.xp
       this.xp = 0
-      if(first) message.reply(eval(getLoc)("user_level_up"))
+      if(first) message.addResponse(eval(getLoc)("user_level_up"))
       switch(this.lvl){
         case 5:
-          message.reply(eval(getLoc)("access_command_upgrade"))
+          message.addResponse(eval(getLoc)("access_command_upgrade"))
           break;
         case 4:
-          message.reply(eval(getLoc)("access_command_editname"))
+          message.addResponse(eval(getLoc)("access_command_editname"))
           break;
         case 6:
-          message.reply(eval(getLoc)("access_command_recycle"))
+          message.addResponse(eval(getLoc)("access_command_recycle"))
           break;
         case 7:
-          message.reply(eval(getLoc)("access_command_create"))
+          message.addResponse(eval(getLoc)("access_command_create"))
           break;
         case 11:
-          message.reply(eval(getLoc)("access_command_buy"))
+          message.addResponse(eval(getLoc)("access_command_buy"))
           break;
         case 9:
-          message.reply(eval(getLoc)("access_command_sort"))
+          message.addResponse(eval(getLoc)("access_command_sort"))
           break;
         case 12:
-          message.reply(eval(getLoc)("access_command_deal"))
+          message.addResponse(eval(getLoc)("access_command_deal"))
           break;
         case 8:
-          message.reply(eval(getLoc)("access_command_collection"))
+          message.addResponse(eval(getLoc)("access_command_collection"))
           break;
         case 10:
-          message.reply(eval(getLoc)("access_command_shop"))
+          message.addResponse(eval(getLoc)("access_command_shop"))
           break;
 
       }

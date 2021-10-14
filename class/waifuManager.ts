@@ -1,5 +1,4 @@
 import user from './user'
-import templateWaifu from './templateWaifu'
 
 export default class waifuManager {
   public readonly objectType = "waifuManager"

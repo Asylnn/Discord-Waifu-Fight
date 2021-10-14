@@ -5,16 +5,21 @@ import osuAPI from './osuAPI/Api'
 import collection from './class/collection'
 import pageEmbed from './class/types/pageEmbed'
 import dungeon from './class/dungeon'
+import consumableUser from './class/item/consumableUser'
+import consumableWaifu from './class/item/consumableWaifu'
+import equipmentWaifu from './class/item/equipmentWaifu'
+import equipmentUser from './class/item/equipmentUser'
+import materials from './class/item/materials'
+import {TEST_BUILD} from './files/config.json'
 
 
 
 
-
-type deal = {proposer:{id:string, username:string}, price:number, object:waifu | item, amount: number}
+type shoppingItem = {proposer:{id:string, username:string}, price:number, object:waifu | equipmentWaifu | equipmentUser | consumableWaifu | consumableUser | materials, amount: number}
 
 declare global {
   var globalAuction: {item:item, price: number, higgestOffer:{username:string, id:string}}
-  var userShop: Array<deal>
+  var userShop: Array<shoppingItem>
 
   var dealIdGenerator: number
   var day: number
@@ -24,6 +29,7 @@ declare global {
 
   var defaultLanguage: string
   var guild: Discord.Guild
+  var commandManager: Discord.GuildApplicationCommandManager
   var pendingAccount: Array<{osuName:string, code:string, id:string}>
   var eventDiscordChannel: Discord.Channel
   var osuBancho: any
@@ -41,7 +47,10 @@ load()
 
 import save from './save'
 
-setInterval(function(){
-  save().catch(err => console.log(err))
-  console.log("save complete!")
-}, 120000)
+
+if(!TEST_BUILD){ //Auto Save every 5 minutes if it's not a test build.
+  setInterval(function(){
+    save().catch(err => console.log(err))
+    console.log("save complete!")
+  }, 120000)
+}

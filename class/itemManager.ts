@@ -14,7 +14,7 @@ export default class itemManager {
   public consumableUser: Array<{item:consumableUser, qty:number}>
   public consumableWaifu: Array<{item:consumableWaifu, qty:number}>
   public equipmentUser: Array<{item:equipmentUser, qty:number}>
-  public equipmentWaifu: Array<equipmentWaifu>
+  public equipmentWaifu: Array<{item:equipmentWaifu, qty:number}>
   public material: Array<{item:material, qty:number}>
 
 
@@ -45,9 +45,12 @@ export default class itemManager {
       item = itemOrId
     }
 
-    switch(item.objectType){
+    /*switch(item.objectType){
       case "equipmentWaifu":
-        this.equipmentWaifu.push(item)
+        let equipmentWaifuAndQty = this[item.objectType].find(itemAndQty => itemAndQty.item.id == item.id)
+        if(equipmentWaifuAndQty == undefined) this[item.objectType].push({item:item, qty:qty})
+        else equipmentWaifuAndQty.qty += qty
+        this[item.objectType].sort((itemA, itemB) => itemA.item.rarity - itemB.item.rarity)
         break;
       case "consumableUser":
         let consumableUserAndQty = this[item.objectType].find(itemAndQty => itemAndQty.item.id == item.id)
@@ -73,7 +76,7 @@ export default class itemManager {
         else materialAndQty.qty += qty
         this[item.objectType].sort((itemA, itemB) => itemA.item.rarity - itemB.item.rarity)
         break;
-    }
+    }*/
 
   }
 

@@ -97,6 +97,6 @@ export default class templateWaifu {
       KAWAIINESS : ${this.o_kaw} \n
       ${eval(getLoc)("rarity")} : ${this.rarityName(message)} \n
       ${eval(getLoc)("rarity")} : ${this.value}¥`)
-    message.reply(embed as any)
+    message.addResponse(embed as any)
   }
 }

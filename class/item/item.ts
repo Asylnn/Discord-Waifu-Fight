@@ -20,7 +20,7 @@ export default abstract class item {
 
 
 
-/*message.reply(eval(getLoc)("equiping_item"))
-message.reply(eval(getLoc)("waifu_already_equiped_item"))
-message.reply(eval(getLoc)("waifu_unequiping_item"))
-message.reply(eval(getLoc)("waifu_equiping_item"))*/
+/*message.addResponse(eval(getLoc)("equiping_item"))
+message.addResponse(eval(getLoc)("waifu_already_equiped_item"))
+message.addResponse(eval(getLoc)("waifu_unequiping_item"))
+message.addResponse(eval(getLoc)("waifu_equiping_item"))*/

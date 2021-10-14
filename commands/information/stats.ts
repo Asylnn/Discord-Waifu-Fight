@@ -40,6 +40,6 @@ export default async function stats(message: message, user: user){
   if(userMoneymult != 1){content += `${eval(getLoc)("incr_coins_gain")} : ${Math.round(userMoneymult*100 - 100)}% \n`}
   if(hasNakanoBonus != 0){content += `${eval(getLoc)("nakano_bonus")}`}
   message.reply(content)
-  user.waifus.forEach((waifu, index) => {if(waifu.id != "-1"){waifu.showStats(message, index)}})
+  user.waifus.forEach((waifu, index) => {if(waifu != null){waifu.showStats(message, index)}})
   return true
 }

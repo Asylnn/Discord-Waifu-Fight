@@ -8,8 +8,7 @@ export default function checkAction(user: user, message: message, userMention: a
   let updateProfile = false
 
   user.waifus.forEach(waifu => {
-
-    if(waifu.action.isDoingAction){
+    if(waifu?.action){
       if(waifu.action.createdTimestamp + waifu.action.timeWaiting < Date.now()){
 
         updateProfile = true
@@ -35,12 +34,12 @@ export default function checkAction(user: user, message: message, userMention: a
               luckMult = 10
               break;
           }
-          const reward = Math.floor(waifu.exp/4)*mult
+          const reward = Math.floor(waifu.stg/4)*mult
           user.money = reward
-          const gainXP = waifu.giveXP(Math.floor(mult*(100 + waifu.exp/1.5)), message)
-          message.reply(eval(getLoc)("waifu_back_from_exploration")); gainXP;
+          const gainXP = waifu.giveXP(Math.floor(mult*(100 + waifu.stg/1.5)), message)
+          message.addResponse(eval(getLoc)("waifu_back_from_exploration")); gainXP;
           if(Math.random() <= luckMult*waifu.luck/300){
-            message.reply(eval(getLoc)("waifu_got_artifact")); userMention;
+            message.addResponse(eval(getLoc)("waifu_got_artifact")); userMention;
             user.items.addItem("1") //artifact
           }
           user.quests.updateQuest("do_exploration")
@@ -50,15 +49,15 @@ export default function checkAction(user: user, message: message, userMention: a
 
         else if(waifu.action.type == "analyse"){
           user.giveXP(5 + randInt(11), message)
-          let gainXP = waifu.giveXP(Math.floor(150 + 1.5*waifu.exp), message)
+          let gainXP = waifu.giveXP(Math.floor(150 + 1.5*waifu.stg), message)
           if(randInt(2) == 0){
-            message.reply(eval(getLoc)("end_analyse_money")); gainXP;
+            message.addResponse(eval(getLoc)("end_analyse_money")); gainXP;
             user.money = 100 + waifu.action.lvl*80
           }
           else{
             let founditem = items.randItem(waifu.action.lvl, "ana")
             if(founditem) user.items.addItem(founditem)
-            message.reply(eval(getLoc)("end_analyse_item"))
+            message.addResponse(eval(getLoc)("end_analyse_item"))
           }
           user.quests.updateQuest("analyse_artifact")
         }
@@ -73,21 +72,24 @@ export default function checkAction(user: user, message: message, userMention: a
           if(randInt(difficulty) < waifu.int){
             let founditem = items.randItem(waifu.action.lvl, "par")
             if(founditem) user.items.addItem(founditem)
-            message.reply(eval(getLoc)("end_decrypt_item")); gainXP;
+            message.addResponse(eval(getLoc)("end_decrypt_item")); gainXP;
           }
           else{
             let reward = 100 + waifu.action.lvl*80
-            message.reply(eval(getLoc)("end_decrypt_money")); gainXP;
+            message.addResponse(eval(getLoc)("end_decrypt_money")); gainXP;
             user.money = reward
           }
           user.quests.updateQuest("decrypt_parchement")
         }
-        waifu.action.isDoingAction = false
+        waifu.action = null
 
       }
 
     }
 
   })
-  if(updateProfile) user.save()
+  if(updateProfile){
+    user.save()
+    message.reply()
+  }
 }

@@ -13,11 +13,11 @@ export default async function accept(message: message, user: user){
   const proposer = await users.get(deal.proposer.id)
   const accepter = await users.get(deal.accepter.id)
 
-  if(!deal.valid){message.reply(eval(getLoc)("deal_not_valid")); return true;}
+  if(!deal.valid){message.addResponse(eval(getLoc)("deal_not_valid")); return true;}
   deal["0"].forEach((object) => { //First it's the proposer that gives items to the accepter
     switch(object.type){
       case "waifu":
-        const waifu = deepCopy(deal.proposer.waifus[object.reference])
+        const waifu = deepCopy(deal.proposer.waifus[object.reference]!)
         waifu.owner = accepter
         deal.accepter.reserveWaifu.push(waifu)
         deal.proposer.waifus.splice(object.reference)
@@ -32,7 +32,7 @@ export default async function accept(message: message, user: user){
       case "consumableuser":
       case "equipmentuser":
       case "equipmentwaifu":
-      case "materials":
+      case "material":
         const item = deepCopy(deal.proposer.items[MAJ[object.type]][object.reference].item)
         deal.accepter.items.addItem(item, object.complement as number)
         deal.proposer.items.removeItem(item.id, object.complement as number)
@@ -45,7 +45,7 @@ export default async function accept(message: message, user: user){
   deal["1"].forEach((object) => {
     switch(object.type){
       case "waifu":
-        const waifu = deepCopy(deal.accepter.waifus[object.reference])
+        const waifu = deepCopy(deal.accepter.waifus[object.reference]!)
         waifu.owner = proposer
         deal.proposer.reserveWaifu.push(waifu)
         deal.accepter.waifus.splice(object.reference)
@@ -60,7 +60,7 @@ export default async function accept(message: message, user: user){
       case "consumableuser":
       case "equipmentuser":
       case "equipmentwaifu":
-      case "materials":
+      case "material":
         const item = deepCopy(deal.proposer.items[MAJ[object.type]][object.reference].item)
         deal.proposer.items.addItem(item, object.complement as number)
         deal.accepter.items.removeItem(item.id, object.complement as number)
@@ -72,6 +72,6 @@ export default async function accept(message: message, user: user){
   });
   let dealDiscordUser = deal.turn == "0" ? discordClient.users.cache.get(deal.accepter.id) as any : discordClient.users.cache.get(deal.proposer.id) as any
   deleteDeal(deal)
-  message.reply(eval(getLoc)("deal_accepted"))
+  message.addResponse(eval(getLoc)("deal_accepted"))
   dealDiscordUser.send(eval(getLoc)("deal_accepted"))
 }

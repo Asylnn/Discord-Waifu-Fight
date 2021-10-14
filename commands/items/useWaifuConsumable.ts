@@ -1,20 +1,21 @@
 import message from '../../class/message'
 import user from '../../class/user'
-import testArg from '../util/testArguments'
 import effect from '../../class/types/effect'
 import {modificator} from '../../class/types/modificator'
+import testItem from '../util/testItem'
+import testWaifu from '../util/testWaifu'
 
 export default async function useWaifuConsumable(message: message, user: user, args: Array<string>){
   const itemIndex = Math.floor(parseInt(args[1]) - 1)
   const waifuIndex = Math.floor(parseInt(args[2]) - 1)
 
-  if(!testArg(message, user, itemIndex, "validItem", "consumablewaifu")){return true;}
-  const item = user.items.consumableWaifu[itemIndex].item
-  if(!testArg(message, user, waifuIndex, "validWaifu")){return true;}
+  const item = testItem(message, user.items.consumableWaifu, itemIndex)
+  if(!item){return true;}
+  const waifu = testWaifu(message, user.waifus, waifuIndex)
+  if(!waifu){return true;}
 
 
   const effects = item.effects // Collection des effets de l'item usedItem
-  const waifu = user.waifus[waifuIndex]// Soit waifu, soit undefined
   let itemUsed = false
   effects.forEach((valueAndEffectType /*OR valueAndType*/: effect) => {
     const {value, effectType} = {...valueAndEffectType}
@@ -27,17 +28,21 @@ export default async function useWaifuConsumable(message: message, user: user, a
 
         if(value[1]){
           user.waifus.splice(waifuIndex)
-          message.reply(eval(getLoc)("extract_xp_die"))
+          message.addResponse(eval(getLoc)("extract_xp_die"))
         }
         else {
           waifu.lvl = 1
           waifu.xp = 0
           waifu.b_luck = waifu.o_luck
-          waifu.b_exp = waifu.o_exp
+          waifu.b_agi = waifu.o_agi
           waifu.b_int = waifu.o_int
+          waifu.b_dext = waifu.o_int
+          waifu.b_kaw = waifu.o_int
+          waifu.b_stg = waifu.o_stg
+
           waifu.stars = 1
         }
-        message.reply(eval(getLoc)("extract_xp_success"))
+        message.addResponse(eval(getLoc)("extract_xp_success"))
         itemUsed = true
 
         break;
@@ -47,11 +52,11 @@ export default async function useWaifuConsumable(message: message, user: user, a
           if(!waifu.modificators.some((waifuModificators: modificator) => waifuModificators.origin == modificator.origin)){
             waifu.modificators.push(modificator)
 
-            message.reply(eval(getLoc)("use_modificator"))
+            message.addResponse(eval(getLoc)("use_modificator"))
             itemUsed = true
           }
           else {
-            message.reply(eval(getLoc)("already_used_item_modificator"))
+            message.addResponse(eval(getLoc)("already_used_item_modificator"))
           }
         }
         break;
@@ -70,7 +75,7 @@ export default async function useWaifuConsumable(message: message, user: user, a
           itemUsed = true
         }
         else{
-          message.reply(eval(getLoc)("lvl_upper_lvl_max"))
+          message.addResponse(eval(getLoc)("lvl_upper_lvl_max"))
         }
         break;
     }

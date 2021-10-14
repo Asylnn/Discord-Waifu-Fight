@@ -1,11 +1,25 @@
 import message from '../../class/message'
 import user from '../../class/user'
-import testArg from '../util/testArguments'
+import getParameterObject from '../util/getParameterObject'
+import Discord from 'discord.js'
 
-export default async function exp(message: message, user: user, args: Array<string>){
-  const waifuIndex = Math.floor(parseInt(args[1]) - 1)
-  if(!testArg(message, user, waifuIndex, "validWaifu")){return true;}
-  const waifu = user.waifus[waifuIndex]
+commandManager?.create({
+  name:"explore",
+  type:"CHAT_INPUT",
+  description:"make a waifu explore the surrounding for potential artifacts",
+  options:[
+    {
+      name:"w",
+      description:"waifu slot -- what waifu do you want to explore with (no input will open select menu) -- help slot",
+      required:false,
+      type:"INTEGER"
+    }
+  ],
+})
+
+export default async function exp(message: message, user: user, args: Array<string>, interaction: Discord.CommandInteraction){
+  const waifu = await getParameterObject(message, user, args[1], interaction, "waifu")
+  if(!waifu){return true;}
   if(waifu.testSendMesAction(message, "waifu_already_doing_action")){return true;}
   let lvl = 2
   switch(true){
@@ -19,6 +33,6 @@ export default async function exp(message: message, user: user, args: Array<stri
       lvl = 4
       break;
   }
-  message.reply(eval(getLoc)("went_exploration"))
-  waifu.action = {isDoingAction:true, createdTimestamp:message.createdTimestamp, type:"exploration", timeWaiting: waifu.timeWaiting("exploration", lvl), lvl:lvl}
+  message.addResponse(eval(getLoc)("went_exploration"))
+  waifu.action = {createdTimestamp:message.createdTimestamp, type:"exploration", timeWaiting: waifu.timeWaiting("exploration", lvl), lvl:lvl}
 }

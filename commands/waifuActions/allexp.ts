@@ -1,11 +1,17 @@
 import message from '../../class/message'
 import user from '../../class/user'
 
+commandManager?.create({
+  name:"allexp",
+  type:"CHAT_INPUT",
+  description:"send all available waifus to explore",
+})
+
 export default async function allexp(message: message, user: user, args: Array<string>){
   let noWaifuEXP = true
   user.waifus.forEach(waifu => {
-    if(waifu.id != "-1"){
-      if(!waifu.action.isDoingAction){
+    if(waifu){
+      if(waifu.action){
         noWaifuEXP = false
         let lvl = 2
         switch(true){
@@ -19,8 +25,8 @@ export default async function allexp(message: message, user: user, args: Array<s
             lvl = 4
             break;
         }
-        message.reply(eval(getLoc)("went_exploration"))
-        waifu.action = {isDoingAction:true, createdTimestamp:message.createdTimestamp, type:"exploration", timeWaiting: waifu.timeWaiting("exploration", lvl), lvl:lvl}
+        message.addResponse(eval(getLoc)("went_exploration"))
+        waifu.action = {createdTimestamp:message.createdTimestamp, type:"exploration", timeWaiting: waifu.timeWaiting("exploration", lvl), lvl:lvl}
       }
     }
   });

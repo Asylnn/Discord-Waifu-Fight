@@ -30,10 +30,10 @@ function getRandom(){
 
 
 export default async function gacha(message: message, user: user){
-  if(user._money < GACHA_PRICE){message.reply(eval(getLoc)("buy_not_enough_money")); return true}
+  if(user._money < GACHA_PRICE){message.addResponse(eval(getLoc)("buy_not_enough_money")); return true}
   user._money -= GACHA_PRICE
   const waifu = new waifuClass(user, deepCopy(getRandom()))
   user.reserveWaifu.push(waifu);
-  message.reply(eval(getLoc)('gacha_got_waifu'))
+  message.addResponse(eval(getLoc)('gacha_got_waifu'))
 
 }

@@ -10,7 +10,7 @@ export default function checkQuests(message: message){
       users.get(global.globalAuction.higgestOffer.id).then(user => {
         const userMention = user.beMentionned ? guild.members.cache.get(user.id) : user.osuName
         user._money -= global.globalAuction.price
-        message.reply(eval(getLoc)("won_auction")); userMention;
+        message.addResponse(eval(getLoc)("won_auction")); userMention;
         user.save()
       })
     }
@@ -33,7 +33,7 @@ export default function checkQuests(message: message){
         let user = waifuserCol.get(highestIndex)
         let zaUser = user.beMentionned ? guild.members.cache.get(user.id) : user.osuName
         user.addItemTier(global.dailyChallenge.rewards[type])
-        message.reply(eval(getLoc)("won_"+type+"_challenge"))
+        message.addResponse(eval(getLoc)("won_"+type+"_challenge"))
       }
     });
     global.dailyChallenge.lb = [new collection, new collection]
@@ -47,7 +47,7 @@ function getRandItem(){
   let item, isItemNotUsable
   do {
     item = items.random()
-    isItemNotUsable = ["artifact", "par1", "par2", "consciousness_key", "perfect_circle", "dango"].includes(item.name) || item.tier > 1
+    isItemNotUsable = ["artifact", "par1", "par2", "consciousness_key", "perfect_circle", "dango"].includes(item.name)
   } while(isItemNotUsable)
   return item
 }

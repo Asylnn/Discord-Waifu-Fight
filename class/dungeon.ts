@@ -213,8 +213,10 @@ export default class dungeon {
     this.lg = user.lg
 
     user.waifus.forEach((waifu) => {
-      if(waifu)
-      this.waifus.push([waifu, waifu.phy*(100 - this.bossRes[0]) + waifu.psy*(100 - this.bossRes[1]) + waifu.mag*(100 - this.bossRes[2])])
+      if(waifu && waifu.action != null){
+        waifu.action = {createdTimestamp:0, timeWaiting:-1, type:"dungeon", lvl:1}
+        this.waifus.push([waifu, waifu.phy*(100 - this.bossRes[0]) + waifu.psy*(100 - this.bossRes[1]) + waifu.mag*(100 - this.bossRes[2])])
+      }
     })
 
 
@@ -284,7 +286,7 @@ export default class dungeon {
     osuAPI.getUserScores({userId: this.ownerOsuId, type:"recent", gamemode:"osu", limit:10}).then(scores => {
       console.log("user found! : " + this.ownerOsuId)
       const score = scores.find(score => score.beatmap.id == this.beatmap.id)
-      if(!score){this.message.reply(eval(getLoc)("beatmap_not_done")); return;}
+      if(!score){this.message.addResponse(eval(getLoc)("beatmap_not_done")); return;}
 
       //Some stuff
       const attackMultiplier = 100
@@ -327,6 +329,13 @@ export default class dungeon {
   }
 
   delete(){
+    users.get(this.ownerId).then(user => {
+      user.waifus.forEach(waifu => {
+        if(waifu != null && waifu.action != null && waifu.action.type == "dungeon"){
+          waifu.action = null
+        }
+      })
+    })
     this.timers.forEach(timer => {
       clearInterval(timer)
     })

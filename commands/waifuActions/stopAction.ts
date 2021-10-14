@@ -1,17 +1,31 @@
 import message from '../../class/message'
 import user from '../../class/user'
-import testArg from '../util/testArguments'
+import getParameterObject from '../util/getParameterObject'
+import Discord from 'discord.js'
 
-export default async function stopaction(message: message, user: user, args: Array<string>){
-  const indexWaifu = Math.floor(parseInt(args[1]) - 1)
+commandManager?.create({
+  name:"stopaction",
+  type:"CHAT_INPUT",
+  description:"stop the action a waifu is doing",
+  options:[
+    {
+      name:"w",
+      description:"waifu slot -- what waifu do you want to explore with (no input will open select menu) -- help slot",
+      required:false,
+      type:"INTEGER"
+    }
+  ],
+})
 
-  if(!testArg(message, user, indexWaifu, "validWaifu")){return true;}
-  let waifu = user.waifus[indexWaifu]
-  if(waifu.action.isDoingAction){
-    waifu.action.isDoingAction = false
-    message.reply(eval(getLoc)("stopping_action"))
+
+export default async function stopaction(message: message, user: user, args: Array<string>, interaction: Discord.CommandInteraction){
+  const waifu = await getParameterObject(message, user, args[1], interaction, "waifu")
+  if(!waifu){return true;}
+  if(waifu.action){
+    waifu.action = null
+    message.addResponse(eval(getLoc)("stopping_action"))
   }
   else{
-    message.reply(eval(getLoc)("not_doing_action"))
+    message.addResponse(eval(getLoc)("not_doing_action"))
   }
 }
