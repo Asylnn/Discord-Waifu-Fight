@@ -6,7 +6,6 @@ export default class templateWaifu {
   public readonly id: string
   public imgURL: string
   public name: string
-  public readonly diffLvlUp: number
   public readonly o_stg: number
   public readonly o_agi: number
   public readonly o_int: number
@@ -23,12 +22,11 @@ export default class templateWaifu {
   public readonly value: number
   public readonly isTradable: boolean
 
-  constructor(args: {id: string, imgURL: string, name: string, diffLvlUp: number, o_stg: number, o_agi: number, o_int: number, o_luck: number, o_dext: number, o_kaw: number,
+  constructor(args: {id: string, imgURL: string, name: string, o_stg: number, o_agi: number, o_int: number, o_luck: number, o_dext: number, o_kaw: number,
     u_stg: number, u_agi: number, u_int: number, u_luck: number, u_dext: number, u_kaw: number, rarity:number, value:number, isTradable:boolean}){
     this.id = args.id
     this.imgURL = args.imgURL
     this.name = args.name
-	  this.diffLvlUp = args.diffLvlUp
     this.o_stg = args.o_stg
     this.o_agi = args.o_agi
     this.o_int = args.o_int

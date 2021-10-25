@@ -35,7 +35,7 @@ export default async function claim_std(message: message, user: user){
   }
 
 
-    multiplicator *= (scoreDetails.length/100)*Math.pow(1.02337, scoreDetails.length/60)
+    multiplicator *= (scoreDetails.length/90)*Math.pow(1.02337, scoreDetails.length/60)
     console.log("multiplicator : " + multiplicator)
     /*if(scoreDetails.accuracy >= 0.999 && (2n & user.milestone) == 0n){
       try {

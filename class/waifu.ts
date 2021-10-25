@@ -45,7 +45,10 @@ export default class waifu extends templateWaifu{
 
 
   get xplvlup(){
-    return Math.floor(((1 + this.diffLvlUp)*this.lvl*this.lvl + 5*this.lvl + 20)*this.diffLvlUp)
+    if(this.lvl < 20){
+      return 0.55*Math.pow(this.lvl,2.2) + 20
+    }
+    return 1.025*((-13/256000)*Math.pow(this.lvl,4) + (4471/96000)*Math.pow(this.lvl,3) +(-161/50)*this.lvl*this.lvl+ (42893/480)*this.lvl -422.29)
   }
 
   get maxLvl(){

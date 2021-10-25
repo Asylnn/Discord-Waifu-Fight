@@ -3,6 +3,12 @@ import user from '../../class/user'
 import randInt from '../../genericFunctions/randInt'
 import consumableUserClass from '../../class/item/consumableUser'
 
+commandManager?.create({
+  name:"box",
+  type:"CHAT_INPUT",
+  description:"open a box if you have one (check by doing /rank)",
+})
+
 function boxLootTable(level: number){
   let consumableUser = new consumableUserClass("64", "", "", 0, 0, "", [])
   let random = randInt(100)

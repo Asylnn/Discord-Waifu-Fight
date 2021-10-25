@@ -435,6 +435,7 @@ export default function replyCommand(message: message, user: userClass, args: Ar
       break;*/
     case "GUILD_TEXT-box":
     case "osu-box":
+    case "interaction-box":
       commandStatus = box(message, user)
       break;
     case "GUILD_TEXT-u":

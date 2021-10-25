@@ -21,12 +21,17 @@ Ephemeral property in user (make user be able to choose if his slash commands ar
 skip score submission for dungeon with button omg big brain
 Make impossible to equip two same waifus based by id
 Bug /gamemode part of response message is 'undefined'
+1/3 of XP for dungeons?
 
  ------ Soon -------
 faire un wiki avec un tutoriel
 
 
+
 Next Update
+
+Remove user lvl
+Reitroduce POW,
 make information embed with collumns
 base starRating property in user
 Add new waifus
@@ -34,6 +39,8 @@ make waifu upgrade based on rarity, max level and copies
 Make 'defaultWaifu' usable on every commands
 waifu teams
 add property in user that remove the no confirm boolean
+Clan
+
 
 
 Possible optimisation

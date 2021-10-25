@@ -4,6 +4,18 @@ import makeCode from '../../genericFunctions/makeCode'
 import truncate from '../../genericFunctions/truncate'
 import {ACCOUNT_URL} from '../../files/config.json'
 
+commandManager?.create({
+  name:"createaccount",
+  type:"CHAT_INPUT",
+  description:"create a new waifu fight profile",
+  options:[{
+      name:"username",
+      description:"your osu username",
+      required:true,
+      type:"STRING"
+    }],
+})
+
 export default async function dmCreateacc(message: message, user: user, args: Array<string>){
   if((await users.exists(user.id) && user.verified)){message.addResponse(en.already_has_account); return true;}
   if(args.length == 1){message.addResponse(en.create_acc_no_osu_name); return true}
