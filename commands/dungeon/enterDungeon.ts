@@ -17,7 +17,7 @@ export default async function enterDungeon(message: message, user: user, args: A
   if(between(+args[2], 1, 10)){message.addResponse(eval(getLoc)("invalid_stage")); return;}
   if(between(+args[3], 0, 11)){message.addResponse(eval(getLoc)("invalid_star")); return;}
   let gamemode = "osu"
-  const starRating = Math.floor(+args[4])
+  const starRating = Math.floor(+args[3])
   if(!["osu", "mania", "taiko", "fruits"].includes(args[4])){
     gamemode = user.gamemode
   }

@@ -28,7 +28,7 @@ export default async function claim_std(message: message, user: user){
   if(allScoreInfo.mods.includes("HF")){scoreDetails.stars *= 1/1.35; scoreDetails.length *= 1.5}
   if(allScoreInfo.mods.includes("FL")){multiplicator *= 1 + (-1.5 + Math.pow(1.5, scoreDetails.stars))*(Math.min(1.5, allScoreInfo.max_combo/200))}
   if(allScoreInfo.mods.includes("HD")){multiplicator *= 1.08}
-  if(allScoreInfo.mods.includes("EZ") ){multiplicator *= 0.58*Math.pow(1.15, scoreDetails.stars)}
+  if(allScoreInfo.mods.includes("EZ")){multiplicator *= 0.58*Math.pow(1.15, scoreDetails.stars)}
   if(allScoreInfo.mods.includes("HR")){multiplicator *= 1.4}
   if(allScoreInfo.mods.includes("SO")){
     message.addResponse("SPUNOUT ? wut")

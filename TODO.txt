@@ -2,26 +2,28 @@ Add waifu's properties stg, phy, mag, psy, int, luck, ----Done
 Add critChance and attackSpeed formula
 Update upgrade function (is in commands/managment/waifuUpgrade.ts) ----Done
 Update level up function ----Done
-Do the command enter dungeon
-Do the Button abandon dungeon
-Update All Modificator names (fruits instead of catch, stg instead of EX...)
-claim command for dungeon (should now be a button) ----To be Reworked
-Add quests for completing a dungeon
-Add the new actions (maid cafe... )
-finish "use user consumable" in commands/items
-Add boutons to confirm instead of adding c to the end of the command
-Create converter from old profile to new profiles
-Add mapping genre to beatmaps database
-sort waifu new criteria with new stats (dext, kaw...)
+Do the command enter dungeon ----Done
+Do the Button abandon dungeon (V13)
+Update All Modificator names (fruits instead of catch, stg instead of EX...) ----+ ou - fait
+claim command for dungeon (should now be a button) ----To be Reworked (V13)
+Add quests for completing a dungeon ----Done
+Add the new actions (maid cafe... ) (V13)
+finish "use user consumable" in commands/items ----Ignored for the moment (V13)
+Add boutons to confirm instead of adding c to the end of the command (V13)
+Create converter from old profile to new profiles (+ tard)
+Add mapping genre to beatmaps database (+ tard)
+sort waifu new criteria with new stats (dext, kaw...) (V13)
 add language files ----Done
-Add everything in showstats (new stats, new modifiers...)
-Reaction Collector ----No Longer Needed
+Add everything in showstats (new stats, new modifiers...) ----Temporarly done
+Reaction Collector ----No Longer Needed (V13)
 Look closer into message.edit(...) ----Done
-Ephemeral property in user (make user be able to choose if his slash commands are ephemeral or not)
-skip score submission for dungeon with button omg big brain
-Make impossible to equip two same waifus based by id
-Bug /gamemode part of response message is 'undefined'
+Ephemeral property in user (make user be able to choose if his slash commands are ephemeral or not) (V13)
+skip score submission for dungeon with button omg big brain (V13)
+Make impossible to equip two same waifus based by id ----Done
+Bug /gamemode part of response message is 'undefined' (V13)
 1/3 of XP for dungeons?
+
+systeme de gacha / currency de gacha / pay 2 win
 
  ------ Soon -------
 faire un wiki avec un tutoriel

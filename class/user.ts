@@ -42,7 +42,8 @@ export default class user{
   public canAddMap = false
   public waifuXP = 0
   public currentDealId = "-1"
-  public isDoingDungeon: boolean = false
+  public isDoingDungeon = false
+  public gachaCurrency = 0
 
   constructor(id: string, osuName: string){
 

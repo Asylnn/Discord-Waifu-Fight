@@ -358,10 +358,10 @@ export default class dungeon {
       let whichEquipment = this.loots[randInt(this.loots.length)]
 
       equipments.push(new equipmentWaifu(whichEquipment[0], whichEquipment[1],  whichEquipment[2], itemRarity, whichEquipment[3], whichEquipment[4], whichEquipment[5]))
-
     }
-    users.get(this.ownerId).then((user ) => {
+    users.get(this.ownerId).then((user) => {
       user.items.equipmentWaifu.push(...equipments)
+      user.quests.updateQuest("finish_dungeon")
       /*
 
       user.items.materials.push ...

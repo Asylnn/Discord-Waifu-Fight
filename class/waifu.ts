@@ -232,11 +232,12 @@ export default class waifu extends templateWaifu{
     if(XPcatchMult != 1){modificators += `${eval(getLoc)("incr_xp_gain_catch")} : ${Math.round(XPcatchMult*100 - 100)}% \n`}
     if(XPtaikoMult != 1){modificators += `${eval(getLoc)("incr_xp_gain_taiko")} : ${Math.round(XPtaikoMult*100 - 100)}% \n`}
 
-    let addLuck = this.luck - this.b_luck
-    let multSTG = this.stg / this.b_stg
+    let multStg = this.stg / this.b_stg
+    let multAgi = this.agi / this.b_agi
     let multInt = this.int / this.b_int
-
-
+    let multLuck = this.luck / this.b_luck
+    let multDext = this.dext / this.b_dext
+    let multKaw = this.kaw / this.b_kaw
 
     const outfit = this.equipedItems.outfit
     const showOutfit = {name: eval(getLoc)("outfit"), value: outfit != null ? `${eval(getLoc)(outfit.name)} ${"★".repeat(outfit.rarity)} Lvl: ${outfit.lvl}`: eval(getLoc)("no_item_in_this_slot"), inLine: true}
@@ -251,10 +252,14 @@ export default class waifu extends templateWaifu{
     embed.addField("Stats", //the title of the embed
       `${eval(getLoc)("number")} : ${number + 1} \n
       Level : ${this.lvl}/${this.maxLvl}
-      XP : ${Math.round(this.xp)}/${this.lvl != this.maxLvl ? this.xplvlup : "-"} (+${Math.round((multXP - 1)*100)}%)
-      AGI : ${Math.round(this.stg)} (+${Math.round((multSTG - 1)*100)}%)
-      LUCK : ${this.luck} (+${addLuck})
-      INT : ${Math.round(this.int)} (+${Math.round((multInt - 1)*100)}%)
+      XP : ${Math.round(this.xp)}/${this.lvl != this.maxLvl ? this.xplvlup : "-"} ${multXP != 1 ? `(+${Math.round((multXP - 1)*100)}%)`}
+      STG : ${Math.round(this.stg)} ${multXP != 1 ? `(+${Math.round((multStg - 1)*100)}%)`}
+      AGI : ${Math.round(this.agi)} ${multXP != 1 ? `(+${Math.round((multAgi - 1)*100)}%)`}
+      INT : ${Math.round(this.int)} ${multXP != 1 ? `(+${Math.round((multInt - 1)*100)}%)`}
+      LUCK : ${Math.round(this.luck)} ${multXP != 1 ? `(+${Math.round((multLuck - 1)*100)}%)`}
+      DEXT : ${Math.round(this.dext)} ${multXP != 1 ? `(+${Math.round((multDext - 1)*100)}%)`}
+      KAW : ${Math.round(this.kaw)} ${multXP != 1 ? `(+${Math.round((multKaw - 1)*100)}%)`}
+
       ${eval(getLoc)("rarity")} : ${this.rarityName(message)} \n`)
       embed.addFields(showOutfit, showWeapon, showAccessory)
 

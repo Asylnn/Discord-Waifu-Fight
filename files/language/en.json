@@ -271,7 +271,7 @@
     "remplaced_waifu": "Success!",
     "replace_waifu": "Do you want to replace ${remplacedWaifu.name} by ${reserveWaifu.name}? To confirm, do the same command and add 'c' to the end",
     "replace_waifu_empty_slot": "Do you want to replace an empty slot by ${reserveWaifu.name}? To confirm, do the same command and add 'c' to the end",
-    "stats_header": "You have ${Math.floor(user.money)}¥! \r\n",
+    "stats_header": "Vous avez ${Math.floor(user.money)}¥! \r\nVous avez ${user.gachaCurrency} ${fr.gacha_currency_name}",
     "stats_modificator": "~ Modificators ~  \r\n ",
     "not_buyable": "This waifu is not buyable!",
     "buyed_waifu": "You bought ${waifuBoughtName}",
@@ -425,5 +425,7 @@
     "decryption": "decryption",
     "gacha_got_waifu": "You got the waifu ${waifu.name}!",
     "waifu_is_doing_this_action": "${waifu.name} is doing the action ${actionType}, she will finish in ${timeLeft}",
-    "buy_not_enough_money": "You don't have enough money! it costs 250yen to do a gacha!"
+    "buy_not_enough_money": "You don't have enough money! It costs 250yen to do a gacha!",
+    "duplicate_replace_waifu": "This waifu is already by your side !",
+    "gacha_currency_name": "Dream essence",
 }

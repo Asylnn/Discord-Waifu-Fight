@@ -4,13 +4,14 @@ import testReserveWaifu from '../util/testReserveWaifu'
 import waifu from '../../class/waifu'
 
 export default async function replaceWaifu(message: message, user: user, args: Array<string>){
-  const waifuIndex = Math.floor(parseInt(args[2]) - 1)
+  const waifuIndex = Math.floor(parseInt(args[1]) - 1)
   const reserveWaifuIndex = Math.floor(parseInt(args[2]) - 1)
 
-  let reserveWaifu = testReserveWaifu(message, user.waifus, reserveWaifuIndex)
+  let reserveWaifu = testReserveWaifu(message, user.reserveWaifu, reserveWaifuIndex)
   if(!reserveWaifu){return true}
 
   if(user.waifus.length < waifuIndex || waifuIndex < 0 || waifuIndex == undefined){message.addResponse(eval(getLoc)("invalid_waifu_replace_waifu")); return true;}
+  if(user.waifus.some((waifu) => waifu?.id == reserveWaifu?.id)){message.addResponse(eval(getLoc)("duplicate_replace_waifu")); return true;}
   let isEmpty = true, remplacedWaifu = new waifu(user)
   if(user.waifus[waifuIndex]){
     remplacedWaifu = user.waifus[waifuIndex]!

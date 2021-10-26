@@ -36,6 +36,9 @@ const quest9: quest = {name:"get_claims", type:"taiko", objective:16, difficulty
 const quest10: quest = {name:"get_claims", type:"mania", objective:4, difficulty:1, generalType:"claim", state:0}
 const quest11: quest = {name:"get_claims", type:"mania", objective:8, difficulty:2, generalType:"claim", state:0}
 const quest12: quest = {name:"get_claims", type:"mania", objective:16, difficulty:3, generalType:"claim", state:0}
+const quest25: quest = {name:"finish_dungeon", type:"finish_dungeon", objective:2, difficulty:1, generalType:"other", state:0}
+const quest26: quest = {name:"finish_dungeon", type:"finish_dungeon", objective:4, difficulty:2, generalType:"other", state:0}
+const quest27: quest = {name:"finish_dungeon", type:"finish_dungeon", objective:8, difficulty:3, generalType:"other", state:0}
 
 var artifact = new material("1", "artifact", "artifact_description", 1, 50, "")
 var par1 = new material("2", "par1", "par1_description", 1, 50, "")
@@ -171,7 +174,7 @@ declare global {
   var gachaWaifus: Array<[templateWaifu, number]>
 }
 
-global.quests = [quest1, quest2, quest3, quest4, quest5, quest6 /*quest7 OOPS!*/, quest8, quest9, quest10, quest11, quest12, quest13, quest14, quest15, quest16, quest17, quest18, quest19, quest20, quest21, quest22, quest23, quest24]
+global.quests = [quest1, quest2, quest3, quest4, quest5, quest6 /*quest7 OOPS!*/, quest8, quest9, quest10, quest11, quest12, quest13, quest14, quest15, quest16, quest17, quest18, quest19, quest20, quest21, quest22, quest23, quest24, quest25, quest26, quest27]
 global.items = new globalItemManager<string, itemAll>([]) // 52 items
 global.itemShop = [{item:item_extractor, price:1000}, {item:item_extractor2, price:2000}]
 
