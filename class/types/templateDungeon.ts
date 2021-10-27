@@ -29,15 +29,23 @@ A la fin du 3ème tour : Si tu as tué le boss, les loots sont générés.
 Sinon, c'est la défaite.
 */
 
+
+import {beatmap, mapGenre} from './beatmap'
 import equipmentWaifu from "../item/equipmentWaifu";
-export type dungeonNameType = 'weapon_dungeon' | 'accessory_dungeon' | 'outfit_dungeon'
-export type stageType = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
-export interface dungeon {
+export default interface templateDungeon {
   createdTimestamp: number
-  name: dungeonNameType
-  stage: stageType
+  name: string
+  description: string
   baseBossHP: number
-  timerRound: number
-  isUserDoingDungeon: boolean
-  possibleLoots: Array<equipmentWaifu>
+  bossRes: [number, number, number]
+  items: Array<{
+    "id":string
+    "name":string
+    "description":string
+    "imgURL":string
+    "type":"outfit" | "weapon" | "accessory"
+    "set": string
+  }>
+  beatmaps: [beatmap]
+  mapGenre: mapGenre
 }

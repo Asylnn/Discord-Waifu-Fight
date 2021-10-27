@@ -1,8 +1,9 @@
-interface beatmap {
+
+export type mapGenre = 'jumps' | 'streams'
+export interface beatmap {
   beatmapSetId:number
   id:number
   genre:string
   language:string
-  mapGenre:string
+  mapGenre:mapGenre
 }
-export default beatmap

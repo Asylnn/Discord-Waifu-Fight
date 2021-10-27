@@ -1,17 +1,13 @@
 import message from '../../class/message'
-import user from '../../class/user'
-import giveClaimXP from './giveClaimXP'
 
-export default async function maniaClaim(message: message, user: user){
-  let mode = "mania"
-  const scores = await osuAPI.getUserScores({userId: user.osuId, type:"recent", gamemode:"osu", limit:10})
+export default async function maniaClaim(message: message, osuId: number, beatmapId: number){
+  const scores = await osuAPI.getUserScores({userId: osuId, type:"recent", gamemode:"osu", limit:10})
 
-  console.log("user found! : " + user.osuName)
+  console.log("user found! : " + osuId)
 
-  const allScoreInfo = scores.find(score => score.beatmap.id == user.fight.beatmapId)
-  if(!allScoreInfo){message.addResponse(eval(getLoc)("beatmap_not_done")); return;}
+  const allScoreInfo = scores.find(score => score.beatmap.id == beatmapId)
+  if(!allScoreInfo){message.addResponse(eval(getLoc)("beatmap_not_done")); return 0;}
 
-  user.playCount.mania++
   const scoreDetails = {
     length:allScoreInfo.beatmap.total_length,
     accuracy:allScoreInfo.accuracy,
@@ -21,8 +17,7 @@ export default async function maniaClaim(message: message, user: user){
     score:allScoreInfo.score
   }
   console.log(scoreDetails)
-  let multiplicator = user.multXP
-  user.multXP = 1
+  let multiplicator = 1
 
   if(allScoreInfo.mods.includes("FL")){multiplicator *= 3.5}
   if(allScoreInfo.mods.includes("HD")){multiplicator *= 1.15}
@@ -63,6 +58,5 @@ export default async function maniaClaim(message: message, user: user){
       m = 0
       break;
   }
-  let rawXP = Math.floor(26*Math.pow(1.7, scoreDetails.stars - 1)*m*Math.pow(scoreDetails.accuracy, 2.5)*multiplicator)
-  giveClaimXP(message, user, rawXP, mode)
+  return Math.floor(26*Math.pow(1.7, scoreDetails.stars - 1)*m*Math.pow(scoreDetails.accuracy, 2.5)*multiplicator)
 }

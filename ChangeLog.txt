@@ -7,3 +7,19 @@ can now do o!gamemode instead of o!setmode
 renamed command osuid to setosuid
 No longer possible to have twice the same waifu in the team
 Add quests for completing a dungeon
+
+Changed some waifus
+changed rarity of rem from rare to legendary
+changed rarity of Hitagi Senjougahara from rare to lengendary
+changed rarity of Kaguya Shinomiya from rare to legendary 
+changed image of Itsuki Nakano and Louise
+
+Added numerous waifus:
+-Ram (legendary)
+-Emilia (legendary)
+-Echidna (epic)
+-Beatrice (epic)
+-Crusch Karsten (rare)
+-Felt (rare)
+-Petra (common)
+-Frederica (common)

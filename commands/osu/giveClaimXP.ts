@@ -6,17 +6,20 @@ import {modificatorType} from '../../class/types/modificator'
 import hasModificators from '../../genericFunctions/hasModificators'
 import randInt from '../../genericFunctions/randInt'
 
-export default function giveClaimXP(message: message, user: user, rawXP: number, mode: string){
+export default function giveClaimXP(message: message, user: user, rawXP: number, mode: "osu" | "taiko" | "mania" | "fruits"){
 
   user.quests.updateQuest("quest_claim_" + mode as questType)
+  user.playCount[mode]++
+
   //let lb = global.dailyChallenge.lb[1]
   /*let claim = lb.has(user.id) ? lb.get(user.id) : 0
   lb.set(user.id, ++claim)*/
 
   let waifu = user.waifus[user.fight.indexWaifu]!
-  let mult = getModificators(waifu, 'mult_XP_' + mode as modificatorType)
+  let mult = getModificators(waifu, 'mult_XP_' + mode as modificatorType)*user.multXP
   let gainXP = waifu.giveXP(rawXP*mult, message)
   user.giveXP(1 + randInt(1), message)
+  user.multXP = 1
 
   console.log("rawXP : " + rawXP)
   console.log("XP : " + gainXP)

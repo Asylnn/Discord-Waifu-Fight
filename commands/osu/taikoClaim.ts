@@ -1,17 +1,13 @@
 import message from '../../class/message'
-import user from '../../class/user'
-import giveClaimXP from './giveClaimXP'
 
-export default async function claim_taiko(message: message, user: user){
-  let mode = "taiko"
-  const scores = await osuAPI.getUserScores({userId: user.osuId, type:"recent", gamemode:"osu", limit:10})
+export default async function claim_taiko(message: message, osuId: number, beatmapId: number){
+  const scores = await osuAPI.getUserScores({userId: osuId, type:"recent", gamemode:"osu", limit:10})
 
-  console.log("user found! : " + user.osuName)
+  console.log("user found! : " + osuId)
 
-  const allScoreInfo = scores.find(score => score.beatmap.id == user.fight.beatmapId)
-  if(!allScoreInfo){message.addResponse(eval(getLoc)("beatmap_not_done")); return true;}
+  const allScoreInfo = scores.find(score => score.beatmap.id == beatmapId)
+  if(!allScoreInfo){message.addResponse(eval(getLoc)("beatmap_not_done")); return 0;}
 
-  user.playCount.taiko++
   const scoreDetails = {
     length:allScoreInfo.beatmap.total_length,
     accuracy:allScoreInfo.accuracy,
@@ -20,8 +16,7 @@ export default async function claim_taiko(message: message, user: user){
     stars:allScoreInfo.beatmap.difficulty_rating
   }
   console.log(scoreDetails)
-  let multiplicator = user.multXP
-  user.multXP = 1
+  let multiplicator = 1
 
   if(allScoreInfo.mods.includes("FL")){multiplicator *= 3.5}
   if(allScoreInfo.mods.includes("HD")){multiplicator *= 1.15}
@@ -41,6 +36,5 @@ export default async function claim_taiko(message: message, user: user){
     message.addResponse(eval(getLoc)("milestone_2"))
     user.milestone = (user.milestone | 2)
   }*/
-  let rawXP = Math.floor(25*Math.pow(1.7, scoreDetails.stars - 1)*scoreDetails.maxCombo*Math.pow(scoreDetails.accuracy, 2)*multiplicator/scoreDetails.maxComboMap)
-  giveClaimXP(message, user, rawXP, mode)
+  return Math.floor(25*Math.pow(1.7, scoreDetails.stars - 1)*scoreDetails.maxCombo*Math.pow(scoreDetails.accuracy, 2)*multiplicator/scoreDetails.maxComboMap)
 }

@@ -3,14 +3,16 @@ import user from '../../class/user'
 import Discord from  'discord.js'
 import getParameterObject from '../util/getParameterObject'
 
-commandManager?.create({
+
+
+commandManager.create({
   name:"analyse",
   type:"CHAT_INPUT",
-  description:"make a waifu analyse an artifact for potential rewards",
+  description:"Make a waifu analyze an artifact for potential rewards",
   options:[
     {
       name:"w",
-      description:"waifu slot -- what waifu do you want to analyse with (no input will open select menu) -- help slot",
+      description:"waifu slot -- Which waifu will analyse an artifact (no input will open select menu) -- help slot",
       required:false,
       type:"INTEGER"
     }

@@ -90,9 +90,9 @@ Rareté 5 : Légendaire :   3000-3200   NivMax = 100   Niveau1 : 20-100 (-300pts
 DIFF 800                  ()
 Rareté 4 : Épique :       2200-2400   NivMax = 90    Niveau1 : 15-73  (-220pts) => (1980 - 1780)/89  => 22.45-20.00
 DIFF 700
-Rareté 3 : Très rare :    1500-1700   NivMax = 80    Niveau1 : 10-50  (-150pts) => (1350 - 1150)/79  => 17.09-14.56
+Rareté 3 : Très rare :    1600-1800   NivMax = 80    Niveau1 : 10-50  (-150pts) => (1350 - 1150)/79  => 17.09-14.56
 DIFF 600
-Rareté 2 : Rare :         900-1100    NivMax = 70    Niveau1 : 6-30  (-90pts)   => (1010 - 810)/69  =>  14.64-11.74
+Rareté 2 : Rare :         900-1200    NivMax = 70    Niveau1 : 6-30  (-90pts)   => (1010 - 810)/69  =>  14.64-11.74
 DIFF 500
 Rareté 1 : Commune :      400-600     NivMax = 60    Niveau1 : 3-13 (-40pts)    => (560 - 360)/59   =>  9.49-6.10
 
@@ -125,27 +125,11 @@ import waifu from "./waifu"
 import gamemode from "./types/gamemode"
 import randInt from '../genericFunctions/randInt'
 import equipmentType from './types/equipmentType'
-import {ATTACK_LINE_NUMBER_IN_EMBED} from '../files/config.json'
+import {ATTACK_LINE_NUMBER_IN_EMBED, IDLE_TIME_OF_INTERACTIONS, BEATMAP_HISTORY_SIZE} from '../files/config.json'
 import Discord from 'discord.js'
 import beatmap from './types/beatmap'
 
-const dungeonMap: {[key:string]: {
-  name: string
-  description: string
-  items: Array<[string, string, string, string, equipmentType, string]>
-  bossRes: [number, number, number]
-  mapGenre:string
-  beatmaps: Array<beatmap>
-}} = {
-  "1": {
-    name: "princess_dungeon",
-    description : "princess_description",
-    items:[["id", "name", "desc", "img", "outfit", "set"]],
-    bossRes:[10,10,10],
-    mapGenre:"osu-stream",
-    beatmaps:[]
-  }
-}
+
 
 const bossHPPerStage = new Array(100,1000,10000,100000,1000000,10000000,100000000,1000000000,10000000000,100000000000) // Valeur des 10 étages
 const raritiesPerStage : Array<[number, number, number]> = Array(
@@ -172,7 +156,7 @@ export default class dungeon {
   private timeRemaining = dungeonDurationInSeconds / 10
   private readonly id: string
   private readonly name: string
-  private readonly stage: number
+  private readonly stage: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
   private bossHP: number //Vie actuelle
   private readonly loots: Array<[string, string, string, string, equipmentType, string]> //Soit la liste des équipements des 2 sets et la ressource pour monter de niveau les équipements (dans une autre variable)
   private readonly probabilityOfRarities: [number, number, number] // Tableau de 3 nombres
@@ -185,10 +169,12 @@ export default class dungeon {
   private message: Discord.Message = "" as unknown as Discord.Message //Quick fix for the ts error message is not defined in constructor (because probably assigned in a async function), should not stay like that
   private visibleAttackSentences: Array<string> = []
   private timers: Array<NodeJS.Timeout> = []
-  private beatmap: beatmap = {id:0, beatmapSetId:0, genre:"no_genre", language:"japanese", mapGenre:"unknown"}
+  private beatmap: beatmap = {id:0, beatmapSetId:0, genre:"anime", language:"japanese", mapGenre:"unknown"}
   private beatmaps: Array<beatmap>
   private lg: string
-  private readonly mapGenre:string
+  private readonly mapGenre: string
+  private mapTimestamp : number = Date.now()
+  private recentMapsIds : Array<beatmap> = []
 
 
 
@@ -200,6 +186,7 @@ export default class dungeon {
     this.name = dungeonMap[id].name
     this.stage = stage
     this.beatmaps = dungeonMap[id].beatmaps
+    this.recentMapsIds = user.playedMapsIds
     this.mapGenre = dungeonMap[id].mapGenre
     this.getNewMap()
     this.bossHP = bossHPPerStage[stage - 1]
@@ -235,9 +222,7 @@ export default class dungeon {
       })
     })
 
-    this.waifus.forEach(waifuAndDamage => {
-      const waifu = waifuAndDamage[0]
-      const damage = waifuAndDamage[1]
+    this.waifus.forEach(([waifu, damage]) => {
 
       this.timers.push(setInterval(() => {
         const critMultiplier = randInt(100) + 1 > waifu.critRate ? 1 : critDamageMultiplier
@@ -278,6 +263,49 @@ export default class dungeon {
         this.delete()
       }
     }, intervalChecksInMilliseconds))
+
+    const collector = (await message.reply()).createMessageComponentCollector({componentType:'BUTTON', idle:IDLE_TIME_OF_INTERACTIONS})
+
+    collector.on('collect', (interaction: Discord.ButtonInteraction) => {
+      switch (interaction.id){
+        case "claim_map":
+        this.recentMapsIds.push(this.beatmap.id)
+        recentMapsIds.remove(0)
+        user.playedMapsIds.unshift(beatmap.id)
+        user.playedMapsIds.length = BEATMAP_HISTORY_SIZE
+        const rawXp = osuClaim(message,this.ownerOsuId,this.beatmap.id)
+
+        this.waifus.forEach(([waifu, damage], index) => {
+          waifu.giveXP(rawXP/(this.waifus.length*3),message)
+        })
+        /*TODO : formule des dégats grace a un claim de map*/
+        const attackMultiplier = 100
+        let totalDamage = 0
+        this.waifus.forEach(waifuAndDamage => {
+          const waifu = waifuAndDamage[0]
+          const damage = waifuAndDamage[1]
+          const critMultiplier = 1 + waifu.critRate*1.5
+          const speedMultiplier = 30/waifu.attackSpeed
+          totalDamage += critMultiplier*speedMultiplier*damage
+        })
+        message.addResponse(eval(getLoc)("claim_dungeon_attack")))
+        this.getNewMap()
+        /*for(const waifu : waifu in this.waifus){
+
+        }*/
+        break;
+        case "skip_map":
+          (Date.now()) - this.mapTimestamp >= 60000 ? this.getNewMap() : message.reply("generated_map_earlier")
+        break;
+        case "abandon_dungeon"
+
+        break;
+        default: message.reply("Je ne sais pas comment vous avez fait mais vous avez trouvé un bouton caché !")
+      }
+    });
+      message.addButton("claim_map","claim_map","SUCCESS"),
+      message.addButton("skip_map","skip_map","SECONDARY"),
+      message.addButton("abandon_dungeon","abandon_dungeon","DANGER")
 
   }
 

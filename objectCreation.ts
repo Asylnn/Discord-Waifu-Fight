@@ -10,6 +10,7 @@ import dungeon from './class/dungeon'
 import collection from './class/collection'
 import randInt from './genericFunctions/randInt'
 import templateWaifu from './class/templateWaifu'
+import templateDungeon from './class/types/templateDungeon'
 
 const quest1: quest = {name:"get_claims", type:"osu", objective:4, difficulty:1, generalType:"claim", state:0}
 const quest2: quest = {name:"get_claims", type:"osu", objective:8, difficulty:2, generalType:"claim", state:0}
@@ -172,7 +173,34 @@ declare global {
   var dungeons: Map<string, dungeon>
   var waifus: collection<string, templateWaifu>
   var gachaWaifus: Array<[templateWaifu, number]>
+  var dungeonMap: Map<string, templateDungeon>
 }
+
+
+dungeonMap = new Map()
+dungeonMap.set("1", {
+  createdTimestamp: Date.now(),
+  name: "princess_dungeon",
+  description : "princess_description",
+  baseBossHP: 150,
+  items:[{
+    id:"1",
+    name:"princess_outfit",
+    description:"princess_outfit_description",
+    imgURL:"",
+    type:"outfit",
+    set:"princess"
+  }],
+  bossRes:[10,10,10],
+  mapGenre:"streams",
+  beatmaps:[{
+    id:7270,
+    beatmapSetId:7270,
+    genre:"rock",
+    language:"japanese",
+    mapGenre:"streams"
+  }]
+})
 
 global.quests = [quest1, quest2, quest3, quest4, quest5, quest6 /*quest7 OOPS!*/, quest8, quest9, quest10, quest11, quest12, quest13, quest14, quest15, quest16, quest17, quest18, quest19, quest20, quest21, quest22, quest23, quest24, quest25, quest26, quest27]
 global.items = new globalItemManager<string, itemAll>([]) // 52 items
@@ -300,9 +328,9 @@ var itemsParchement = [itemsParchementL1, itemsParchementL2]
 
 global.waifus = new collection<string, templateWaifu>()
 
-var createTemplateWaifu = (id: string, imgURL: string, name: string, diffLvlUp: number, o_stg: number, o_agi: number, o_int: number, o_luck: number, o_dext: number, o_kaw: number,
+var createTemplateWaifu = (id: string, imgURL: string, name: string, o_stg: number, o_agi: number, o_int: number, o_luck: number, o_dext: number, o_kaw: number,
   u_stg: number, u_agi: number, u_int: number, u_luck: number, u_dext: number, u_kaw: number, rarity:number, value:number, isTradable:boolean = true) => {
-  waifus.set(id, new templateWaifu({id, imgURL,name,diffLvlUp, o_stg, o_agi, o_int, o_luck, o_dext, o_kaw, u_stg, u_agi, u_int, u_luck, u_dext, u_kaw, rarity, value, isTradable}))
+  waifus.set(id, new templateWaifu({id, imgURL,name, o_stg, o_agi, o_int, o_luck, o_dext, o_kaw, u_stg, u_agi, u_int, u_luck, u_dext, u_kaw, rarity, value, isTradable}))
 }
 
 createTemplateWaifu("1",'https://cdn.discordapp.com/attachments/504676515414540289/683320377929105415/43e236eaee120b8e57183428fcd50a98.jpg', "Shouko Nishimiya", 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
@@ -418,6 +446,7 @@ var nakano = new templateWaifu("1002",'https://cdn.discordapp.com/attachments/50
 for (var i = 1; i < 45; i++) {
   waifus.set(i.toString(), eval("bwaifu"+i))
 }
+
 waifus.set("1000", Yui)
 waifus.set("0", custom)
 waifus.set("1001", ultimate)
