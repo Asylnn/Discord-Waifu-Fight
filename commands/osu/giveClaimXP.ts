@@ -6,8 +6,8 @@ import {modificatorType} from '../../class/types/modificator'
 import hasModificators from '../../genericFunctions/hasModificators'
 import randInt from '../../genericFunctions/randInt'
 
-export default function giveClaimXP(message: message, user: user, rawXP: number, mode: "osu" | "taiko" | "mania" | "fruits"){
-
+export default function giveClaimXP(message: message, user: user, rawXP: number){
+  const mode = user.fight.mode
   user.quests.updateQuest("quest_claim_" + mode as questType)
   user.playCount[mode]++
 
@@ -15,14 +15,14 @@ export default function giveClaimXP(message: message, user: user, rawXP: number,
   /*let claim = lb.has(user.id) ? lb.get(user.id) : 0
   lb.set(user.id, ++claim)*/
 
-  let waifu = user.waifus[user.fight.indexWaifu]!
-  let mult = getModificators(waifu, 'mult_XP_' + mode as modificatorType)*user.multXP
-  let gainXP = waifu.giveXP(rawXP*mult, message)
+  const waifu = user.waifus[user.fight.indexWaifu]!
+  const mult = getModificators(waifu, 'mult_XP_' + mode as modificatorType)*user.multXP
+  const earnedXP = waifu.giveXP(rawXP*mult, message)
   user.giveXP(1 + randInt(1), message)
   user.multXP = 1
 
   console.log("rawXP : " + rawXP)
-  console.log("XP : " + gainXP)
+  console.log("XP : " + earnedXP)
 
   if(hasModificators(waifu, 'get_quest_reroll')){
     const probability = getModificators(waifu, 'mult_XP_' + mode as modificatorType)

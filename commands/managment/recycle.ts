@@ -7,14 +7,56 @@ import {LEVEL_PERMISSIONS} from '../../files/config.json'
 import waifuClass from '../../class/waifu'
 import testItem from '../util/testItem'
 import testReserveWaifu from '../util/testReserveWaifu'
+import Discord from 'discord.js'
 
-export default async function recycleItem(message: message, user: user, args: Array<string>){
+commandManager.create({
+  name:"recycle",
+  type:"CHAT_INPUT",
+  description:"sometime things has to be done to earn money...",
+  options:[
+    {
+      name:"waifu",
+      description:"recycle a waifu",
+      required:true,
+      type:"SUB_COMMAND"
+    },{
+      name:"reserveWaifu",
+      description:"recycle a reserve waifu",
+      required:true,
+      type:"SUB_COMMAND"
+    },{
+      name:"item",
+      description:"recycle a item",
+      required:true,
+      type:"SUB_COMMAND",
+      options:[{
+        name:"it",
+        description:"item type -- ADD DESCRIPTION",
+        required:true,
+        choices:[{name:"consumableuser", value:"consumableuser"},
+        {name:"consumablewaifu", value:"consumablewaifu"},
+        {name:"equipmentuser", value:"equipmentuser"},
+        {name:"equipmentwaifu", value:"equipmentwaifu"},
+        {name:"material", value:"material"},
+      ],
+        type:"STRING"
+      }]
+    },{
+      name:"index",
+      description:"Index",
+      required:true,
+      type:"INTEGER"
+    },
+  ],
+})
+
+export default async function recycleItem(message: message, user: user, args: Array<string>, interaction: Discord.CommandInteraction){
   if(user.lvl < LEVEL_PERMISSIONS.recycle){message.addResponse(eval(getLoc)("lvl_too_low")); return true;}
-  const index = Math.floor(parseInt(args[2]) - 1)
-
-  const type = args[1]
   let reward = 0
   let waifu:waifu | null
+
+  const {i:index, t:type} = !message.isInteraction ? {"i":parseInt(args[2]) - 1, "t":args[1]} : {"i":interaction.options.getInteger('index')!,"t":interaction.options.getSubcommand()}
+
 
   switch(type){
     case 'consumableuser':

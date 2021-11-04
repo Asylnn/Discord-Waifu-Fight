@@ -1,4 +1,4 @@
-import message from '../../class/message'
+/*import message from '../../class/message'
 import user from '../../class/user'
 import {GACHA_PRICE} from '../../files/config.json'
 import randInt from '../../genericFunctions/randInt'
@@ -37,3 +37,4 @@ export default async function gacha(message: message, user: user){
   message.addResponse(eval(getLoc)('gacha_got_waifu'))
 
 }
+*/

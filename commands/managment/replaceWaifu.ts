@@ -2,10 +2,30 @@ import message from '../../class/message'
 import user from '../../class/user'
 import testReserveWaifu from '../util/testReserveWaifu'
 import waifu from '../../class/waifu'
+import Discord from 'discord.js'
 
-export default async function replaceWaifu(message: message, user: user, args: Array<string>){
-  const waifuIndex = Math.floor(parseInt(args[1]) - 1)
-  const reserveWaifuIndex = Math.floor(parseInt(args[2]) - 1)
+commandManager.create({
+  name:"recycle",
+  type:"CHAT_INPUT",
+  description:"sometime things has to be done to earn money...",
+  options:[
+    {
+      name:"w",
+      description:"waifu index",
+      required:true,
+      type:"INTEGER"
+    },{
+      name:"rw",
+      description:"reserve waifu index",
+      required:true,
+      type:"INTEGER"
+    },
+  ],
+})
+
+export default async function replaceWaifu(message: message, user: user, args: Array<string>, interaction: Discord.CommandInteraction){
+  const waifuIndex = message.isInteraction ? interaction.options.getInteger("w")! : Math.floor(parseInt(args[1]) - 1)
+  const reserveWaifuIndex = message.isInteraction ? interaction.options.getInteger("rw")! : Math.floor(parseInt(args[2]) - 1)
 
   let reserveWaifu = testReserveWaifu(message, user.reserveWaifu, reserveWaifuIndex)
   if(!reserveWaifu){return true}

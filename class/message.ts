@@ -29,6 +29,10 @@ export default class globalMessage{
     this.ephemeral = ephemeral
   }
 
+  get isInteraction(){
+    return this.type == "interaction"
+  }
+
   addResponse(content: string){
     if(content) /*If it's not an empty string*/ this.response += content + "\r\n"
   }

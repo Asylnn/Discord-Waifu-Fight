@@ -4,7 +4,7 @@ import makeCode from '../../genericFunctions/makeCode'
 import truncate from '../../genericFunctions/truncate'
 import {ACCOUNT_URL} from '../../files/config.json'
 
-commandManager?.create({
+/*commandManager?.create({
   name:"createaccount",
   type:"CHAT_INPUT",
   description:"create a new waifu fight profile",
@@ -14,7 +14,7 @@ commandManager?.create({
       required:true,
       type:"STRING"
     }],
-})
+})*/
 
 export default async function dmCreateacc(message: message, user: user, args: Array<string>){
   if((await users.exists(user.id) && user.verified)){message.addResponse(en.already_has_account); return true;}

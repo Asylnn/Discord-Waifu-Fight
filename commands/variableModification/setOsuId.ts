@@ -15,13 +15,7 @@ commandManager?.create({
 })
 
 export default async function setOsuId(message:message, user:user, args: Array<string>, interaction:Discord.CommandInteraction){
-  let osuid: number
-  if(message.type != "interaction"){
-    osuid = parseInt(args[1])
-  }
-  else{
-    osuid = interaction.options.getInteger('id')!
-  }
+  const osuid = !message.isInteraction ? parseInt(args[1]) : interaction.options.getInteger('id')!
 
   if(isNaN(osuid)){message.addResponse(eval(getLoc)('nan_osu_id')); return true}
   user.osuId = osuid

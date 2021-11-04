@@ -1,13 +1,44 @@
 import message from '../../class/message'
 import user from '../../class/user'
 import {LEVEL_PERMISSIONS} from '../../files/config.json'
+import Discord from 'discord.js'
 
-export default async function buy(message: message, user: user, args: Array<string>){
+commandManager.create({
+  name:"buy",
+  type:"CHAT_INPUT",
+  description:"It's shopping time!",
+  options:[
+    {
+      name:"item",
+      description:"buy an item from the \"official shop\"",
+      required:true,
+      type:"SUB_COMMAND"
+    },{
+      name:"user",
+      description:"buy an item from an user",
+      required:true,
+      type:"SUB_COMMAND"
+    },{
+      name:"auction",
+      description:"propose a price for the auction",
+      required:true,
+      type:"SUB_COMMAND"
+    },{
+      name:"index",
+      description:"Index",
+      required:true,
+      type:"INTEGER"
+    }
+  ],
+})
+
+export default async function buy(message: message, user: user, args: Array<string>, interaction: Discord.CommandInteraction){
   let price
   if(user.lvl < LEVEL_PERMISSIONS.buy){message.addResponse(eval(getLoc)("lvl_too_low")); return true;}
 
-  const index = Math.floor(parseInt(args[2]) - 1)
-  switch (args[1]) {
+  const {i:index, t:type} = !message.isInteraction ? {"i":parseInt(args[2]) - 1, "t":args[1]} : {"i":interaction.options.getInteger('index')!,"t":interaction.options.getSubcommand()}
+
+  switch (type) {
     case "item":
       if(!itemShop[index]){message.addResponse(eval(getLoc)("buy_item_dont_exist")); return true;}
       price = itemShop[index].price

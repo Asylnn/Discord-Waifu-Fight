@@ -25,6 +25,7 @@ skip score submission for dungeon with button omg big brain (V13)
 Bug /gamemode part of response message is 'undefined' (V13)
 1/3 of XP for dungeons?
 gacha system / gacha currency / pay 2 win
+upgrade waifu stuff (copies?)
 
  ------ Soon -------
 

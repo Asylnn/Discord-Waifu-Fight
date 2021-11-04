@@ -7,13 +7,59 @@ import {LEVEL_PERMISSIONS} from '../../files/config.json'
 import testItem from '../util/testItem'
 import testWaifu from '../util/testWaifu'
 import testReserveWaifu from '../util/testReserveWaifu'
+import Discord from 'discord.js'
 
-export default async function sell(message: message,user: user, args: Array<string>){
+commandManager.create({
+  name:"buy",
+  type:"CHAT_INPUT",
+  description:"It's shopping time!",
+  options:[
+    {
+      name:"waifu",
+      description:"sell a waifu",
+      required:true,
+      type:"SUB_COMMAND"
+    },{
+      name:"reserveWaifu",
+      description:"sell a reserve waifu",
+      required:true,
+      type:"SUB_COMMAND"
+    },{
+      name:"item",
+      description:"sell a item",
+      required:true,
+      type:"SUB_COMMAND",
+      options:[{
+        name:"it",
+        description:"item type -- ADD DESCRIPTION",
+        required:true,
+        choices:[{name:"consumableuser", value:"consumableuser"},
+        {name:"consumablewaifu", value:"consumablewaifu"},
+        {name:"equipmentuser", value:"equipmentuser"},
+        {name:"equipmentwaifu", value:"equipmentwaifu"},
+        {name:"material", value:"material"},
+      ],
+        type:"STRING"
+      }]
+    },{
+      name:"index",
+      description:"Index",
+      required:true,
+      type:"INTEGER"
+    },{
+      name:"price",
+      description:"the price you want to set",
+      required:true,
+      type:"INTEGER"
+    }
+  ],
+})
+
+export default async function sell(message: message,user: user, args: Array<string>, interaction: Discord.CommandInteraction){
   if(user.lvl < LEVEL_PERMISSIONS.buy){message.addResponse(eval(getLoc)("lvl_too_low")); return true;}
 
-  const index = Math.floor(parseInt(args[2]) - 1)
-  const price = Math.floor(parseInt(args[3]))
-  const type = args[1]
+  const {i:index, p:price, t:type} = !message.isInteraction ? {"i":parseInt(args[2]) - 1, "t":args[1], "p":Math.floor(parseInt(args[3]))} : {"i":interaction.options.getInteger('index')!,"t":interaction.options.getSubcommand(), "p": Math.floor(interaction.options.getInteger('price')!)}
+
   switch (type) {
     case "consumableuser":
     case "consumablewaifu":

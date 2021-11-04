@@ -31,15 +31,11 @@ export default async function editname(message: message, user: user, args: Array
 
   const waifu = await getParameterObject(message, user, args[1], interaction, "waifu")
   if(!waifu){return true;}
-
-
   let newWaifuName = ""
-  if(message.type == "interaction"){
-    newWaifuName = interaction.options.getString('name')!
-  }
-  else{
-    newWaifuName = truncate(message.content, 1)
-  }
+
+
+  newWaifuName = message.type == "interaction" ? interaction.options.getString('name')! : truncate(message.content, 1)
+
 
   if(newWaifuName.length > 250){message.addResponse(eval(getLoc)("waifu_name_too_long")); return true;}
   newWaifuName = newWaifuName.replace(".", "")
