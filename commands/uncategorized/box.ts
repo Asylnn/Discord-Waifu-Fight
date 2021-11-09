@@ -88,7 +88,7 @@ function boxLootTable(level: number){
 
 
 export default async function box(message: message, user: user){
-  if(user.boxs.length == 0){message.addResponse(eval(getLoc)("no_lootbox")); return true;}
+  if(!user.boxs.length){message.addResponse(eval(getLoc)("no_lootbox")); return true;}
   user.quests.updateQuest("quest_box", 1)
-  user.items.addItem(boxLootTable(user.boxs.pop() as number))
+  user.items.addItem(boxLootTable(user.boxs.pop()!))
 }

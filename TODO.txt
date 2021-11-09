@@ -26,11 +26,14 @@ Bug /gamemode part of response message is 'undefined' (V13)
 1/3 of XP for dungeons?
 gacha system / gacha currency / pay 2 win
 upgrade waifu stuff (copies?)
+update help txt about equip commands
+transform waifuCollection into a page embed
 
  ------ Soon -------
 
 Next Update
 
+Item to accelerate or complete an action
 Remove user lvl
 Reitroduce POW,
 make information embed with collumns

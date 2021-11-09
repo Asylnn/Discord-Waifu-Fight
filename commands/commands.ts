@@ -98,6 +98,7 @@ commandManager?.create({
 
 export default function replyCommand(message: message, user: userClass, args: Array<string>, initialMessage: any): void{
   let commandStatus: Promise<boolean | undefined> = new Promise((resolve) => resolve(true))
+  message.authorId = user.id
   args[0] = args[0]?.replace(PREFIX, "")
   message.lg = user.lg
   const command = message.type + "-" + (args[0] || initialMessage.commandName)

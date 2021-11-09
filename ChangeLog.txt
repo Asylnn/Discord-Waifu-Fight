@@ -1,17 +1,18 @@
 you can now do o!explore instead of o!exp
-Slash commands bla bla bla...
 language now cannot be done from osu (that will for sure cause issue for a lot of users (0 out of 0 is a lot kekw))
 same for o!setmode
 can now do o!defaultwaifu instead of o!default
 can now do o!gamemode instead of o!setmode
 renamed command osuid to setosuid
 No longer possible to have twice the same waifu in the team
-Add quests for completing a dungeon
+
+Reverted back the way to equip / use items, it's to say (without slash commands):
+o!equip waifu/user / item index / waifu id (if needed) / slot
 
 Changed some waifus
 changed rarity of rem from rare to legendary
 changed rarity of Hitagi Senjougahara from rare to lengendary
-changed rarity of Kaguya Shinomiya from rare to legendary 
+changed rarity of Kaguya Shinomiya from rare to legendary
 changed image of Itsuki Nakano and Louise
 
 Added numerous waifus:
@@ -23,3 +24,12 @@ Added numerous waifus:
 -Felt (rare)
 -Petra (common)
 -Frederica (common)
+
+Big changes:
+New Stats bla bla bla...
+New Actions bla bla bla...
+Slash commands bla bla bla...
+Dungeons bla bla bla...
+Added quests for completing a dungeon
+Gacha blablabla...
+waifuEquipment bla bla bla...

@@ -4,7 +4,7 @@ export default function createSimpleEmbed(page:number, totalPages:number, title:
   const embed = new Discord.MessageEmbed()
   embed.setFooter(`Page ${page}/${totalPages}`)
   embed.setColor(0x35A7BF)
-  embed.setTitle(title)
+  embed.setTitle(eval(getLoc)(title))
   embed.setDescription(content)
   return embed
 }

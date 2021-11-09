@@ -3,6 +3,8 @@ import user from '../../class/user'
 import testReserveWaifu from '../util/testReserveWaifu'
 import waifu from '../../class/waifu'
 import Discord from 'discord.js'
+import {IDLE_TIME_OF_INTERACTIONS} from '../../files/config.json'
+import checkClicker from '../util/checkClicker'
 
 commandManager.create({
   name:"recycle",
@@ -40,7 +42,12 @@ export default async function replaceWaifu(message: message, user: user, args: A
   else{
     remplacedWaifu.name = eval(getLoc)("empty_slot")
   }
-  if(args[3] == "c"){
+
+  message.addButton("confirm", "confirm", "PRIMARY")
+  const collector = (await message.reply(eval(getLoc)("replace_waifu"))).createMessageComponentCollector({componentType:'BUTTON', idle:IDLE_TIME_OF_INTERACTIONS})
+
+  collector.on('collect', (interaction: Discord.ButtonInteraction) => {
+    if (checkClicker(interaction, user.id)) return true;
     if(!isEmpty){
       if(remplacedWaifu.action){
         remplacedWaifu.action = null
@@ -51,8 +58,6 @@ export default async function replaceWaifu(message: message, user: user, args: A
     user.waifus[waifuIndex] = reserveWaifu
     user.reserveWaifu.splice(reserveWaifuIndex)
     message.addResponse(eval(getLoc)("remplaced_waifu"))
-  }
-  else {
-    message.addResponse(eval(getLoc)("replace_waifu"))
-  }
+  })
+
 }

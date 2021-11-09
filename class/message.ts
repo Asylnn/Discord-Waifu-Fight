@@ -1,13 +1,15 @@
 import Discord from 'discord.js'
-import {TEST_BUILD} from '../files/config.json'
+import {TEST_BUILD, IDLE_TIME_OF_INTERACTIONS} from '../files/config.json'
 import waifu from './waifu'
 type messageType = 'osu' | "DM" | 'GUILD_TEXT' | 'GUILD_NEWS' | 'interaction' | Discord.ThreadChannelTypes
+import checkClicker from '../commands/util/checkClicker'
+//import turnPage from '../commands/util/turnPage'
 
 
 export default class globalMessage{
   public lg: string
   public readonly content: string
-  //public readonly author: {o, id}
+  public authorId: string = "-1"
   public readonly type: messageType
   public readonly createdTimestamp: number
   public channel: any
@@ -96,6 +98,24 @@ export default class globalMessage{
     else if(this.haveToUpdate){
       this.channel.update(messageReplyOptions)
     }
+  }
+
+  async createPageInteraction(numberOfPages:number, createEmbed:(page:number) => Discord.MessageEmbed){
+    this.addButton("pageLeft", "<<", "PRIMARY")
+    this.addButton("pageRight", ">>", "PRIMARY")
+    let page = 1
+    this.embeds[0] = createEmbed(page)
+    const collector = (await this.reply()).createMessageComponentCollector({componentType:'BUTTON', idle:IDLE_TIME_OF_INTERACTIONS})
+
+    collector.on('collect', (interaction: Discord.ButtonInteraction) => {
+      if(checkClicker(interaction, this.authorId)) return true;
+      interaction.customId == "pageLeft" ? page-- : page++
+      if(page == numberOfPages + 1) page = 1
+      else if(page == 0) page = numberOfPages
+      this.embeds[0] = createEmbed(page)
+      interaction.update({embeds:this.embeds, content:" "})
+    })
+    return true
   }
 
   /*edit(messageId:string = "", content: string = ""){

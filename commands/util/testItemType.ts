@@ -1,7 +1,6 @@
 import message from '../../class/message'
-type itemTypeLowerCase = 'consumablewaifu' | 'consumableuser' | 'equipmentuser' | 'equipmentwaifu' | 'materials'
 
-export default function testArg(message: message, itemType: itemTypeLowerCase){
+export default function testArg(message: message, itemType: string){
     if(['userconsumable' , 'waifuconsumable' , 'useritem' , 'waifuitem' , 'materials'].includes(itemType)){
       return true
     }

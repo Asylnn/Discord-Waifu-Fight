@@ -8,6 +8,9 @@ import waifuClass from '../../class/waifu'
 import testItem from '../util/testItem'
 import testReserveWaifu from '../util/testReserveWaifu'
 import Discord from 'discord.js'
+import checkClicker from '../util/checkClicker'
+import {IDLE_TIME_OF_INTERACTIONS} from '../../files/config.json'
+
 
 commandManager.create({
   name:"recycle",
@@ -55,8 +58,18 @@ export default async function recycleItem(message: message, user: user, args: Ar
   let reward = 0
   let waifu:waifu | null
 
-  const {i:index, t:type} = !message.isInteraction ? {"i":parseInt(args[2]) - 1, "t":args[1]} : {"i":interaction.options.getInteger('index')!,"t":interaction.options.getSubcommand()}
+  let {i:index, t:type} = !message.isInteraction ? {"i":parseInt(args[2]) - 1, "t":args[1]} : {"i":interaction.options.getInteger('index')!, "t":interaction.options.getSubcommand()}
+  if(type == "item") type = interaction.options.getString("it")!
 
+  message.addButton("confirm", "confirm", "PRIMARY")
+
+  const collectorOn = async (text:string, instructions:Function) => {
+    const collector = (await message.reply(text)).createMessageComponentCollector({componentType:'BUTTON', idle:IDLE_TIME_OF_INTERACTIONS})
+    collector.on('collect', (interaction: Discord.ButtonInteraction) => {
+      if(checkClicker(interaction, user.id)) return true;
+      instructions()
+    })
+  }
 
   switch(type){
     case 'consumableuser':
@@ -74,36 +87,42 @@ export default async function recycleItem(message: message, user: user, args: Ar
       if(amount > items[index].qty){message.addResponse(eval(getLoc)("not_enough_item")); return true;}
       reward = item.value*amount
 
-      if(args.pop() != "c"){message.addResponse(eval(getLoc)("sell_item_confirm")); return true;}
-      user._money += reward
-      message.addResponse(eval(getLoc)("sell_item"))
+      collectorOn(eval(getLoc)("sell_item_confirm"), () => {
+        user._money += reward
+        message.reply(eval(getLoc)("sell_item"))
+        user.items.removeItem(item.id, amount)
+      })
 
-      user.items.removeItem(item.id, amount)
+
+
 
       break;
     case 'waifu':
-
       waifu = testWaifu(message, user.waifus, index)
       if(!waifu){return true;}
 
       reward = waifu.value + Math.floor(waifu.value*waifu.lvl/50) + waifu.value*(waifu.stars - 1)/4
-      if(args[3] != "c"){message.addResponse(eval(getLoc)("sell_waifu_confirm")); return true;}
-      user._money += reward
-      message.addResponse(eval(getLoc)("sell_waifu"))
-      user.waifus[index] = new waifuClass(user)
+      collectorOn(eval(getLoc)("sell_waifu_confirm"), () => {
+        user._money += reward
+        message.reply(eval(getLoc)("sell_waifu"))
+        user.waifus[index] = new waifuClass(user)
+      })
       break;
+
     case 'reservewaifu':
       waifu = testReserveWaifu(message, user.waifus, index)
       if(!waifu){return true;}
 
       reward = waifu.value + Math.floor(waifu.value*waifu.lvl/50) + waifu.value*(waifu.stars - 1)/4
-      if(args[3] != "c"){message.addResponse(eval(getLoc)("sell_waifu_confirm")); return true;}
-      user._money += reward
-      message.addResponse(eval(getLoc)("sell_waifu"))
-      user.reserveWaifu.splice(index)
+      collectorOn(eval(getLoc)("sell_waifu_confirm"), () => {
+        user._money += reward
+        message.reply(eval(getLoc)("sell_waifu"))
+        user.reserveWaifu.splice(index)
+      })
       break;
     default:
       message.addResponse(eval(getLoc)('invalid_recycle'))
       break;
+
   }
 }
