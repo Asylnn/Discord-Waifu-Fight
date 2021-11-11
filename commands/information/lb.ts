@@ -1,17 +1,38 @@
 import message from '../../class/message'
 import user from '../../class/user'
-import seelb from './seelb'
-import leaderboardType from '../../class/types/leaderboardType'
+import Discord from 'discord.js'
+import createSimpleEmbed from '../util/createSimpleEmbed'
+import {OBJECT_PER_PAGE} from '../../files/config.json'
 
-export default async function lb(message: message, user: user, args: Array<string>){
-  let leaderboardType:leaderboardType, evLvl: number[] = [], evName: string[] = [], evClaim: number[] = [], evQuest: number[] = [], detArray: any[]
+
+commandManager?.create({
+  name:"leaderboard",
+  type:"CHAT_INPUT",
+  description:"see the global leaderboard",
+  options:[
+    {
+      name:"sort",
+      description:"how do you want to sort the leaderboard (by default is by lvl)",
+      required:false,
+      type:"STRING",
+      choices:[{name:"claim", value:"claim"},
+        {name:"quest", value:"quest"},
+        {name:"lvl", value:"lvl"}
+      ],
+    },
+  ],
+})
+
+export default async function lb(message: message, args: Array<string>, interaction:Discord.CommandInteraction){
+  let leaderboardType:string, evLvl: number[] = [], evName: string[] = [], evClaim: number[] = [], evQuest: number[] = [], detArray: any[]
   (await users.all()).forEach((user: user) => {
     evLvl.push(user.lvl) //and we only take their xp and lvl
     evName.push(user.osuName)
     evClaim.push(user.totalClaims)
     evQuest.push(user.quests.totalQuestDone)
   });
-  switch(args[1]){
+  leaderboardType = interaction.options.getString("sort") || args[1]
+  switch(leaderboardType){
     case "claim":
     case "claims":
       leaderboardType = "claim"
@@ -31,13 +52,7 @@ export default async function lb(message: message, user: user, args: Array<strin
   for(var i = 0; i < detArray.length; i++){
     for(var j = i; j < detArray.length; j++){
       if(detArray[j] > detArray[i]){
-        console.log(detArray[i]);
-        console.log(detArray[j]);
-
         [detArray[i], detArray[j]] = [detArray[j], detArray[i]];
-
-        console.log(detArray[i]);
-        console.log(detArray[j]);
         [evLvl[i], evLvl[j]] = [evLvl[j], evLvl[i]];
         [evName[i], evName[j]] = [evName[j], evName[i]];
         [evClaim[i], evClaim[j]] = [evClaim[j], evClaim[i]];
@@ -45,7 +60,16 @@ export default async function lb(message: message, user: user, args: Array<strin
       }
     }
   }
-  seelb(message, {evName, evLvl, evClaim, evQuest, leaderboardType}, 1, user.id, true)
+  const numberOfPages = Math.ceil(detArray.length/OBJECT_PER_PAGE)
+
+  message.createPageInteraction(numberOfPages, page => {
+    const embed = createSimpleEmbed(eval(getLoc)('leaderboard_title'), " ")
+    embed.addField("Leaderboard", evName.slice((page - 1)*OBJECT_PER_PAGE, page*OBJECT_PER_PAGE).join('\r\n'), true); //addField(name, value, inline);
+    embed.addField("Level", evLvl.slice((page - 1)*OBJECT_PER_PAGE, page*OBJECT_PER_PAGE).join('\r\n'), true);
+    if(leaderboardType == "claim") embed.addField("Claims", evClaim.slice((page - 1)*OBJECT_PER_PAGE, page*OBJECT_PER_PAGE).join("\r\n") , true);
+    if(leaderboardType == "quest") embed.addField("Quests", evQuest.slice((page - 1)*OBJECT_PER_PAGE, page*OBJECT_PER_PAGE).join("\r\n"), true)
+    return embed
+  })
 
   return true
 }

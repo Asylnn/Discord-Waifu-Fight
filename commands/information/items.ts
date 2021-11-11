@@ -1,6 +1,5 @@
 import message from '../../class/message'
 import user from '../../class/user'
-import seeItems from './seeItems'
 import {MAJ} from '../../class/types/itemType'
 import {OBJECT_PER_PAGE} from '../../files/config.json'
 import testItemType from '../util/testItemType'
@@ -18,9 +17,7 @@ export default async function items(message: message, user: user, args: Array<st
       const {item, qty} = {...items[i]}
       content += `${i+1}: (x${qty}) ${eval(getLoc)(item.name) + "★".repeat(item.rarity)} | ${eval(getLoc)(item.description)} \r\n`
     }
-    return createSimpleEmbed(page, numberOfPages, 'items_title', content+" ")
+    return createSimpleEmbed(eval(getLoc)('items_title'), content+" ")
   })
-  seeItems(message, items, 1, user.id, true)
-
   return true
 }

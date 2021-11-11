@@ -177,7 +177,7 @@ declare global {
 }
 
 
-dungeonMap = new Map()
+global.dungeonMap = new Map()
 dungeonMap.set("1", {
   createdTimestamp: Date.now(),
   name: "princess_dungeon",

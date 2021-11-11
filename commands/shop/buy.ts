@@ -3,6 +3,16 @@ import user from '../../class/user'
 import {LEVEL_PERMISSIONS} from '../../files/config.json'
 import Discord from 'discord.js'
 
+const options: Discord.ApplicationCommandChoicesData[] = [
+  {
+    name:"index",
+    description:"Index",
+    required:true,
+    type:"INTEGER"
+  }
+]
+
+
 commandManager.create({
   name:"buy",
   type:"CHAT_INPUT",
@@ -11,23 +21,22 @@ commandManager.create({
     {
       name:"item",
       description:"buy an item from the \"official shop\"",
-      required:true,
+      required:false,
+      options:options,
       type:"SUB_COMMAND"
     },{
       name:"user",
       description:"buy an item from an user",
-      required:true,
-      type:"SUB_COMMAND"
+      required:false,
+      type:"SUB_COMMAND",
+      options:options
+
     },{
       name:"auction",
       description:"propose a price for the auction",
-      required:true,
-      type:"SUB_COMMAND"
-    },{
-      name:"index",
-      description:"Index",
-      required:true,
-      type:"INTEGER"
+      required:false,
+      type:"SUB_COMMAND",
+      options:options
     }
   ],
 })

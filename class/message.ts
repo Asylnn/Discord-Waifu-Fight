@@ -68,7 +68,7 @@ export default class globalMessage{
   reply(additionnalContent:string = " ", ephemeral = true){
     this.addResponse(additionnalContent)
     const messageReplyOptions = {
-      content:this.response,
+      content:this.response + " ",
       embeds:this.embeds,
       components:this.components,
     };
@@ -106,13 +106,13 @@ export default class globalMessage{
     let page = 1
     this.embeds[0] = createEmbed(page)
     const collector = (await this.reply()).createMessageComponentCollector({componentType:'BUTTON', idle:IDLE_TIME_OF_INTERACTIONS})
-
     collector.on('collect', (interaction: Discord.ButtonInteraction) => {
       if(checkClicker(interaction, this.authorId)) return true;
       interaction.customId == "pageLeft" ? page-- : page++
       if(page == numberOfPages + 1) page = 1
       else if(page == 0) page = numberOfPages
       this.embeds[0] = createEmbed(page)
+      this.embeds[0].setFooter(`Page ${page}/${numberOfPages}`)
       interaction.update({embeds:this.embeds, content:" "})
     })
     return true

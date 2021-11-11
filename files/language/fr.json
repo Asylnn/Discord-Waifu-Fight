@@ -241,12 +241,11 @@
     "invalid_url": "Vous devez mettre le lien de l'image!",
     "mention_deal": "S'il vous plaît, mentionnez la personne avec qui vous souhaitez commencer le deal!",
     "mentionned_already_in_deal": "La personne avec qui vous voulez faire un deal est déjà en deal avec une autre personne",
-    "mention_no_account": "S'il vous plait, mentionnez une personne qui possède un compte!",
     "start_deal": "Vous avez commencé un deal avec ${discordMessage.mentions.users.first().username} la suite des commandes se fait en message privé avec le bot! Pour savoir comment marchent les deals allez dans la section deal de o!help (page 9)",
     "start_deal_pm": "${discordMessage.author.username} veut faire un échange avec vous! Attendez qu'il remplisse les termes avant de pouvoir ajouter les votres",
     "has_not_discord_permission": "Vous n'avez pas les permissions!",
     "xp_box_moderator_description": "Une boite d'XP venant d'un modérateur! Contient ${box_xp}XP!",
-    "rank_of": "Rank de : ${discordMessage.mentions.users.first().username}",
+    "rank_of": "Rang de : ${user.osuName}",
     "your_rank": "Votre rank!",
     "total_power": "Puissance totale : ${pow} \r\n",
     "get_notifications": "Vous allez de nouveau recevoir des notifications",
@@ -325,6 +324,7 @@
     "lobby_already_requested": "Vous avez déjà demandé la création d'une salle!",
     "lobby_creation_waiting": "La demande de création de lobby à été envoyée! Attendez que plus de personnes demandent un lobby, vous serez invité lorsque le lobby sera disponible!",
     "no_account": "Vous n'avez pas de compte!",
+    "arg_no_account": "Cet utilisateur n'a pas de compte!",
     "waifu_invalid_no_arg": "Vous devez selectionner une waifu (un nombre entre 1 et 3), si vous savez pas quel est le numéro de la waifu, faites o!stats",
     "waifu_invalid": "Vous n'avez pas selectionné une waifu valide !",
     "waifu_invalid_no_waifu": "Vous n'avez pas de waifu à l'emplacement ${index + 1}",
@@ -428,7 +428,7 @@
         "${waifu.name} s'est concentrée sur la formule de son sort pour ne pas vous decevoir et grâce à sa détermination, elle à reussi a infliger ${totalDamage} de dégats !",
         "La tempête de glace de ${waifu.name} à percée l'armure du boss et lui a retiré ${totalDamage} points de vie !",
         "La puissante magie qui emmane de ${waifu.name} lui a permis d'effectuer ${totalDamage} dégats !",
-        "Le pouvoir insoupconné de ${waifu.name} à surpris le boss et il a perdu ${totalDamage} points de vie !",
+        "Le pouvoir insoupconné de ${waifu.name} à surpris le boss et il a perdu ${totalDamage} points de vie !"
       ],
       "physical" : [
         "${waifu.name} à jailli son arme, l'a levée au ciel et s'est servie des rayons du soleil pour infliger ${totalDamage} de dégats !",
@@ -443,11 +443,6 @@
         "${waifu.name} à réussi à faire jouer une partie de cache-cache au boss, et elle en a profité pour lui faire des chatouilles pour un total de ${totalDamage} points de vie !"
       ],
       "1" : [],
-      "2" : [],
+      "2" : []
     }
 }
-{magical : [],
-physical : [],
-psychic : [],
-waifu1: [],
-...}

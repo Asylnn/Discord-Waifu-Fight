@@ -2,11 +2,9 @@ import message from '../../class/message'
 import user from '../../class/user'
 //import editPagesEmbed from './editPagesEmbed'
 import {LEVEL_PERMISSIONS} from '../../files/config.json'
-import {HELP_PAGE_NUMBER, IDLE_TIME_OF_INTERACTIONS} from '../../files/config.json'
+import {HELP_PAGE_NUMBER} from '../../files/config.json'
 import createSimpleEmbed from '../util/createSimpleEmbed'
-import turnPage from '../util/turnPage'
-import Discord from 'discord.js'
-import checkClicker from '../util/checkClicker'
+
 
 
 
@@ -41,7 +39,7 @@ export default async function textHelp(message: message, user: user){
         if(user.lvl >= LEVEL_PERMISSIONS.deal) subpage = 2
         break
     }
-    return createSimpleEmbed(page, HELP_PAGE_NUMBER, `help_${page}_title` ,eval(getLoc)(`help_${page}_description_${subpage}`))
+    return createSimpleEmbed(eval(getLoc)(`help_${page}_title`) ,eval(getLoc)(`help_${page}_description_${subpage}`))
   })
   return true
 }

@@ -7,18 +7,19 @@ import Discord from 'discord.js'
 
 
 commandManager.create({
-  name:"use",
+  name:"usexp",
   type:"CHAT_INPUT",
   description:"c o n s u m e",
-  options:[{
-      name:"w",
-      description:"waifu slot -- Which waifu will analyse an artifact (no input will open select menu) -- help slot",
-      required:false,
-      type:"INTEGER"
-    },{
+  options:[
+    {
       name:"amount",
       description:"amount of XP to give",
       required:true,
+      type:"INTEGER"
+    },{
+      name:"w",
+      description:"waifu slot -- Which waifu will analyse an artifact (no input will open select menu) -- help slot",
+      required:false,
       type:"INTEGER"
     }
   ],
@@ -26,7 +27,6 @@ commandManager.create({
 
 export default async function useXP(message: message, user: user, args: Array<string>, interaction:Discord.CommandInteraction){
   const amount = message.isInteraction ? interaction.options.getInteger('amount')! : Math.floor(parseInt(args[1]) - 1)
-
   const waifu = await getParameterObject(message, user, args[3], interaction, "waifu")
   if(!waifu) return true
 

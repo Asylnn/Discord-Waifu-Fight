@@ -252,13 +252,13 @@ export default class waifu extends templateWaifu{
     embed.addField("Stats", //the title of the embed
       `${eval(getLoc)("number")} : ${number + 1} \n
       Level : ${this.lvl}/${this.maxLvl}
-      XP : ${Math.round(this.xp)}/${this.lvl != this.maxLvl ? this.xplvlup : "-"} ${multXP != 1 ? `(+${Math.round((multXP - 1)*100)}%)`}
-      STG : ${Math.round(this.stg)} ${multXP != 1 ? `(+${Math.round((multStg - 1)*100)}%)`}
-      AGI : ${Math.round(this.agi)} ${multXP != 1 ? `(+${Math.round((multAgi - 1)*100)}%)`}
-      INT : ${Math.round(this.int)} ${multXP != 1 ? `(+${Math.round((multInt - 1)*100)}%)`}
-      LUCK : ${Math.round(this.luck)} ${multXP != 1 ? `(+${Math.round((multLuck - 1)*100)}%)`}
-      DEXT : ${Math.round(this.dext)} ${multXP != 1 ? `(+${Math.round((multDext - 1)*100)}%)`}
-      KAW : ${Math.round(this.kaw)} ${multXP != 1 ? `(+${Math.round((multKaw - 1)*100)}%)`}
+      XP : ${Math.round(this.xp)}/${this.lvl != this.maxLvl ? this.xplvlup : "-"} ${multXP != 1 ? `(+${Math.round((multXP - 1)*100)}%)` : ""}
+      STG : ${Math.round(this.stg)} ${multXP != 1 ? `(+${Math.round((multStg - 1)*100)}%)` : ""}
+      AGI : ${Math.round(this.agi)} ${multXP != 1 ? `(+${Math.round((multAgi - 1)*100)}%)` : ""}
+      INT : ${Math.round(this.int)} ${multXP != 1 ? `(+${Math.round((multInt - 1)*100)}%)` : ""}
+      LUCK : ${Math.round(this.luck)} ${multXP != 1 ? `(+${Math.round((multLuck - 1)*100)}%)` : ""}
+      DEXT : ${Math.round(this.dext)} ${multXP != 1 ? `(+${Math.round((multDext - 1)*100)}%)` : ""}
+      KAW : ${Math.round(this.kaw)} ${multXP != 1 ? `(+${Math.round((multKaw - 1)*100)}%)` : ""}
 
       ${eval(getLoc)("rarity")} : ${this.rarityName(message)} \n`)
       embed.addFields(showOutfit, showWeapon, showAccessory)

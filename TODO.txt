@@ -28,6 +28,9 @@ gacha system / gacha currency / pay 2 win
 upgrade waifu stuff (copies?)
 update help txt about equip commands
 transform waifuCollection into a page embed
+test if an embed can have an empty string as description
+create text "leaderboard title"
+check difference between defaultAvatarURL and avatar (and also check avatarURL function)
 
  ------ Soon -------
 

@@ -275,8 +275,9 @@ export default function replyCommand(message: message, user: userClass, args: Ar
       commandStatus = editname(message, user, args, initialMessage)
       break;
     case "GUILD_TEXT-lb":
-      commandStatus = lb(message, user, args)
+      commandStatus = lb(message, args, initialMessage)
       break;
+    case "interaction-rank":
     case "GUILD_TEXT-rank":
       commandStatus = rank(message, user, initialMessage)
       break;

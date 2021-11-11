@@ -1,6 +1,11 @@
 import message from '../../class/message'
 import user from '../../class/user'
 
+commandManager?.create({
+  name:"quests",
+  type:"CHAT_INPUT",
+  description:"show your active quests",
+})
 
 export default async function quests(message: message, user: user){
   let mes = ""

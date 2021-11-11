@@ -7,7 +7,7 @@ import {IDLE_TIME_OF_INTERACTIONS} from '../../files/config.json'
 import checkClicker from '../util/checkClicker'
 
 commandManager.create({
-  name:"recycle",
+  name:"replace",
   type:"CHAT_INPUT",
   description:"sometime things has to be done to earn money...",
   options:[

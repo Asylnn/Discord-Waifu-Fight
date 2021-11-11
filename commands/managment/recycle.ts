@@ -11,45 +11,50 @@ import Discord from 'discord.js'
 import checkClicker from '../util/checkClicker'
 import {IDLE_TIME_OF_INTERACTIONS} from '../../files/config.json'
 
+const options: Discord.ApplicationCommandChoicesData[] = [
+  {
+    name:"index",
+    description:"Index",
+    required:true,
+    type:"INTEGER"
+  }
+]
 
 commandManager.create({
   name:"recycle",
   type:"CHAT_INPUT",
-  description:"sometime things has to be done to earn money...",
+  description:"sometimes things has to be done to earn money...",
   options:[
     {
       name:"waifu",
       description:"recycle a waifu",
-      required:true,
-      type:"SUB_COMMAND"
+      required:false,
+      type:"SUB_COMMAND",
+      options:options
     },{
-      name:"reserveWaifu",
+      name:"reservewaifu",
       description:"recycle a reserve waifu",
-      required:true,
-      type:"SUB_COMMAND"
+      required:false,
+      type:"SUB_COMMAND",
+      options:options
     },{
       name:"item",
       description:"recycle a item",
-      required:true,
+      required:false,
       type:"SUB_COMMAND",
-      options:[{
+      options:options.concat([{
         name:"it",
         description:"item type -- ADD DESCRIPTION",
         required:true,
+        type:"STRING",
         choices:[{name:"consumableuser", value:"consumableuser"},
-        {name:"consumablewaifu", value:"consumablewaifu"},
-        {name:"equipmentuser", value:"equipmentuser"},
-        {name:"equipmentwaifu", value:"equipmentwaifu"},
-        {name:"material", value:"material"},
-      ],
-        type:"STRING"
-      }]
-    },{
-      name:"index",
-      description:"Index",
-      required:true,
-      type:"INTEGER"
-    },
+          {name:"consumablewaifu", value:"consumablewaifu"},
+          {name:"equipmentuser", value:"equipmentuser"},
+          {name:"equipmentwaifu", value:"equipmentwaifu"},
+          {name:"material", value:"material"},
+        ],
+      }])
+    }
   ],
 })
 

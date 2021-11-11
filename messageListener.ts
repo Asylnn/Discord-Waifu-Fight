@@ -17,10 +17,9 @@ import addbeatmapset from './commands/osu/addMapSet'
 
 
 discordClient.on('interactionCreate', async (interaction) => {
-  if(!interaction.isCommand()) return;
+  if(!interaction.isCommand() && !interaction.isContextMenu()) return;
   const message = new messageClass(defaultLanguage, "interaction no content", "interaction", interaction.createdTimestamp, interaction, interaction.id)
-
-  let userObj: user = {currentDealId:"-1", lg:defaultLanguage, id:interaction.user.id, verified:false, osuName:"Asyln"} as any
+  let userObj: user = {currentDealId:"-1", lg:defaultLanguage, id:interaction.user.id, verified:false, osuName:"-"} as any
 
    if(await users.exists(interaction.user.id)){
     userObj = await users.get(interaction.user.id)
@@ -28,8 +27,8 @@ discordClient.on('interactionCreate', async (interaction) => {
   commands(message, userObj, [], interaction)
 })
 
+/*
 discordClient.on('messageReactionAdd', (reaction, user) => {
-  console.log("0")
   if(!user.bot) return;
 
 
@@ -39,7 +38,7 @@ discordClient.on('messageReactionAdd', (reaction, user) => {
       reaction.message.channel.send(`ERROR : ${err.toString()} <@${ASYLN_DISCORD_ID}>`)
     })
   }
-});
+});*/
 
 
 discordClient.on('messageCreate', async function(discordMessage: Discord.Message) {
