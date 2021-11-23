@@ -44,9 +44,9 @@ export default class user{
   public currentDealId = "-1"
   public isDoingDungeon = false
   public gachaCurrency = 0
+  public ephemeral = true
 
   constructor(id: string, osuName: string){
-
 
     this.waifus = [new waifu(this, waifus.get(["1", "12", "13"][randInt(3)])), null, null]
     this.id = id

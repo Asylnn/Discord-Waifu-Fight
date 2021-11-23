@@ -28,7 +28,7 @@ const userEncoding = {
 }*/
 
 import user from './class/user'
-import beatmap from './class/types/beatmap'
+import {beatmap} from './class/types/beatmap'
 
 declare global {
   var users: levelTs<user>
@@ -37,14 +37,15 @@ declare global {
   var deals:levelTs<{turn: "0" | "1", proposer: user, accepter:user, '0':Array<{reference: number, type: dealObjectType, name:string, complement:string | number}>, '1':Array<{reference: number, type: dealObjectType, name:string, complement:string | number}>, valid:boolean}>
 }
 
-const beatmaps = level('./files/beatmaps', {keyEncoding:'utf8', valueEncoding:'json'})
-global.beatmaps = new levelTs(beatmaps)
+/*const beatmaps = level('./files/beatmaps', {keyEncoding:'utf8', valueEncoding:'json'})
+global.beatmaps = new levelTs(beatmaps)*/
 
-const dealsJS = level('./files/deals', {keyEncoding:'utf8', valueEncoding:userEncoding})
-global.deals = new levelTs(dealsJS);
+/*const dealsJS = level('./files/deals', {keyEncoding:'utf8', valueEncoding:userEncoding})
+global.deals = new levelTs(dealsJS);*/
 
 const usersJS = level('./files/users', {keyEncoding:'utf8', valueEncoding:userEncoding})
 global.users = new levelTs(usersJS);
 
-const beatmapsBySR = level('./files/beatmapsBySR', {keyEncoding:'utf8', valueEncoding:'json'})
-global.beatmapsBySR = new levelTs(beatmapsBySR);
+
+/*const beatmapsBySR = level('./files/beatmapsBySR', {keyEncoding:'utf8', valueEncoding:'json'})
+global.beatmapsBySR = new levelTs(beatmapsBySR);*/

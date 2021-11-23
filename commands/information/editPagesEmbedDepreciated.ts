@@ -1,4 +1,4 @@
-import Discord from 'discord.js'
+/*import Discord from 'discord.js'
 import pageEmbed from '../../class/types/pageEmbed'
 import sleep from '../../genericFunctions/sleep'
 export default function messageReaction(content:string ,newEmbed:boolean, pageEmbed:pageEmbed) {
@@ -30,3 +30,4 @@ export default function messageReaction(content:string ,newEmbed:boolean, pageEm
     message.edit(embed)
   }
 }
+*/

@@ -259,14 +259,10 @@ export default class waifu extends templateWaifu{
       LUCK : ${Math.round(this.luck)} ${multXP != 1 ? `(+${Math.round((multLuck - 1)*100)}%)` : ""}
       DEXT : ${Math.round(this.dext)} ${multXP != 1 ? `(+${Math.round((multDext - 1)*100)}%)` : ""}
       KAW : ${Math.round(this.kaw)} ${multXP != 1 ? `(+${Math.round((multKaw - 1)*100)}%)` : ""}
-
-      ${eval(getLoc)("rarity")} : ${this.rarityName(message)} \n`)
-      embed.addFields(showOutfit, showWeapon, showAccessory)
-
-      embed.addField(eval(getLoc)("modificators"),  modificators)
-
-
-    message.addResponse(embed as any)
+      ${eval(getLoc)("rarity")} : ${this.rarityName(message)} \n`
+    )
+    embed.addFields(showOutfit, showWeapon, showAccessory)
+    embed.addField(eval(getLoc)("modificators"),  modificators)
+    return embed
   }
-
 }

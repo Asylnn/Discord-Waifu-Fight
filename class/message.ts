@@ -100,20 +100,32 @@ export default class globalMessage{
     }
   }
 
-  async createPageInteraction(numberOfPages:number, createEmbed:(page:number) => Discord.MessageEmbed){
+  async createPageInteraction(numberOfPages:number, createEmbed:(page:number, interaction?:Discord.ButtonInteraction) => Discord.MessageEmbed){
+    if(numberOfPages) numberOfPages = 1
     this.addButton("pageLeft", "<<", "PRIMARY")
     this.addButton("pageRight", ">>", "PRIMARY")
     let page = 1
     this.embeds[0] = createEmbed(page)
+    this.embeds[0].setFooter(`Page ${page}/${numberOfPages}`)
+
     const collector = (await this.reply()).createMessageComponentCollector({componentType:'BUTTON', idle:IDLE_TIME_OF_INTERACTIONS})
     collector.on('collect', (interaction: Discord.ButtonInteraction) => {
       if(checkClicker(interaction, this.authorId)) return true;
-      interaction.customId == "pageLeft" ? page-- : page++
-      if(page == numberOfPages + 1) page = 1
-      else if(page == 0) page = numberOfPages
-      this.embeds[0] = createEmbed(page)
-      this.embeds[0].setFooter(`Page ${page}/${numberOfPages}`)
-      interaction.update({embeds:this.embeds, content:" "})
+      if(interaction.customId == "pageLeft" || interaction.customId == "pageRight"){
+        interaction.customId == "pageLeft" ? page-- : page++
+        if(page == numberOfPages + 1) page = 1
+        else if(page == 0) page = numberOfPages
+        this.embeds[0] = createEmbed(page, interaction)
+        this.embeds[0].setFooter(`Page ${page}/${numberOfPages}`)
+        interaction.update({embeds:this.embeds, content:" "})
+      }
+      else createEmbed(page, interaction)
+
+
+
+      //interaction.reply({ content: `These buttons aren't for you!`, ephemeral: true })
+
+
     })
     return true
   }

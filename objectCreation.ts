@@ -5,12 +5,13 @@ import equipmentUser from './class/item/equipmentUser'
 import equipmentWaifu from './class/item/equipmentWaifu'
 import item from './class/item/item'
 import material from './class/item/materials'
-
+import banner from './class/types/banner'
 import dungeon from './class/dungeon'
 import collection from './class/collection'
 import randInt from './genericFunctions/randInt'
 import templateWaifu from './class/templateWaifu'
 import templateDungeon from './class/types/templateDungeon'
+import fs from 'fs'
 
 const quest1: quest = {name:"get_claims", type:"osu", objective:4, difficulty:1, generalType:"claim", state:0}
 const quest2: quest = {name:"get_claims", type:"osu", objective:8, difficulty:2, generalType:"claim", state:0}
@@ -174,8 +175,61 @@ declare global {
   var waifus: collection<string, templateWaifu>
   var gachaWaifus: Array<[templateWaifu, number]>
   var dungeonMap: Map<string, templateDungeon>
+  var banners: Array<banner>
 }
 
+global.waifus = new collection()
+
+const createTemplateWaifu = (args:{id: string, imgURL: string, name: string, o_stg: number, o_agi: number, o_int: number, o_luck: number, o_dext: number, o_kaw: number,
+  u_stg: number, u_agi: number, u_int: number, u_luck: number, u_dext: number, u_kaw: number, rarity:number, value:number, isTradable:boolean}) => {
+  global.waifus.set(args.id, new templateWaifu(args))
+
+}
+
+const waifuData = JSON.parse(fs.readFileSync('./files/templateWaifus.json' ).toString())
+waifuData.forEach((waifu:any) => createTemplateWaifu(waifu))
+
+const baseBanner1: banner = {
+  id:"ban1",
+  name:"base_banner1",
+  imgURL:"",
+  description:"base_banner1_description",
+  waifus:waifus.filter(waifu => waifu.rarity <= 3).map<{waifu:templateWaifu, tier:number}>(waifu => {return {waifu:waifu, tier:waifu.rarity - 1}}),
+  focusWaifus:[],
+  startingDate:-1,
+  duration:-1,
+  dropRates: [70,25,5],
+  cost: 1
+}
+
+const baseBanner2: banner = {
+  id:"ban2",
+  name:"base_banner2",
+  imgURL:"",
+  description:"base_banner2_description",
+  waifus:waifus.filter(waifu => waifu.rarity >= 2 && waifu.rarity <= 4).map<{waifu:templateWaifu, tier:number}>(waifu => {return {waifu:waifu, tier:waifu.rarity - 2}}),
+  focusWaifus:[],
+  startingDate:-1,
+  duration:-1,
+  dropRates: [70,25,5],
+  cost: 1
+}
+
+const baseBanner3: banner = {
+  id:"ban3",
+  name:"base_banner3",
+  imgURL:"",
+  description:"base_banner3_description",
+  waifus:waifus.filter(waifu => waifu.rarity >= 3).map<{waifu:templateWaifu, tier:number}>(waifu => {return {waifu:waifu, tier:waifu.rarity - 3}}),
+  focusWaifus:[],
+  startingDate:-1,
+  duration:-1,
+  dropRates: [70,25,5],
+  cost: 1
+}
+
+//global.banners.set(baseBanner1.id, baseBanner1).set(baseBanner2.id, baseBanner1).set(baseBanner3.id, baseBanner1)
+global.banners = [baseBanner1, baseBanner2, baseBanner3]
 
 global.dungeonMap = new Map()
 dungeonMap.set("1", {
@@ -326,14 +380,8 @@ let itemsParchementL7 = new collection([[old_script5, 4], [fraud_parchment5, 4],
                                               [philosophical_papers6, 6], [old_script7, 4], [fraud_parchment7, 4], [old_map7, 12], [cesar_manuscript7, 12], [philosophical_papers7, 12]])*/
 var itemsParchement = [itemsParchementL1, itemsParchementL2]
 
-global.waifus = new collection<string, templateWaifu>()
 
-var createTemplateWaifu = (id: string, imgURL: string, name: string, o_stg: number, o_agi: number, o_int: number, o_luck: number, o_dext: number, o_kaw: number,
-  u_stg: number, u_agi: number, u_int: number, u_luck: number, u_dext: number, u_kaw: number, rarity:number, value:number, isTradable:boolean = true) => {
-  waifus.set(id, new templateWaifu({id, imgURL,name, o_stg, o_agi, o_int, o_luck, o_dext, o_kaw, u_stg, u_agi, u_int, u_luck, u_dext, u_kaw, rarity, value, isTradable}))
-}
-
-createTemplateWaifu("1",'https://cdn.discordapp.com/attachments/504676515414540289/683320377929105415/43e236eaee120b8e57183428fcd50a98.jpg', "Shouko Nishimiya", 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
+//createTemplateWaifu("1",'https://cdn.discordapp.com/attachments/504676515414540289/683320377929105415/43e236eaee120b8e57183428fcd50a98.jpg', "Shouko Nishimiya", 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
 /*
 //var custom = new templateWaifu("0", "",'custom',0.8,39,2,1,250,20,21,1) //Creation)
 var bwaifu1 = new templateWaifu("1",'https://cdn.discordapp.com/attachments/504676515414540289/683320377929105415/43e236eaee120b8e57183428fcd50a98.jpg'

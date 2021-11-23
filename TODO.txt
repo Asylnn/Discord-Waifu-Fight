@@ -31,11 +31,19 @@ transform waifuCollection into a page embed
 test if an embed can have an empty string as description
 create text "leaderboard title"
 check difference between defaultAvatarURL and avatar (and also check avatarURL function)
+create text item_shop_title
+create text not_enough_gacha_currency
+update help :/ ...
+add waifu converter (from software to bot)
+convert every item object creation in objectCreation.ts
+
+when everything is finished, put user.ephemeral in gacha.ts
 
  ------ Soon -------
 
 Next Update
 
+Make so you can see other's waifu
 Item to accelerate or complete an action
 Remove user lvl
 Reitroduce POW,

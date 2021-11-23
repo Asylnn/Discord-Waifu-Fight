@@ -27,22 +27,9 @@ discordClient.on('interactionCreate', async (interaction) => {
   commands(message, userObj, [], interaction)
 })
 
-/*
-discordClient.on('messageReactionAdd', (reaction, user) => {
-  if(!user.bot) return;
-
-
-  if(reaction.message.channel.id == '709807051060019270' || reaction.message.channel.id == '672515818025779220' || reaction.message.channel.id == '689575655704100941' ||  reaction.message.channel.id == '688415622601638010' || reaction.message.channel.id == '705907776135757914' || reaction.message.channel.id == '705907805210542201'){
-    messageReaction(reaction, user.id).catch(err => {
-      console.log(err)
-      reaction.message.channel.send(`ERROR : ${err.toString()} <@${ASYLN_DISCORD_ID}>`)
-    })
-  }
-});*/
-
-
 discordClient.on('messageCreate', async function(discordMessage: Discord.Message) {
   if(discordMessage.author.bot) return;
+  console.log(discordMessage.content)
   const message = new messageClass(defaultLanguage, discordMessage.content, discordMessage.channel.type, discordMessage.createdTimestamp, discordMessage.channel, discordMessage.id)
   const np = message.content.split('/b/')
   if(np[1]){
@@ -68,11 +55,7 @@ osuBancho.on("PM", async (osuMessage: any) => {
   console.log(`${osuMessage.user.ircUsername}: ${osuMessage.message}`)
   const message = new messageClass(defaultLanguage, osuMessage.message, "osu", Date.now(),osuMessage.user, "-1")
   let userObj: user = {currentDealId:"-1", lg:defaultLanguage, id:"-1", verified:false, osuName:osuMessage.user.ircUsername} as any
-  /*if(osuMessage.message.split("https://osu.ppy.sh/b/")[1] != undefined && user.canAddMap){
-    let beatmapId = osuMessage.message.split("https://osu.ppy.sh/b/")[1].split(" ")[0]
-    message.author.id = user.id
-    addmapset(message, user, [null, beatmapId])
-  }*/
+
   if(osuMessage.user.ircUsername == USERNAME){return;} // If it comes from the bot itself return.
   const args = message.content.toLowerCase().split(' ');
   if(!message.content.toLowerCase().startsWith(PREFIX)) return;

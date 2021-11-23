@@ -5,6 +5,7 @@ import truncate from '../genericFunctions/truncate'
 //import item from '../class/item'
 //import itemManager from '../class/itemManager'
 import save from '../save'
+import createSimpleEmbed from './util/createSimpleEmbed'
 
 /*
  Do a command that unequip item
@@ -65,10 +66,10 @@ import useWaifuXP from './items/useWaifuXP'
 import items from './information/items'
 import lb from './information/lb'
 import quests from './information/quests'
-import rank from './information/rank'
 import reserve from './information/reserve'
 import shop from './information/shop'
 import stats from './information/stats'
+import waifus from './information/waifus'
 import textCreateAcc from './information/textCreateAccount'
 import textHelp from './information/textHelp'
 import waifuCollection from './information/waifuCollection'
@@ -118,6 +119,11 @@ export default function replyCommand(message: message, user: userClass, args: Ar
       else{
         message.addResponse("nope")
       }
+      break;
+    case "DM-testing":
+      const e1 = createSimpleEmbed("a", "b")
+      message.addButton("1", "STOP", "DANGER")
+      message.embeds.push(e1)
       break;
     case "DM-createacc":
       commandStatus = dmCreateAcc(message, user, args)
@@ -212,6 +218,10 @@ export default function replyCommand(message: message, user: userClass, args: Ar
       else{
         message.addResponse("nope")
       }
+      break;
+    case "GUILD_TEXT-gac":
+      user.gachaCurrency += 200000
+      user.save()
       break;
     case "GUILD_TEXT-givebox":
       commandStatus = giveBox(message, args, initialMessage)
@@ -354,8 +364,16 @@ export default function replyCommand(message: message, user: userClass, args: Ar
       break;
     case "GUILD_TEXT-s":
     case "GUILD_TEXT-stats":
-      commandStatus = stats(message, user)
+    case "GUILD_TEXT-rank":
+    case "interaction-stats":
+      commandStatus = stats(message, user, initialMessage)
       break;
+    case "GUILD_TEXT-w":
+    case "GUILD_TEXT-waifu":
+    case "GUILD_TEXT-waifus":
+    case "interaction-waifus":
+      commandStatus = waifus(message, user, initialMessage)
+      break
     /*case "osu-request":
       if(user.milestone & w(35) == 0){message.addResponse(eval(getLoc)("lvl_too_low")); return;}
       if(global.hasCreatedLobby){
@@ -412,7 +430,7 @@ export default function replyCommand(message: message, user: userClass, args: Ar
       commandStatus = useWaifuXP(message, user, args)
       break;
 
-
+    case "interaction-gacha":
     case "GUILD_TEXT-gacha":
       commandStatus = gacha(message, user)
       break;

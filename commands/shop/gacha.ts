@@ -1,40 +1,69 @@
-/*import message from '../../class/message'
+import message from '../../class/message'
 import user from '../../class/user'
-import {GACHA_PRICE} from '../../files/config.json'
+import createSimpleEmbed from '../util/createSimpleEmbed'
+import {OBJECT_PER_PAGE} from '../../files/config.json'
 import randInt from '../../genericFunctions/randInt'
-import waifuClass from '../../class/waifu'
-import {deepCopy} from '../../genericFunctions/copy'
+import waifu from '../../class/waifu'
 
-function getRandom(){
-  let totalWeight = 0
+commandManager?.create({
+  name:"gacha",
+  type:"CHAT_INPUT",
+  description:"open gacha menu"
+})
 
-  gachaWaifus.forEach(waifuAndWeight => {
-    totalWeight += waifuAndWeight[1]
-  })
-  const rand = randInt(totalWeight)
-  let w = 0
-  console.log(totalWeight)
-  console.log("rand : ", rand)
-  for(var i = 0; true; i++){
-    console.log("i : ", i)
+export default async function gacha(message:message, user:user){
+  const numberOfPages = Math.ceil(banners.length)
+  let qty = 1
+  message.addButton('pull1', 'Pull 1',  'SUCCESS')
+  message.addButton('pull10', 'Pull 10',  'SUCCESS')
 
-    w += gachaWaifus[i][1]
+  message.createPageInteraction(numberOfPages, (page, interaction) => {
+    const banner = banners[page-1]
+    if(interaction?.customId == "pull1" || interaction?.customId == "pull10"){
+      if(interaction.customId == "pull10") qty = 10
 
-    console.log("w : ", w)
+      if(banner.cost*qty > user.gachaCurrency){interaction.reply({content:eval(getLoc)("not_enough_gacha_currency"), ephemeral:true})}
+      else{
 
-    if(w > rand){
-      return gachaWaifus[i][0]
+        user.gachaCurrency -= banner.cost*qty
+        const totWeight = banner.dropRates.reduce((tot, weight) => tot + weight)
+        const pulledWaifus = []
+
+
+        for(var i = 0; i < qty; i++){
+          const rand = randInt(totWeight)
+
+
+          for(var j = 0; true; j++){
+            const currentWeight = banner.dropRates.reduce((tot, weight, k) => (Math.max(j - k + 1, 0) && weight) + tot) //i*j*(i*j - i - j + 1) + i - j + 1
+
+            if(currentWeight > rand){
+              const waifus = banner.waifus.filter(({tier}) => tier == j).map(({waifu}) => waifu)
+              pulledWaifus.push(waifus[randInt(waifus.length)])
+              break;
+            }
+          }
+        }
+
+        let content
+        let embeds = []
+        if(pulledWaifus.length == 1){
+          embeds.push(pulledWaifus[0].show(message, false))
+          content = " "
+        }
+        else{
+          content = "Obtained Waifus \r\n" + pulledWaifus.reduce((str, waifu) => str + `${waifu.rarityName(message)} ${waifu.name}\r\n`, "")
+        }
+        //message.hasReplied = false
+        interaction.reply({content:content, embeds: embeds, ephemeral: /*user.ephemeral*/ false});
+        user.reserveWaifu.push(...pulledWaifus.map(template => new waifu(user, template)))
+        user.save()
+      }
     }
-  }
+
+    return createSimpleEmbed(banner.name, banner.description)
+  })
+
+
+  return false
 }
-
-
-export default async function gacha(message: message, user: user){
-  if(user._money < GACHA_PRICE){message.addResponse(eval(getLoc)("buy_not_enough_money")); return true}
-  user._money -= GACHA_PRICE
-  const waifu = new waifuClass(user, deepCopy(getRandom()))
-  user.reserveWaifu.push(waifu);
-  message.addResponse(eval(getLoc)('gacha_got_waifu'))
-
-}
-*/

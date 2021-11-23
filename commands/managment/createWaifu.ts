@@ -28,7 +28,7 @@ export default async function createWaifu(message: message, user: user, args: Ar
   let customWaifu = new waifu(user, waifus.get("0"))
   customWaifu.imgURL = url
   try {
-    customWaifu.showStats(message, user.reserveWaifu.length + 1)
+    message.embeds.push(customWaifu.showStats(message, user.reserveWaifu.length + 1))
     user.reserveWaifu.push(customWaifu)
     user._money -= COST_CREATE_WAIFU
   } catch (e) {

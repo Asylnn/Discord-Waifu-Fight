@@ -264,7 +264,7 @@
     "remplaced_waifu": "Opération effectuée!",
     "replace_waifu": "Voulez vous remplacer ${remplacedWaifu.name} par ${reserveWaifu.name}. Pour confirmer, faites la même commande en ajoutant 'c' à la fin",
     "replace_waifu_empty_slot": "Vous voulez remplacer un emplacement vide par ${reserveWaifu.name} pour confirmer, faites la même commande en ajoutant 'c' à la fin",
-    "stats_header": "Vous avez ${Math.floor(user.money)}¥! \r\nVous avez ${user.gachaCurrency} ${fr.gacha_currency_name}",
+    "stats_header": "Vous avez ${Math.floor(user.money)}¥! \r\nVous avez ${user.gachaCurrency} ${fr.gacha_currency_name}\r\n",
     "stats_modificator": "~ Modificateurs ~  \r\n ",
     "not_buyable": "Cette waifu n'est pas achetable!",
     "buy_not_enough_money": "Vous n'avez pas assez d'argent!",
@@ -423,6 +423,14 @@
     "waifu_is_doing_this_action": "${waifu.name} fait l'action ${actionType}, elle se terminera dans ${timeLeft}",
     "duplicate_replace_waifu": "Cette waifu est déjà de votre coté !",
     "gacha_currency_name": "Essence de rêves",
+    "not_enough_gacha_currency":"Vous n'avez pas assez d'${fr.gacha_currency_name}",
+
+
+
+
+
+
+
     "attack_lines": {
       "magical" : [
         "${waifu.name} s'est concentrée sur la formule de son sort pour ne pas vous decevoir et grâce à sa détermination, elle à reussi a infliger ${totalDamage} de dégats !",

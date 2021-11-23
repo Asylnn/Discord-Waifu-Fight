@@ -25,7 +25,7 @@ export default async function load(){
   global.allPagesEmbed = new collection()
   global.getLoc = GETLOC
   global.osuBancho = new Banchojs.BanchoClient({ username: USERNAME, password: IRC_PASSWORD, limiterTimespan:60000, port: 6667, apiKey:OSU_API_KEY, limiterPrivate:270 });
-  global.discordClient = new Discord.Client({partials:["REACTION"], intents:["GUILD_MESSAGE_REACTIONS", "GUILD_MESSAGES", "GUILDS", "GUILD_EMOJIS_AND_STICKERS"]});
+  global.discordClient = new Discord.Client({partials:["REACTION", "CHANNEL"], intents:["GUILD_MESSAGE_REACTIONS", "GUILD_MESSAGES", "GUILDS", "GUILD_EMOJIS_AND_STICKERS", "DIRECT_MESSAGES"]});
   global.discordClient.login(TOKEN)
   global.osuAPI = new api(OSU_CLIENT_ID, OSU_CLIENT_SECRET)
   global.day = (new Date()).getDate()

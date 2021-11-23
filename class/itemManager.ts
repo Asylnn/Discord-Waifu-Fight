@@ -14,7 +14,7 @@ export default class itemManager {
   public consumableUser: Array<{item:consumableUser, qty:number}>
   public consumableWaifu: Array<{item:consumableWaifu, qty:number}>
   public equipmentUser: Array<{item:equipmentUser, qty:number}>
-  public equipmentWaifu: Array<{item:equipmentWaifu, qty:number}>
+  public equipmentWaifu: Array<{item:equipmentWaifu}>
   public material: Array<{item:material, qty:number}>
 
 
@@ -39,45 +39,22 @@ export default class itemManager {
   addItem(itemOrId: itemClassType | string , qty = 1){
     let item: itemClassType
     if(typeof itemOrId == "string"){
-      item = items.get(itemOrId) as itemClassType
+      item = items.get(itemOrId)
     }
     else {
       item = itemOrId
     }
-
-    /*switch(item.objectType){
-      case "equipmentWaifu":
-        let equipmentWaifuAndQty = this[item.objectType].find(itemAndQty => itemAndQty.item.id == item.id)
-        if(equipmentWaifuAndQty == undefined) this[item.objectType].push({item:item, qty:qty})
-        else equipmentWaifuAndQty.qty += qty
-        this[item.objectType].sort((itemA, itemB) => itemA.item.rarity - itemB.item.rarity)
-        break;
-      case "consumableUser":
-        let consumableUserAndQty = this[item.objectType].find(itemAndQty => itemAndQty.item.id == item.id)
-        if(consumableUserAndQty == undefined) this[item.objectType].push({item:item, qty:qty})
-        else consumableUserAndQty.qty += qty
-        this[item.objectType].sort((itemA, itemB) => itemA.item.rarity - itemB.item.rarity)
-        break;
-      case "consumableWaifu":
-        let consumableWaifuAndQty = this[item.objectType].find(itemAndQty => itemAndQty.item.id == item.id)
-        if(consumableWaifuAndQty == undefined) this[item.objectType].push({item:item, qty:qty})
-        else consumableWaifuAndQty.qty += qty
-        this[item.objectType].sort((itemA, itemB) => itemA.item.rarity - itemB.item.rarity)
-        break;
-      case "equipmentUser":
-        let equipmentUserAndQty = this[item.objectType].find(itemAndQty => itemAndQty.item.id == item.id)
-        if(equipmentUserAndQty == undefined) this[item.objectType].push({item:item, qty:qty})
-        else equipmentUserAndQty.qty += qty
-        this[item.objectType].sort((itemA, itemB) => itemA.item.rarity - itemB.item.rarity)
-        break;
-      case "material":
-        let materialAndQty = this[item.objectType].find(itemAndQty => itemAndQty.item.id == item.id)
-        if(materialAndQty == undefined) this[item.objectType].push({item:item, qty:qty})
-        else materialAndQty.qty += qty
-        this[item.objectType].sort((itemA, itemB) => itemA.item.rarity - itemB.item.rarity)
-        break;
-    }*/
-
+    if(item.objectType == "equipmentWaifu"){
+      let materialAndQty = (this[item.objectType]).find(itemAndQty => itemAndQty.item.id == item.id)
+      if(materialAndQty == undefined) (this[item.objectType]).push({item:item})
+      this[item.objectType].sort((itemA, itemB) => itemA.item.rarity - itemB.item.rarity)
+    }
+    else {
+      let materialAndQty = (this[item.objectType] as {item:itemClassType, qty:number}[]).find(itemAndQty => itemAndQty.item.id == item.id)
+      if(materialAndQty == undefined) (this[item.objectType] as {item:itemClassType, qty:number}[]).push({item:item, qty:qty})
+      else materialAndQty.qty += qty
+      this[item.objectType].sort((itemA, itemB) => itemA.item.rarity - itemB.item.rarity)
+    }
   }
 
   removeItem(id: string, amount:number = 1){

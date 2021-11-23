@@ -5,9 +5,12 @@ can now do o!defaultwaifu instead of o!default
 can now do o!gamemode instead of o!setmode
 renamed command osuid to setosuid
 No longer possible to have twice the same waifu in the team
+made item shop page embed
 
 Reverted back the way to equip / use items, it's to say (without slash commands):
 o!equip waifu/user / item index / waifu id (if needed) / slot
+now to view waifus you need to do o!waifus
+commands o!rank and o!stats (without waifus) were combined 
 
 Changed some waifus
 changed rarity of rem from rare to legendary
