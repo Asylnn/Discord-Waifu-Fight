@@ -1,15 +1,15 @@
-import templateWaifu from './templateWaifu'
-import message from './message'
-import { modificator } from './types/modificator'
-import equipmentWaifu from './item/equipmentWaifu'
-import {action, actionType} from './types/action'
+import TemplateWaifu from './templateWaifu'
+import Message from './message'
+import Modificator from './modificator'
+const {getModificators} = Modificator
+import WaifuEquipment from './item/waifuEquipment'
+import {Action, ActionType} from './types/action'
 import {EXP_DIFFICULTY, PAR_DIFFICULTY, TIME_ANALYSE, TIME_DECRYPTION, TEST_BUILD} from '../files/config.json'
 import Discord from 'discord.js'
-import getModificators from '../genericFunctions/getModificators'
 import {milliToHours} from '../genericFunctions/timeConversion'
-import user from './user'
+import User from './user'
 
-export default class waifu extends templateWaifu{
+export default class waifu extends TemplateWaifu{
   public readonly objectType = "waifu"
   public xp = 0
   public lvl = 1
@@ -21,15 +21,15 @@ export default class waifu extends templateWaifu{
   public b_dext:number
   public b_kaw:number
 
-  public modificators: Array<modificator> = [] //A retirer?
+  public modificators: Array<Modificator> = [] //A retirer?
   public equipedItems: {
-    "outfit": equipmentWaifu | null,
-    "accessory" : equipmentWaifu | null,
-    "weapon": equipmentWaifu | null
+    "outfit": WaifuEquipment | null,
+    "accessory" : WaifuEquipment | null,
+    "weapon": WaifuEquipment | null
   } = {"outfit": null, "accessory": null, "weapon": null}
-  public action: action | null = null
-  public owner: user | undefined //undefined when having no owner in deal transfer, sold in user shop or when converted to JSON format
-  constructor(owner: user, template: templateWaifu = waifus.get("1")){
+  public action: Action | null = null
+  public owner: User | undefined //undefined when having no owner in deal transfer, sold in user shop or when converted to JSON format
+  constructor(owner: User, template: TemplateWaifu = waifus.get("1")){
     super(template)
     this.owner = owner
     this.xp = 0
@@ -52,58 +52,58 @@ export default class waifu extends templateWaifu{
   }
 
   get maxLvl(){
-    return 20 + 10*(this.stars-1) + getModificators(this, 'add_max_level')
+    return 20 + 10*(this.stars-1) + getModificators(this, 'add_max_level').value
   }
 
   get stg(){
-    const mult = getModificators(this, 'mult_stg')
+    const mult =  getModificators(this, 'mult_stg').value
     return this.b_stg*mult
   }
 
   get agi(){ // Renvoie la valeur avec modifs
-    const mult = getModificators(this, 'mult_agi')
+    const mult =  getModificators(this, 'mult_agi').value
     return this.b_agi*mult
   }
 
   get int(){
-    const mult = getModificators(this, 'mult_int')
+    const mult = getModificators(this, 'mult_int').value
     return this.b_int*mult
   }
 
   get luck(){ // Renvoie la valeur avec modifs
-    const mult = getModificators(this, 'mult_luck')
+    const mult = getModificators(this, 'mult_luck').value
     return this.b_luck*mult
   }
 
   get dext(){
-    const mult = getModificators(this, 'mult_dext')
+    const mult = getModificators(this, 'mult_dext').value
     return this.b_dext*mult
   }
 
   get kaw(){
-    const mult = getModificators(this, 'mult_kaw')
+    const mult = getModificators(this, 'mult_kaw').value
     return this.b_kaw*mult
   }
 
   get phy(){
-    const mult = getModificators(this, 'mult_phy')
+    const mult = getModificators(this, 'mult_phy').value
     return this.stg*mult
   }
 
   get psy(){
-    const mult = getModificators(this, 'mult_psy')
+    const mult = getModificators(this, 'mult_psy').value
     return this.kaw*mult
   }
 
   get mag(){
-    const mult = getModificators(this, 'mult_mag')
+    const mult = getModificators(this, 'mult_mag').value
     return this.int*mult
   }
 
-  giveXP(xp: number, message: message, useModificators = true, first = true){
+  giveXP(xp: number, message: Message, useModificators = true, first = true){
     let mult = 1, totalXP
     if(useModificators){
-      mult = getModificators(this, 'mult_XP')
+      mult = getModificators(this, 'mult_XP').value
     }
     totalXP = xp*mult
     this.xp += totalXP
@@ -142,7 +142,7 @@ export default class waifu extends templateWaifu{
     return totalXP
   }
 
-  testSendMesAction(message: message, sendMes:string | boolean = false){
+  testSendMesAction(message: Message, sendMes:string | boolean = false){
     if(this.action && sendMes){
       let actionType
       if(this.action.type == 'exploration'){
@@ -160,22 +160,22 @@ export default class waifu extends templateWaifu{
     return !!this.action
   }
 
-  timeWaiting(type: actionType, lvl: number){
+  timeWaiting(type: ActionType, lvl: number){
     let mult = 1
     let time = 0
     switch (type) {
       case "exploration" :
         time = EXP_DIFFICULTY[lvl]
-        mult = getModificators(this, 'reduce_EX_time')
+        mult = getModificators(this, 'reduce_explo_time').value
         time = time/mult
         break;
       case "analyse":
         let timeReductor = (this.int/50)*1800*1000 //+ ANA_DIFFICULTY[lvl]
-        mult = getModificators(this, 'reduce_analyse_time')
+        mult = getModificators(this, 'reduce_analyse_time').value
         time = TIME_ANALYSE/mult - timeReductor
         break;
       case "decryption":
-        mult = getModificators(this, 'reduce_decrypt_time')
+        mult = getModificators(this, 'reduce_decrypt_time').value
         let difficulty = PAR_DIFFICULTY[lvl]
         time = TIME_DECRYPTION/(mult*(1 + 2*(this.int/difficulty)))
         break;
@@ -185,52 +185,31 @@ export default class waifu extends templateWaifu{
   }
 
   get attackSpeed(){
-    return 30000*(Math.pow(Math.log(this.agi), 2.5) * 0.419)
+    return 5000/Math.pow(Math.E, this.agi/550)
   }
 
   get critRate(){
 
-    return this.dext // Calculer le taux critique TODO
+    return 0.05 + this.dext/1000
   }
 
-  get explorationSpeed(){
-    return 0
-  }
-
-  get analyseSpeed(){
-    return 0
-  }
-
-  get decryptSpeed(){
-    return 0
-  }
-
-  showStats(message: message, number: number){
+  showStats(message: Message, number: number){
     var embed = new Discord.MessageEmbed()
     embed.setThumbnail(this.imgURL)
     embed.setTitle(`${this.name} ${"★".repeat(this.stars)}`)
-    let multXP = getModificators(this, 'mult_XP')
+    let multXP = getModificators(this, 'mult_XP').value
     let modificators = ""
 
     //let waifuTimeAction = getModificators(this, 'reduce_action_time')
-    let waifuTimeEX = getModificators(this, 'reduce_EX_time')
-    let waifuTimeAnalyse = getModificators(this, 'reduce_analyse_time')
-    let waifuTimeDecrypt = getModificators(this, 'reduce_decrypt_time')
-    let addArtifactLevel = getModificators(this, 'add_artifact_level')
-    //if(waifuTimeAction != 1){modificators += `${eval(getLoc)("reduce_action_time")} : ${Math.round((1 - 1 / waifuTimeAction)*100)}% \n`}
-    if(waifuTimeEX != 1){modificators += `${eval(getLoc)("reduce_explo_time")} : ${Math.round((1 - 1 / waifuTimeEX)*100)}% \n`}
-    if(waifuTimeAnalyse != 1){modificators += `${eval(getLoc)("reduce_analyse_time")} : ${Math.round((1 - 1 / waifuTimeAnalyse)*100)}% \n`}
-    if(waifuTimeDecrypt != 1){modificators += `${eval(getLoc)("reduce_decrypt_time")} : ${Math.round((1 - 1 / waifuTimeDecrypt)*100)}% \n`}
-    if(addArtifactLevel != 0){modificators += `${eval(getLoc)("add_artifact_level")} : ${addArtifactLevel} \n`}
+    modificators += getModificators(this, 'reduce_explo_time').toString(message)
+    modificators += getModificators(this, 'reduce_analyse_time').toString(message)
+    modificators += getModificators(this, 'reduce_decrypt_time').toString(message)
+    modificators += getModificators(this, 'add_artifact_level').toString(message)
 
-    let XPstdMult = getModificators(this, 'mult_XP_std')
-    let XPmaniaMult = getModificators(this, 'mult_XP_mania')
-    let XPcatchMult = getModificators(this, 'mult_XP_catch')
-    let XPtaikoMult = getModificators(this, 'mult_XP_taiko')
-    if(XPstdMult != 1){modificators += `${eval(getLoc)("incr_xp_gain_std")} : ${Math.round(XPstdMult*100 - 100)}% \n`}
-    if(XPmaniaMult != 1){modificators += `${eval(getLoc)("incr_xp_gain_mania")} : ${Math.round(XPmaniaMult*100 - 100)}% \n`}
-    if(XPcatchMult != 1){modificators += `${eval(getLoc)("incr_xp_gain_catch")} : ${Math.round(XPcatchMult*100 - 100)}% \n`}
-    if(XPtaikoMult != 1){modificators += `${eval(getLoc)("incr_xp_gain_taiko")} : ${Math.round(XPtaikoMult*100 - 100)}% \n`}
+    modificators += getModificators(this, 'mult_XP_std').toString(message)
+    modificators += getModificators(this, 'mult_XP_mania').toString(message)
+    modificators += getModificators(this, 'mult_XP_catch').toString(message)
+    modificators += getModificators(this, 'mult_XP_taiko').toString(message)
 
     let multStg = this.stg / this.b_stg
     let multAgi = this.agi / this.b_agi
@@ -262,6 +241,7 @@ export default class waifu extends templateWaifu{
       ${eval(getLoc)("rarity")} : ${this.rarityName(message)} \n`
     )
     embed.addFields(showOutfit, showWeapon, showAccessory)
+    if(!modificators) modificators = eval(getLoc)("no_modificators")
     embed.addField(eval(getLoc)("modificators"),  modificators)
     return embed
   }

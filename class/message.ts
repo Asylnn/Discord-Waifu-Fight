@@ -65,7 +65,7 @@ export default class globalMessage{
     this.components.push(actionRow)
   }
 
-  reply(additionnalContent:string = " ", ephemeral = true){
+  reply(additionnalContent = "", ephemeral = true){
     this.addResponse(additionnalContent)
     const messageReplyOptions = {
       content:this.response + " ",
@@ -73,7 +73,9 @@ export default class globalMessage{
       components:this.components,
     };
 
-    if(!this.hasReplied || this.channel.id == eventDiscordChannel.id){
+
+
+    if((!this.hasReplied || this.channel.id == eventDiscordChannel.id) && (!this.hasReplied && TEST_BUILD)){
 
       this.hasReplied = true
       this.response = ""
@@ -96,12 +98,17 @@ export default class globalMessage{
       }
     }
     else if(this.haveToUpdate){
-      this.channel.update(messageReplyOptions)
+      if(this.type == "DM"){
+        this.channel.dmChannel.messages.fetch(this.id).then((message:Discord.Message) => message.edit(messageReplyOptions))
+      }
+      else {
+        this.channel.update(messageReplyOptions)
+      }
     }
   }
 
   async createPageInteraction(numberOfPages:number, createEmbed:(page:number, interaction?:Discord.ButtonInteraction) => Discord.MessageEmbed){
-    if(numberOfPages) numberOfPages = 1
+    if(!numberOfPages) numberOfPages = 1
     this.addButton("pageLeft", "<<", "PRIMARY")
     this.addButton("pageRight", ">>", "PRIMARY")
     let page = 1
@@ -120,11 +127,6 @@ export default class globalMessage{
         interaction.update({embeds:this.embeds, content:" "})
       }
       else createEmbed(page, interaction)
-
-
-
-      //interaction.reply({ content: `These buttons aren't for you!`, ephemeral: true })
-
 
     })
     return true

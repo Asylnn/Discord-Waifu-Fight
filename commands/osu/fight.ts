@@ -1,7 +1,7 @@
 import message from '../../class/message'
 import user from '../../class/user'
 import between from '../../genericFunctions/between'
-import {milliToHours} from '../../genericFunctions/timeConversion'
+import {milliToMinutes} from '../../genericFunctions/timeConversion'
 import {TIME_FIGHT, BEATMAP_HISTORY_SIZE} from '../../files/config.json'
 import randInt from '../../genericFunctions/randInt'
 import gamemode from '../../class/types/gamemode'
@@ -82,7 +82,7 @@ export default async function fight(message: message, user: user, args:Array<str
   if(!waifu.testSendMesAction(message, "waifu_already_doing_action")){
     if(!between(star,0,11)){message.addResponse(eval(getLoc)("invalid_star")); return true;}
     if(user.fight.isInAFight){
-      const timeLeft = milliToHours(user.fight.time + TIME_FIGHT - message.createdTimestamp); timeLeft
+      const timeLeft = milliToMinutes(user.fight.time + TIME_FIGHT - message.createdTimestamp); timeLeft
       if(user.fight.time + TIME_FIGHT >= message.createdTimestamp){message.addResponse(eval(getLoc)("already_in_fight")); return true;}
     }
     const beatmap = await getMap(gamemode, star, user.playedMapsIds)

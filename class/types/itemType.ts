@@ -3,15 +3,25 @@ export default itemType
 
 
 export const MAJ: {
-"consumableuser": "consumableUser",
-"equipmentuser": "equipmentUser",
-"consumablewaifu": "consumableWaifu",
-"equipmentwaifu": "equipmentWaifu",
-"material":"material"
+  "uc": "userConsumable",
+  "ue": "userEquipment",
+  "wc": "waifuConsumable",
+  "we": "waifuEquipment",
+  "m":"material",
+  "userconsumable": "userConsumable",
+  "userequipment": "userEquipment",
+  "waifuconsumable": "waifuConsumable",
+  "waifuequipment": "waifuEquipment",
+  "material":"material"
 } =  {
-  "consumableuser": "consumableUser",
-  "equipmentuser": "equipmentUser",
-  "consumablewaifu": "consumableWaifu",
-  "equipmentwaifu": "equipmentWaifu",
+  "uc": "userConsumable",
+  "ue": "userEquipment",
+  "wc": "waifuConsumable",
+  "we": "waifuEquipment",
+  "m":"material",
+  "userconsumable": "userConsumable",
+  "userequipment": "userEquipment",
+  "waifuconsumable": "waifuConsumable",
+  "waifuequipment": "waifuEquipment",
   "material":"material"
 }

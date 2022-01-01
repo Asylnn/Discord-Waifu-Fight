@@ -1,7 +1,6 @@
 import message from '../../class/message'
 import user from '../../class/user'
 import createSimpleEmbed from '../util/createSimpleEmbed'
-import {OBJECT_PER_PAGE} from '../../files/config.json'
 import randInt from '../../genericFunctions/randInt'
 import waifu from '../../class/waifu'
 

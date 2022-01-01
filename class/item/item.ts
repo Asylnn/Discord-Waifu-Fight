@@ -1,4 +1,7 @@
+
+
 export default abstract class item {
+  public readonly objectType: string = ""
   public readonly id: string
   public readonly name: string
   public readonly description: string
@@ -7,6 +10,7 @@ export default abstract class item {
   public readonly rarity: number
   public value: number
   public readonly img: string
+  public readonly uniqueId: string
 
   constructor(id = "-1", name = "noName", description = "noDesc", rarity = 0, value = -69, img = ""){
     this.id = id
@@ -15,6 +19,8 @@ export default abstract class item {
     this.rarity = rarity
     this.value = value
     this.img = img
+    this.uniqueId = uniqueId
+    uniqueId = (+uniqueId+1).toString()
   }
 }
 

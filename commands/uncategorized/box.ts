@@ -1,7 +1,7 @@
 import message from '../../class/message'
 import user from '../../class/user'
 import randInt from '../../genericFunctions/randInt'
-import consumableUserClass from '../../class/item/consumableUser'
+import consumableUserClass from '../../class/item/userConsumable'
 
 commandManager?.create({
   name:"box",

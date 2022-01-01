@@ -1,8 +1,8 @@
-import {modificator} from "../types/modificator";
+import modificator from "../modificator";
 import item from './item'
 
-export default class equipmentUser extends item {
-  public readonly objectType = "equipmentUser"
+export default class userEquipment extends item {
+  public readonly objectType = "userEquipment"
 
   public modificators: Array<modificator>
 

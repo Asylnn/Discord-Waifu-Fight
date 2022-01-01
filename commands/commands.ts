@@ -73,8 +73,9 @@ import waifus from './information/waifus'
 import textCreateAcc from './information/textCreateAccount'
 import textHelp from './information/textHelp'
 import waifuCollection from './information/waifuCollection'
+import dungeons from './information/dungeon'
 
-
+import enterDungeon from './dungeon/enterDungeon'
 
 import accept from './trades/accept'
 import refuse from './trades/refuse'
@@ -208,11 +209,14 @@ export default function replyCommand(message: message, user: userClass, args: Ar
       }
       break;
     case "DM-save":
+    case "GUILD_TEXT-save":
       if(user.id == "297788049230921728"){
         try {
           save()
+          message.addResponse("save complete")
         } catch (e) {
           console.log(e)
+          message.addResponse("save failed!")
         }
       }
       else{
@@ -253,6 +257,7 @@ export default function replyCommand(message: message, user: userClass, args: Ar
     case "interaction-setosuname":
       commandStatus = setOsuName(message,user, args, initialMessage)
       break;
+    case "GUILD_TEXT-osuid":
     case "osu-setosuid":
     case "GUILD_TEXT-setosuid":
     case "interaction-setosuid":
@@ -276,8 +281,16 @@ export default function replyCommand(message: message, user: userClass, args: Ar
     case "GUILD_TEXT-nomentions":
     case "osu-nomention":
     case "osu-nomentions":
-      user.beMentionned = user.beMentionned ? false : true
-      message.addResponse(eval(getLoc)("update_notifications"))
+      user.beMentionned = !user.beMentionned
+      message.addResponse(eval(getLoc)(user.beMentionned ? "get_notifications" : "no_notification"))
+      break;
+    case "GUILD_TEXT-nomention":
+    case "GUILD_TEXT-nomentions":
+    case "osu-nomention":
+    case "osu-nomentions":
+      user.ephemeral = !user.ephemeral
+      message.addResponse(eval(getLoc)(!user.ephemeral ? "show_reply" : "hide_reply"))
+
       break;
     case "GUILD_TEXT-editname":
     case "interaction-editname":
@@ -286,10 +299,6 @@ export default function replyCommand(message: message, user: userClass, args: Ar
       break;
     case "GUILD_TEXT-lb":
       commandStatus = lb(message, args, initialMessage)
-      break;
-    case "interaction-rank":
-    case "GUILD_TEXT-rank":
-      commandStatus = rank(message, user, initialMessage)
       break;
     case "osu-default":
     case "interaction-defaultwaifu"
@@ -391,6 +400,19 @@ export default function replyCommand(message: message, user: userClass, args: Ar
       break;*/
     case (user.currentDealId != "-1" ? command : "LÖVBACKEN") : // XXXXXXXXXXX ---- Test if the user isn't in a trade ---- XXXXXXXXXXX //
       message.addResponse(eval(getLoc)("in_deal"))
+      break;
+
+    case "GUILD_TEXT-enterdungeon":
+    case "GUILD_TEXT-enter":
+    case "dm-enterdungeon":
+    case "dm-enter":
+    case "interaction-enter":
+      commandStatus = enterDungeon(message, user, args, initialMessage)
+      break;
+    case "GUILD_TEXT-dungeon":
+    case "GUILD_TEXT-dungeons":
+    case "interaction-dungeon":
+      commandStatus = dungeons(message)
       break;
     case "GUILD_TEXT-startdeal":
       commandStatus = startDeal(message, user, initialMessage)

@@ -30,9 +30,4 @@ export default async function analyse(message :message ,user: user, args: Array<
   user.items.removeItem("1") //artifact
   message.addResponse(eval(getLoc)("waifu_analyse"))
 
-
-
-
-
-
 }

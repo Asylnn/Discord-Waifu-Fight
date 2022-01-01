@@ -5,15 +5,12 @@ import osuAPI from './osuAPI/Api'
 import collection from './class/collection'
 import pageEmbed from './class/types/pageEmbed'
 import dungeon from './class/dungeon'
-import consumableUser from './class/item/consumableUser'
-import consumableWaifu from './class/item/consumableWaifu'
-import equipmentWaifu from './class/item/equipmentWaifu'
-import equipmentUser from './class/item/equipmentUser'
-import materials from './class/item/materials'
+import consumableUser from './class/item/userConsumable'
+import consumableWaifu from './class/item/waifuConsumable'
+import equipmentWaifu from './class/item/waifuEquipment'
+import equipmentUser from './class/item/userEquipment'
+import materials from './class/item/material'
 import {TEST_BUILD} from './files/config.json'
-
-
-
 
 type shoppingItem = {proposer:{id:string, username:string}, price:number, object:waifu | equipmentWaifu | equipmentUser | consumableWaifu | consumableUser | materials, amount: number}
 
@@ -39,6 +36,7 @@ declare global {
   var allPagesEmbed: collection<string, pageEmbed>
   var osuAPI: osuAPI
   var activeDungeons: Map<string,dungeon>
+  var uniqueId: string
 }
 
 
@@ -51,6 +49,5 @@ import save from './save'
 if(!TEST_BUILD){ //Auto Save every 5 minutes if it's not a test build.
   setInterval(function(){
     save().catch(err => console.log(err))
-    console.log("save complete!")
   }, 120000)
 }

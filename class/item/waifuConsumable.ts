@@ -1,8 +1,9 @@
 import effect from '../types/effect'
 import item from './item'
 
-export default class consumableUser extends item {
-  public readonly objectType = "consumableUser"
+export default class waifuConsumable extends item {
+  public readonly objectType = "waifuConsumable"
+
   public effects: Array<effect>
 
   //Generating a new instance

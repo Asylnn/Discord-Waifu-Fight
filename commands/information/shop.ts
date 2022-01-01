@@ -1,10 +1,10 @@
 import message from '../../class/message'
 import user from '../../class/user'
 import waifu from '../../class/waifu'
-import {LEVEL_PERMISSIONS} from '../../files/config.json'
+import {LEVEL_PERMISSIONS, TEST_BUILD} from '../../files/config.json'
 import {OBJECT_PER_PAGE} from '../../files/config.json'
 import Discord from 'discord.js'
-import equipmentWaifu from '../../class/item/equipmentWaifu'
+import equipmentWaifu from '../../class/item/waifuEquipment'
 import createSimpleEmbed from '../util/createSimpleEmbed'
 
 commandManager.create({
@@ -26,7 +26,7 @@ commandManager.create({
 })
 
 export default async function shop(message: message, user: user, args: Array<string>, interaction:Discord.CommandInteraction){
-  if(user.lvl < LEVEL_PERMISSIONS.shop){message.reply(eval(getLoc)("lvl_too_low")); return true;}
+  if(user.lvl < LEVEL_PERMISSIONS.shop && !TEST_BUILD){message.reply(eval(getLoc)("lvl_too_low")); return true;}
   let numberOfPages:number
 
   const type = message.isInteraction ? interaction.options.getString("s") : args[1]

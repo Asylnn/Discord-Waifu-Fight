@@ -34,22 +34,38 @@
     "rarity3": "très rare",
     "rarity4": "épique",
     "rarity5": "légendaire",
+
+
+
+
     "reduce_action_time": "Réduction du temps d'une action",
     "reduce_explo_time": "Réduction du temps d'exploration",
     "reduce_analyse_time": "Réduction du temps d'analyse",
-    "incr_xp_gain": "Augmentation du gain d'XP de toutes les waifus",
+    "mult_XP": "Augmentation du gain d'XP",
+    "mult_XP_std": "Augmentation du gain d'XP en std",
+    "mult_XP_mania": "Augmentation du gain d'XP en mania",
+    "mult_XP_catch": "Augmentation du gain d'XP en catch",
+    "mult_XP_taiko": "Augmentation du gain d'XP en taiko",
+    "mult_stg": "Augmentation de la STG de toutes les waifus",
+    "mult_int": "Augmentation de l'INT de toutes les waifus",
+    "nakano_bonus": "Augmentation de 40% de l'EX & XP, de l'Int de 20% et ajout de 5 de luck pour toutes les soeurs Nakano",
+    "reduce_decrypt_time": "Réduction du temps de décryptage",
+    "mult_kaw":"Augmentation de la KAW",
+    "mult_dext":"Augmentation de la DEXT",
+    "mult_agi":"Augmentation de l'AGI",
+    "mult_luck":"Augmentation de la LUCK",
+    "mult_psy":"Augmentation de l'attaque psychique",
+    "mult_phy":"Augmentation de l'attaque physique",
+    "mult_mag":"Augmentation de l'attaque magique",
+
+
+
+
+
     "waifus_sorted": "Vos waifus ont bien été triées!",
     "items_sorted": "Vos items ont bien été triés!",
     "sort_item_missing_argument": "Vous devez préciser par quoi vous souhaitez trier les items",
     "sort_waifu_missing_argument": "Vous devez préciser par quoi vous souhaitez trier les waifus",
-    "incr_xp_gain_std": "Augmentation du gain d'XP en std",
-    "incr_xp_gain_mania": "Augmentation du gain d'XP en mania",
-    "incr_xp_gain_catch": "Augmentation du gain d'XP en catch",
-    "incr_xp_gain_taiko": "Augmentation du gain d'XP en taiko",
-    "incr_ex_gain": "Augmentation de l'EX de toutes les waifus",
-    "incr_int_gain": "Augmentation de l'Int de toutes les waifus",
-    "nakano_bonus": "Augmentation de 40% de l'EX & XP, de l'Int de 20% et ajout de 5 de luck pour toutes les soeurs Nakano",
-    "reduce_decrypt_time": "Réduction du temps de décryptage",
     "get_claims": "Les claims",
     "get_dango": "La peluche",
     "get_pow": "La puissance",
@@ -82,6 +98,7 @@
     "equiped_item": "Item equipé",
     "modificators": "Modificateurs",
     "price": "prix",
+    "item_xp":"Proudre de rêves",
     "level_up": "${this.name} a gagné un niveau!",
     "earn_money": "Vous avez recu ${value}¥",
     "new_multxp": "Vous obtiendrez ${value} fois plus d'XP à votre prochain claim",
@@ -424,27 +441,66 @@
     "duplicate_replace_waifu": "Cette waifu est déjà de votre coté !",
     "gacha_currency_name": "Essence de rêves",
     "not_enough_gacha_currency":"Vous n'avez pas assez d'${fr.gacha_currency_name}",
+    "already_in_dungeon":"Vous êtes déjà en donjon!",
+    "dungeon_does_not_exitst":"Ce donjon n'existe pas!",
+    "invalid_stage":"Cette étage n'existe pas (doit être entre 1 et 10)",
+    "check_dm":"regardez vos dms!",
+    "no_modificators":"pas de modificateurs",
+    "claim_map_button":"claim",
+    "skip_map_button": "skip map",
+    "abandon_dungeon_button": "abandonner",
+    "generated_map_earlier":"Vous venez juste d'avoir une map! attendez ${timeLeft} avant de skip",
+    "leaderboard_title":"leaderboard",
+    "went_maid_cafe":"Votre waifu est parti travailler au maid café!",
+    "item_shop_title":"Magasin ya \"c'que ta besoin!\"",
+    "went_mining":"Votre waifu est parti miner!",
+    "waifu_back_from_mining":"Votre waifu est revenu de la mine! elle a ramenée ${itemXP} {fr.item_xp} et : \r\n${listOfMinerals}",
+    "waifu_back_from_cafe":"Votre waifu reviens du maid cafe, elle a recu ${reward} en pourboire et a générée ${gachaReward} ${fr.gacha_currency_name}",
+    "show_reply":"Les réponses des commandes sont désormais visible par tous!",
+    "hide_reply":"Vous seul pouvez voir les réponses des commandes",
+    "delete_dungeon_confirmation":"Appuyez encore une fois sur le boutton pour confirmer",
+    "dungeon_close":"Le donjon a fermé ses portes",
 
 
+    "time_left":"Temps restant",
+    "boss_resistances":"Résistances",
+    "map_genre":"Type de map",
+    "dungeon_fight_map":"Faites cette map! [${this.mapGenre}]",
+
+    "phy":"physique",
+    "psy":"psychique",
+    "mag":"magique",
 
 
-
+    "princess_sets":"Princesse",
+    "princess_dungeon":"Chateau des temps perdus",
+    "princess_description":"Ce chateau venant de temps ancestraux présente en son centre une princesse assez péculière",
+    "boss_princess":"Princesse du Temps",
+    "princess_outfit":"Robe royale",
+    "princess_outfit_description":"Une robe en soie de haute qualité, elle donne au porteur un étrange sentiment de supériorité",
+    "princess_accessory":"Diadème",
+    "princess_accessory_description":"Ce diadème est ornée d'une multitude de gemmes, possédant une couleur quasi divine",
+    "princess_weapon":"Sceptre",
+    "princess_weapon_description":"Ce sceptre semble distordre l'éspace temps...",
+    "gived_item_xp":"Vous avez utilisé ${amount} ${fr.item_xp} pour améliorer l'item ${eval(`fr.${item.name}`)}",
+    "equipment_waifu_new_modificator":"${eval(`fr.${this.name}`)} à un nouveau modificateur!",
+    "equipment_waifu_upgraded_modificator":"un des modificateurs de ${eval(`fr.${this.name}`)} à été amélioré!",
 
 
     "attack_lines": {
-      "magical" : [
+      "mag" : [
         "${waifu.name} s'est concentrée sur la formule de son sort pour ne pas vous decevoir et grâce à sa détermination, elle à reussi a infliger ${totalDamage} de dégats !",
         "La tempête de glace de ${waifu.name} à percée l'armure du boss et lui a retiré ${totalDamage} points de vie !",
         "La puissante magie qui emmane de ${waifu.name} lui a permis d'effectuer ${totalDamage} dégats !",
         "Le pouvoir insoupconné de ${waifu.name} à surpris le boss et il a perdu ${totalDamage} points de vie !"
       ],
-      "physical" : [
+      "phy" : [
         "${waifu.name} à jailli son arme, l'a levée au ciel et s'est servie des rayons du soleil pour infliger ${totalDamage} de dégats !",
         "La force insoupconnée de ${waifu.name} à transpercée l'armure du boss pour un total de ${totalDamage} points de vie !",
         "${waifu.name} s'est servie de son arme pour effectuer un coup latéral sur la machoire du boss et a réussi à retirer ${totalDamage} points de vie !",
         "${waifu.name} à analyser le boss pour attaquer un des ses points vitaux pour un total de ${totalDamage} dégats !"
       ],
-      "psychic" : [
+      "psy" : [
         "${waifu.name} à utilisé la technique de supplier en pleurant, et de sa cuteness infinie à infliger ${totalDamage} de dégats !",
         "${waifu.name} est si kawaii qu'une seule utilisation du terme \"Onii-chan\" à réussi à faire baisser la garde du boss, lui retirant ${totalDamage} points de vie !",
         "La toute puissance de ${waifu.name} à été utilisée pour faire des grimaces au boss, le faisant rire pour ${totalDamage} de dégats !",

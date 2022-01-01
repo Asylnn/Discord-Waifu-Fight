@@ -1,6 +1,6 @@
 import message from '../../class/message'
 import user from '../../class/user'
-import {LEVEL_PERMISSIONS} from '../../files/config.json'
+import {LEVEL_PERMISSIONS, TEST_BUILD} from '../../files/config.json'
 import Discord from 'discord.js'
 
 const options: Discord.ApplicationCommandChoicesData[] = [
@@ -43,7 +43,7 @@ commandManager.create({
 
 export default async function buy(message: message, user: user, args: Array<string>, interaction: Discord.CommandInteraction){
   let price
-  if(user.lvl < LEVEL_PERMISSIONS.buy){message.addResponse(eval(getLoc)("lvl_too_low")); return true;}
+  if(user.lvl < LEVEL_PERMISSIONS.buy && !TEST_BUILD){message.addResponse(eval(getLoc)("lvl_too_low")); return true;}
 
   const {i:index, t:type} = !message.isInteraction ? {"i":parseInt(args[2]) - 1, "t":args[1]} : {"i":interaction.options.getInteger('index')!,"t":interaction.options.getSubcommand()}
 

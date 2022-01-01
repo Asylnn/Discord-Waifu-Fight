@@ -1,13 +1,13 @@
 import message from '../../class/message'
 import user from '../../class/user'
-import item from '../../class/item/consumableWaifu'
+import item from '../../class/item/waifuConsumable'
 import {deepCopy} from '../../genericFunctions/copy'
 import getParameterObject from '../util/getParameterObject'
 import Discord from 'discord.js'
 
 
 commandManager.create({
-  name:"usexp",
+  name:"giveitemxp",
   type:"CHAT_INPUT",
   description:"c o n s u m e",
   options:[

@@ -58,6 +58,8 @@ export default async function replaceWaifu(message: message, user: user, args: A
     user.waifus[waifuIndex] = reserveWaifu
     user.reserveWaifu.splice(reserveWaifuIndex)
     message.addResponse(eval(getLoc)("remplaced_waifu"))
+    user.save()
+    collector.stop()
   })
 
 }

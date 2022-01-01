@@ -7,7 +7,7 @@ import {ASYLN_DISCORD_ID} from '../files/config.json'
 import sleep from '../genericFunctions/sleep'
 
 export default async function check(){
-  const message = new messageClass(defaultLanguage, "", 'GUILD_TEXT', -1, eventDiscordChannel, "-1");
+  const message = new messageClass(defaultLanguage, "", 'GUILD_TEXT', -1, eventDiscordChannel, "-5");
   (await users.all()).forEach(user => {
     const userMention = user.beMentionned ? guild.members.cache.get(user.id) : user.osuName
     message.lg = user.lg

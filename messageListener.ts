@@ -47,8 +47,8 @@ discordClient.on('messageCreate', async function(discordMessage: Discord.Message
    if(await users.exists(discordMessage.author.id)){
     userObj = await users.get(discordMessage.author.id)
   }
-  commands(message, userObj, args, discordMessage)
 
+  commands(message, userObj, args, discordMessage)
 })
 
 osuBancho.on("PM", async (osuMessage: any) => {

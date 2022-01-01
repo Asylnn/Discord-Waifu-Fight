@@ -31,21 +31,24 @@ Sinon, c'est la défaite.
 
 
 import {beatmap, mapGenre} from './beatmap'
-import equipmentWaifu from "../item/equipmentWaifu";
+import equipmentType from './equipmentType'
+
 export default interface templateDungeon {
-  createdTimestamp: number
+  id:string
   name: string
   description: string
   baseBossHP: number
-  bossRes: [number, number, number]
+  bossName: string
+  bossRes: {psy:number, phy:number, mag:number}
+  sets: string
   items: Array<{
     "id":string
     "name":string
     "description":string
     "imgURL":string
-    "type":"outfit" | "weapon" | "accessory"
+    "type":equipmentType
     "set": string
   }>
-  beatmaps: [beatmap]
+  beatmaps: beatmap[][]
   mapGenre: mapGenre
 }

@@ -4,14 +4,15 @@ import questManager from '../class/questManager'
 import waifuManager from '../class/waifuManager'
 import itemManager from '../class/itemManager'
 import item from '../class/item/item'
-import equipmentWaifu from '../class/item/equipmentWaifu'
-import equipmentUser from '../class/item/equipmentUser'
-import consumableUser from '../class/item/consumableUser'
-import consumableWaifu from '../class/item/consumableWaifu'
-import materials from '../class/item/materials'
+import waifuEquipment from '../class/item/waifuEquipment'
+import userEquipment from '../class/item/userEquipment'
+import userConsumable from '../class/item/userConsumable'
+import waifuConsumable from '../class/item/waifuConsumable'
+import material from '../class/item/material'
+import modificator from '../class/modificator'
 
 
-eval(""); waifuManager; questManager; user; waifu; item; itemManager; materials; consumableWaifu; consumableUser; equipmentUser; equipmentWaifu;
+eval(""); waifuManager; questManager; user; waifu; item; itemManager; material; waifuConsumable; userConsumable; userEquipment; waifuEquipment; modificator;
 
 
 export default function decode(data: string): any{
@@ -37,13 +38,14 @@ function recursiveShit2(object: any, userObject: any  = undefined){
 
     if(object.constructor.name == "Array"){
       newObject = []
-      object.forEach((value: any) => newObject.push(recursiveShit2(value, userObject)))
+      object.forEach((value: any) => {
+        newObject.push(recursiveShit2(value, userObject))
+      })
     }
     else{
 
       for(const key in object){
         if(!stop) {
-
           newObject[key] = recursiveShit2(object[key], userObject)
         }
       }

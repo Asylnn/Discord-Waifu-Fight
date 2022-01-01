@@ -1,6 +1,7 @@
 import message from '../../class/message'
 
 export default async function claim_taiko(message: message, osuId: number, beatmapId: number){
+  if(!osuId){message.addResponse(eval(getLoc)("no_osu_id")); return 0}
   const scores = await osuAPI.getUserScores({userId: osuId, type:"recent", gamemode:"osu", limit:10})
 
   console.log("user found! : " + osuId)

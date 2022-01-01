@@ -3,9 +3,15 @@ import fs from 'fs'
 
 export default async function save(){
 
-  const dealIdGeneratorData = JSON.stringify(dealIdGenerator)
+  /*const dealIdGeneratorData = JSON.stringify(dealIdGenerator)
 
   fs.writeFile('./files/dealIdGenerator.json', dealIdGeneratorData, (err) => {
+    if(err) console.log(err)
+  })*/
+
+  const uniqueIdData = JSON.stringify(uniqueId)
+
+  fs.writeFile('./files/uniqueId.json', uniqueIdData, (err) => {
     if(err) console.log(err)
   })
 
@@ -20,4 +26,6 @@ export default async function save(){
   fs.writeFile('./files/userShop.json', userShopData, (err) => {
     if(err) console.log(err)
   })
+
+  console.log("save complete!")
 }

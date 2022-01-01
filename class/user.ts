@@ -1,34 +1,34 @@
-import waifu from "./waifu"
-import itemManager from "./itemManager"
-import equipmentUser from "./item/equipmentUser"
-import questManager from "./questManager"
+import Waifu from "./waifu"
+import ItemManager from "./itemManager"
+import UserEquipment from "./item/userEquipment"
+import QuestManager from "./questManager"
 import gamemode from "./types/gamemode"
 import {PAR_LEVEL, ANA_LEVEL, BOX_LEVEL} from '../files/config.json'
-import globalMessage from './message'
-import { modificator } from './types/modificator'
-import getModificators from '../genericFunctions/getModificators'
-import waifuManager from './waifuManager'
+import Message from './message'
+import Modificator from './modificator'
+const {getModificators} = Modificator
+import WaifuManager from './waifuManager'
 import {deepCopy} from '../genericFunctions/copy'
 import randInt from '../genericFunctions/randInt'
 
 export default class user{
-  public readonly waifuManager: waifuManager
+  public readonly waifuManager: WaifuManager
   public readonly objectType = "user"
   public readonly id: string
   public osuId = 0
   public osuName: string
-  public waifus: Array<waifu | null>
-  public quests: questManager
+  public waifus: Array<Waifu | null>
+  public quests: QuestManager
 
-  public modificators: Array<modificator> = []
+  public modificators: Array<Modificator> = []
   public multXP = 1
   public _money = 500
-  public reserveWaifu: Array<waifu> = []
+  public reserveWaifu: Array<Waifu> = []
   public dailyTimestamp = 0
   public beMentionned = true
   public boxs: Array<number> = []
-  public items: itemManager = new itemManager()
-  public equipedItems: Array<equipmentUser | null> = [null]
+  public items: ItemManager = new ItemManager()
+  public equipedItems: Array<UserEquipment | null> = [null]
   public milestone: bigint = 0n
   public playedMapsIds: Array<number> = []
   public verified = true
@@ -41,6 +41,7 @@ export default class user{
   public fight: {isInAFight:boolean, beatmapId: number, indexWaifu: number, mode:gamemode, time: number} = {isInAFight:false, beatmapId: 0, indexWaifu:0, mode:"osu", time: -1}
   public canAddMap = false
   public waifuXP = 0
+  public itemXP = 0
   public currentDealId = "-1"
   public isDoingDungeon = false
   public gachaCurrency = 0
@@ -48,15 +49,15 @@ export default class user{
 
   constructor(id: string, osuName: string){
 
-    this.waifus = [new waifu(this, waifus.get(["1", "12", "13"][randInt(3)])), null, null]
+    this.waifus = [new Waifu(this, waifus.get(["1", "12", "13"][randInt(3)])), null, null]
     this.id = id
     this.osuName = osuName
-    this.quests = new questManager(this)
-    this.waifuManager = new waifuManager(this)
+    this.quests = new QuestManager(this)
+    this.waifuManager = new WaifuManager(this)
   }
 
   get boxLevel(){
-    const boxLevelModificator = getModificators(this, 'add_box_level')
+    const boxLevelModificator = getModificators(this, 'add_box_level').value
     return 1 + boxLevelModificator + BOX_LEVEL.reduce((accumulator: number, level: number) => {
       if(level <= this.lvl) return ++accumulator
       else return accumulator
@@ -64,7 +65,7 @@ export default class user{
   }
 
   get parLevel(){
-    const boxLevelModificator = getModificators(this, 'add_par_level')
+    const boxLevelModificator = getModificators(this, 'add_par_level').value
     return 1 + boxLevelModificator + PAR_LEVEL.reduce((accumulator: number, level: number) => {
       if(level <= this.lvl) return ++accumulator
       else return accumulator
@@ -72,7 +73,7 @@ export default class user{
   }
 
   get anaLevel(){
-    const boxLevelModificator = getModificators(this, 'add_artifact_level')
+    const boxLevelModificator = getModificators(this, 'add_artifact_level').value
     return 1 + boxLevelModificator + ANA_LEVEL.reduce((accumulator: number, level: number) => {
       if(level <= this.lvl) return ++accumulator
       else return accumulator
@@ -88,7 +89,7 @@ export default class user{
   }
 
   set money(coins){
-    const mult = getModificators(this, 'mult_money_earned')
+    const mult = getModificators(this, 'mult_money_earned').value
     this.quests.updateQuest("quest_money", coins*mult)
     this._money += coins*mult
   }
@@ -101,11 +102,11 @@ export default class user{
     return this.playCount.osu + this.playCount.mania + this.playCount.taiko + this.playCount.fruits
   }
 
-  save(){
-    users.put(this.id, deepCopy(this))
+  async save(){
+    await users.put(this.id, deepCopy(this))
   }
 
-  giveXP(xp: number, message: globalMessage, first = true){
+  giveXP(xp: number, message: Message, first = true){
     this.xp += xp
     if(this.xp >= this.xplvlup){
       this.xp -= this.xplvlup

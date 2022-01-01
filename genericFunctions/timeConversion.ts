@@ -1,3 +1,10 @@
+export function milliToMinutes(milli: number){
+   let min = Math.floor(milli/60000)
+   milli = milli % 60000
+   let sec = Math.floor(milli/1000)
+   return `${min}min${sec}s`
+}
+
 export function milliToHours(milli: number){
    let hours = Math.floor(milli/3600000)
    milli = milli % 3600000

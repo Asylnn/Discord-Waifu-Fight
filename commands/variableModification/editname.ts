@@ -1,6 +1,6 @@
 import message from '../../class/message'
 import user from '../../class/user'
-import {LEVEL_PERMISSIONS} from '../../files/config.json'
+import {LEVEL_PERMISSIONS, TEST_BUILD} from '../../files/config.json'
 import truncate from '../../genericFunctions/truncate'
 import Discord from  'discord.js'
 import getParameterObject from '../util/getParameterObject'
@@ -27,7 +27,7 @@ commandManager?.create({
 
 
 export default async function editname(message: message, user: user, args: Array<string>, interaction: Discord.CommandInteraction){
-  if(user.lvl < LEVEL_PERMISSIONS.editname){message.addResponse(eval(getLoc)("lvl_too_low")); return true;}
+  if(user.lvl < LEVEL_PERMISSIONS.editname && !TEST_BUILD){message.addResponse(eval(getLoc)("lvl_too_low")); return true;}
 
   const waifu = await getParameterObject(message, user, args[1], interaction, "waifu")
   if(!waifu){return true;}

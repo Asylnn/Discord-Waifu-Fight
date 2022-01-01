@@ -1,7 +1,7 @@
 import message from '../../class/message'
 import user from '../../class/user'
 import templateWaifu from '../../class/templateWaifu'
-import {LEVEL_PERMISSIONS} from '../../files/config.json'
+import {LEVEL_PERMISSIONS, TEST_BUILD} from '../../files/config.json'
 
 commandManager?.create({
   name:"collection",
@@ -10,7 +10,7 @@ commandManager?.create({
 })
 
 export default async function waifuCollection(message: message, user: user){
-  if(user.lvl < LEVEL_PERMISSIONS.collection){message.reply(eval(getLoc)("lvl_too_low")); return true;}
+  if(user.lvl < LEVEL_PERMISSIONS.collection && !TEST_BUILD){message.reply(eval(getLoc)("lvl_too_low")); return true;}
 
   let col = ""
   waifus.each((templateWaifu: templateWaifu) => {

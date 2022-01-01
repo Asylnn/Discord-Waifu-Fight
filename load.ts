@@ -30,11 +30,14 @@ export default async function load(){
   global.osuAPI = new api(OSU_CLIENT_ID, OSU_CLIENT_SECRET)
   global.day = (new Date()).getDate()
 
-global.discordClient
+  global.discordClient
   fs.readFile('./files/beatmapsIds.json', (err, data) => {
     if(err) console.log(err)
     global.beatmaps = JSON.parse(data.toString())
   })
+  const data = fs.readFileSync('./files/uniqueId.json')
+  global.uniqueId = JSON.parse(data.toString())
+
   fs.readFile('./files/globalAuction.json', (err, data) => {
     if(err) console.log(err)
     global.globalAuction = decode(data.toString())
@@ -59,8 +62,15 @@ global.discordClient
   });
 
   require('./objectCreation')
-  require('./database')
+  require('./database');
 
+  (await users.all()).forEach(user => {
+    user.isDoingDungeon = false
+    user.waifus.forEach((waifu) => {
+      if(waifu) waifu.action = null
+    })
+    user.save()
+  })
 
   //convert()
 }

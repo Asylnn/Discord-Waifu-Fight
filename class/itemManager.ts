@@ -1,53 +1,53 @@
 import item from './item/item'
-import consumableUser from './item/consumableUser'
-import consumableWaifu from './item/consumableWaifu'
-import equipmentUser from './item/equipmentUser'
-import equipmentWaifu from './item/equipmentWaifu'
-import material from './item/materials'
+import WaifuEquipment from './item/waifuEquipment'
+import UserEquipment from './item/userEquipment'
+import UserConsumable from './item/userConsumable'
+import WaifuConsumable from './item/waifuConsumable'
+import Material from './item/material'
 
-type itemClassType =  material | equipmentUser | consumableUser | consumableWaifu | equipmentWaifu
+type itemClassType =  Material | WaifuEquipment | UserEquipment | UserConsumable | WaifuConsumable
 
 
 
 export default class itemManager {
   public readonly objectType = "itemManager"
-  public consumableUser: Array<{item:consumableUser, qty:number}>
-  public consumableWaifu: Array<{item:consumableWaifu, qty:number}>
-  public equipmentUser: Array<{item:equipmentUser, qty:number}>
-  public equipmentWaifu: Array<{item:equipmentWaifu}>
-  public material: Array<{item:material, qty:number}>
+  public userConsumable: Array<{item:UserConsumable, qty:number}>
+  public waifuConsumable: Array<{item:WaifuConsumable, qty:number}>
+  public userEquipment: Array<{item:UserEquipment, qty:number}>
+  public waifuEquipment: Array<WaifuEquipment>
+  public material: Array<{item:Material, qty:number}>
 
 
   constructor(){
-    this.consumableUser = []
-    this.consumableWaifu = []
-    this.equipmentUser = []
-    this.equipmentWaifu = []
+    this.userConsumable = []
+    this.waifuConsumable = []
+    this.userEquipment = []
+    this.waifuEquipment = []
     this.material = []
     this.objectType;
   }
 
   get totalItemCount(){
-    const userConCount = this.consumableUser.reduce((accumulator, itemAndQty) => accumulator += itemAndQty.qty, 1)
-    const userItemCount = this.equipmentUser.reduce((accumulator, itemAndQty) => accumulator += itemAndQty.qty, 1)
-    const waifuConCount = this.consumableWaifu.reduce((accumulator, itemAndQty) => accumulator += itemAndQty.qty, 1)
-    const waifuItemCount = this.equipmentWaifu.length
+    const userConCount = this.userConsumable.reduce((accumulator, itemAndQty) => accumulator += itemAndQty.qty, 1)
+    const userItemCount = this.userEquipment.reduce((accumulator, itemAndQty) => accumulator += itemAndQty.qty, 1)
+    const waifuConCount = this.waifuConsumable.reduce((accumulator, itemAndQty) => accumulator += itemAndQty.qty, 1)
+    const waifuItemCount = this.waifuEquipment.length
     const matCount = this.material.reduce((accumulator, itemAndQty) => accumulator += itemAndQty.qty, 1)
     return userConCount + userItemCount + waifuConCount + waifuItemCount + matCount
   }
 
-  addItem(itemOrId: itemClassType | string , qty = 1){
+  addItem(itemOrId: item | string , qty = 1){
     let item: itemClassType
     if(typeof itemOrId == "string"){
       item = items.get(itemOrId)
     }
     else {
-      item = itemOrId
+      item = itemOrId as itemClassType
     }
-    if(item.objectType == "equipmentWaifu"){
-      let materialAndQty = (this[item.objectType]).find(itemAndQty => itemAndQty.item.id == item.id)
-      if(materialAndQty == undefined) (this[item.objectType]).push({item:item})
-      this[item.objectType].sort((itemA, itemB) => itemA.item.rarity - itemB.item.rarity)
+    if(item.objectType == "waifuEquipment"){
+      let materialAndQty = (this[item.objectType]).find(itemAndQty => itemAndQty.id == item.id)
+      if(materialAndQty == undefined) (this[item.objectType]).push(item)
+      this[item.objectType].sort((itemA, itemB) => itemA.rarity - itemB.rarity)
     }
     else {
       let materialAndQty = (this[item.objectType] as {item:itemClassType, qty:number}[]).find(itemAndQty => itemAndQty.item.id == item.id)
@@ -57,8 +57,25 @@ export default class itemManager {
     }
   }
 
-  removeItem(id: string, amount:number = 1){
-    let item = items.get(id) as material | equipmentUser | consumableUser | consumableWaifu
+  removeItem(item: itemClassType, amount:number = 1){
+
+    if(item.objectType == "waifuEquipment"){
+      let index = this.waifuEquipment.findIndex(equipment => equipment.uniqueId == item.uniqueId)
+      this.waifuEquipment.splice(index, 1)
+    }
+    else {
+      let index = this[item.objectType].findIndex((itemAndQty: {item:item, qty:number}) => itemAndQty.item.id == item.id)
+      if(this[item.objectType][index].qty > amount){
+        this[item.objectType][index].qty -= amount
+      }
+      else{
+        this[item.objectType].splice(index, 1)
+      }
+    }
+  }
+
+  removeItemById(id:string, amount:number = 1){
+    let item = items.get(id) as Material | UserEquipment | UserConsumable | WaifuConsumable
     let index = this[item.objectType].findIndex((itemAndQty: {item:item, qty:number}) => itemAndQty.item.id == id)
 
 
@@ -70,12 +87,8 @@ export default class itemManager {
     }
   }
 
-  removeEquipmentWaifu(slot: number){
-    this.equipmentWaifu.splice(slot)
-  }
-
   hasItem(id: string): boolean {
-    let item = items.get(id) as material | equipmentUser | consumableUser | consumableWaifu
+    let item = items.get(id) as Material | UserEquipment | UserConsumable | WaifuConsumable
 
     if(typeof item == "undefined") return false;
     return this[item.objectType].some((itemAndQty: {item:item, qty:number}) => itemAndQty.item.id == id)

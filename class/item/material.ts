@@ -1,6 +1,6 @@
 import item from './item'
 
-export default class material extends item {
+export default class Material extends item {
   public readonly objectType = "material"
 
 

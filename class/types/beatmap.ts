@@ -1,5 +1,5 @@
 
-export type mapGenre = 'jumps' | 'streams'
+export type mapGenre = 'jumps' | 'streams' | 'unknown'
 export interface beatmap {
   beatmapSetId:number
   id:number

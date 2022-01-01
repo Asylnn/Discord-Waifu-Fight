@@ -1,6 +1,6 @@
 import message from '../../class/message'
 import user from '../../class/user'
-import {LEVEL_PERMISSIONS} from '../../files/config.json'
+import {LEVEL_PERMISSIONS, TEST_BUILD} from '../../files/config.json'
 import Discord from 'discord.js'
 
 commandManager.create({
@@ -32,7 +32,7 @@ export default async function sortWaifu(message: message, user: user, args: Arra
   const sortingCriteria = message.isInteraction ? interaction.options.getString("criteria")! : args[1]
 
 
-  if(user.lvl < LEVEL_PERMISSIONS.sortWaifu){message.addResponse(eval(getLoc)("lvl_too_low")); return true;}
+  if(user.lvl < LEVEL_PERMISSIONS.sortWaifu && !TEST_BUILD){message.addResponse(eval(getLoc)("lvl_too_low")); return true;}
   if(!["int", "luck", "ex", "lvl", "stars", "rarity","name","agi","kaw","dext"].includes(sortingCriteria)){message.addResponse(eval(getLoc)("sort_waifu_missing_argument")); return true;}
   switch(args[1]){
     case "name":

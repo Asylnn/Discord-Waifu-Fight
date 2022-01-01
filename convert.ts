@@ -4,9 +4,18 @@ import itemManager from './class/itemManager'
 import collection from './class/collection'
 import itemClass from './class/item'
 import waifuClass from './class/waifu'
+import User from './class/user'
 
 var w = (nb:number) => BigInt(Math.pow(2, nb))
 const userCol = new collection()
+
+export default async function convert(){
+  (await users.all()).forEach((user)=>{
+    const tempUser = new User('asyln', 'asyln')
+    Object.assign(user, tempUser)    
+    user.save();
+  })
+}
 
 /*export default function convert(){
   const data = fs.readFileSync('usersave.json')

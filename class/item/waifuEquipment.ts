@@ -63,12 +63,12 @@ weapon.add_luck.rarity.statSecondaire <- tableau avec la fourchette [valeur_min,
 
 
 
-import {modificator} from "../types/modificator";
+import modificator from "../modificator";
 import randInt from '../../genericFunctions/randInt'
 import message from '../../class/message'
 import item from './item'
 import equipmentType from '../types/equipmentType'
-import {modificatorType} from '../types/modificator'
+import modificatorType from '../types/modificatorType'
 
 
 const procsPerPiece: {
@@ -77,15 +77,15 @@ const procsPerPiece: {
   "outfit":Array</*rarity*/Array<[modificatorType, number, number]>>,
   "accessory":Array</*rarity*/Array<[modificatorType, number, number]>>
 } = {
-  "generic": [/*Rareté 1*/[["mult_stg",1,2],["mult_int",1,2],["mult_kaw",1,2],["mult_agi",1,2],["mult_dext",1,2],["mult_luck",1,2],["mult_XP",3,3]],
-              /*Rareté 2*/[["mult_stg",2,2],["mult_int",2,2],["mult_kaw",2,2],["mult_agi",2,2],["mult_dext",2,2],["mult_luck",2,2],["mult_XP",5,3]],
-              /*Rareté 3*/[["mult_stg",3,3],["mult_int",3,3],["mult_kaw",3,3],["mult_agi",3,3],["mult_dext",3,3],["mult_luck",3,3],["mult_XP",7,4]],
-              /*Rareté 4*/[["mult_stg",5,4],["mult_int",5,4],["mult_kaw",5,4],["mult_agi",5,4],["mult_dext",5,4],["mult_luck",5,4],["mult_XP",9,6]],
-              /*Rareté 5*/[["mult_stg",6,5],["mult_int",6,5],["mult_kaw",6,5],["mult_agi",6,5],["mult_dext",6,5],["mult_luck",6,5],["mult_XP",11,7]]
+  "generic": [/*Rareté 1*/[["mult_stg",0.01,0.02],["mult_int",0.01,0.02],["mult_kaw",0.01,0.02],["mult_agi",0.01,0.02],["mult_dext",0.01,0.02],["mult_luck",0.01,0.02],["mult_XP",0.03,0.03]],
+              /*Rareté 2*/[["mult_stg",0.02,0.02],["mult_int",0.02,0.02],["mult_kaw",0.02,0.02],["mult_agi",0.02,0.02],["mult_dext",0.02,0.02],["mult_luck",0.02,0.02],["mult_XP",0.05,0.03]],
+              /*Rareté 3*/[["mult_stg",0.03,0.03],["mult_int",0.03,0.03],["mult_kaw",0.03,0.03],["mult_agi",0.03,0.03],["mult_dext",0.03,0.03],["mult_luck",0.03,0.03],["mult_XP",0.07,0.04]],
+              /*Rareté 4*/[["mult_stg",0.05,0.04],["mult_int",0.05,0.04],["mult_kaw",0.05,0.04],["mult_agi",0.05,0.04],["mult_dext",0.05,0.04],["mult_luck",0.05,0.04],["mult_XP",0.09,0.06]],
+              /*Rareté 5*/[["mult_stg",0.06,0.05],["mult_int",0.06,0.05],["mult_kaw",0.06,0.05],["mult_agi",0.06,0.05],["mult_dext",0.06,0.05],["mult_luck",0.06,0.05],["mult_XP",0.11,0.07]]
              ],
-  "weapon": [],
-  "outfit": [],
-  "accessory": []
+  "weapon": [[], [], [], [], []],
+  "outfit": [[], [], [], [], []],
+  "accessory": [[], [], [], [], []]
 }
 
 const mainStatPerPiece: {
@@ -93,17 +93,32 @@ const mainStatPerPiece: {
   "outfit":Array</*rarity*/Array<[modificatorType, number, number]>>,
   "accessory":Array</*rarity*/Array<[modificatorType, number, number]>>
 } = {
-  "weapon": [],
-  "outfit": [],
-  "accessory": []
+  "weapon": [/*Rareté 1*/[["mult_stg",0.01,0.02],["mult_int",0.01,0.02],["mult_kaw",0.01,0.02]],
+              /*Rareté 2*/[["mult_stg",0.02,0.02],["mult_int",0.02,0.02],["mult_kaw",0.02,0.02]],
+              /*Rareté 3*/[["mult_stg",0.03,0.03],["mult_int",0.03,0.03],["mult_kaw",0.03,0.03]],
+              /*Rareté 4*/[["mult_stg",0.05,0.04],["mult_int",0.05,0.04],["mult_kaw",0.05,0.04]],
+              /*Rareté 5*/[["mult_stg",0.06,0.05],["mult_int",0.06,0.05],["mult_kaw",0.06,0.05]]
+             ],
+  "outfit": [/*Rareté 1*/[["mult_agi",0.01,0.02],["mult_dext",0.01,0.02]],
+              /*Rareté 2*/[["mult_agi",0.02,0.02],["mult_dext",0.02,0.02]],
+              /*Rareté 3*/[["mult_agi",0.03,0.03],["mult_dext",0.03,0.03]],
+              /*Rareté 4*/[["mult_agi",0.05,0.04],["mult_dext",0.05,0.04]],
+              /*Rareté 5*/[["mult_agi",0.06,0.05],["mult_dext",0.06,0.05]]
+             ],
+  "accessory": [/*Rareté 1*/[["mult_luck",0.01,0.02],["mult_XP",0.03,0.03]],
+              /*Rareté 2*/[["mult_luck",0.02,0.02],["mult_XP",0.05,0.03]],
+              /*Rareté 3*/[["mult_luck",0.03,0.03],["mult_XP",0.07,0.04]],
+              /*Rareté 4*/[["mult_luck",0.05,0.04],["mult_XP",0.09,0.06]],
+              /*Rareté 5*/[["mult_luck",0.06,0.05],["mult_XP",0.11,0.07]]
+             ],
 }
 
 const maxProcs = 5
 
 
-export default class equipmentWaifu extends item {
-  public readonly objectType = "equipmentWaifu"
-  public lvl = 0
+export default class waifuEquipment extends item {
+  public readonly objectType = "waifuEquipment"
+  public lvl = 1
   public xp = 0
   public readonly type: equipmentType // Helmet,chestplate,boots ...
   public readonly set: string// Maybe add a class for the set of equipment for different checks
@@ -111,18 +126,21 @@ export default class equipmentWaifu extends item {
 
   constructor(id: string, name: string, description:string, rarity: number, img:string, type: equipmentType, set: string){
     //Générer valeur
+
     super(id, name, description, rarity, rarity*100, img)
+
 
     this.type = type
     this.set = set
     this.modificators = []
+
+    if(!id) return; /*When getting user from database, everything is a plain JS object (not a class),
+    so you must do something like Object.assign(new object(), object_from_database) to transform it to a class.
+    when doing this every parameters of the constructor is undefined.*/
+
+
     const modificatorInfo = mainStatPerPiece[this.type][rarity - 1][randInt(mainStatPerPiece[this.type][rarity - 1].length)]
-    this.modificators = [{
-      origin: `${this.type}_${this.rarity}_${modificatorInfo[0]}`,
-      value: modificatorInfo[1],
-      type:modificatorInfo[0],
-      valueIncrease:[modificatorInfo[2], 0]
-    }]
+    this.modificators = [new modificator(`${this.type}_${this.rarity}_${modificatorInfo[0]}`, modificatorInfo[0], 1 + modificatorInfo[1], [modificatorInfo[2], 0])]
 
     let numberOfPossibleProcs = [1,2,3,3,4]
     let numberOfModificators = numberOfPossibleProcs[this.rarity] + randInt(2)
@@ -138,19 +156,13 @@ export default class equipmentWaifu extends item {
 
     let randProcIndex = randInt(possibleProcs.length) //Generating the modificator index
     const procInfo = possibleProcs[randProcIndex]
-    const proc : modificator = {
-      origin: `${this.type}_${this.rarity}_${procInfo[0]}`,
-      value: procInfo[1] + randInt(procInfo[2] + 1),
-      type:procInfo[0],
-      valueIncrease: [procInfo[1], procInfo[2]]
-    }
-
+    const proc = new modificator(`${this.type}_${this.rarity}_${procInfo[0]}`, procInfo[0], 1 + procInfo[1] + randInt(procInfo[2] + 1), [procInfo[1], procInfo[2]])
     this.modificators.push(proc)
 
   }
 
   get xpNeededToLevelUp(){
-    return 0
+    return Math.pow(this.rarity, 1.7)*(10 + 4*this.lvl + this.lvl*this.lvl)
   }
 
   giveXP(message: message, amount:number){
@@ -163,24 +175,17 @@ export default class equipmentWaifu extends item {
       this.xp = 0
       message.addResponse(eval(getLoc)("equipment_waifu_lvl_up"))
       const mainStat = this.modificators[0]
-      if(mainStat.valueIncrease){
-        mainStat.value += mainStat.valueIncrease[0]*(1 + Math.pow(this.lvl, 3)/2000)
-      }
-      else {
-        message.addResponse("there is an error, mainStat.valueIncrease is undefined (equipmentWaifu.ts)")
-      }
+      mainStat.value += mainStat.valueIncrease![0]*(1 + Math.pow(this.lvl, 3)/2000)
+
       if(this.lvl % 3 == 0){
         if(this.modificators.length < maxProcs + 1){ // If there is still available procs slots
           this.generateModificator()
+          message.addResponse(eval(getLoc)("equipment_waifu_new_modificator"))
         }
         else {
           const modificator = this.modificators[randInt(maxProcs + 1)]
-          if(modificator.valueIncrease){
-          modificator.value += modificator.valueIncrease[0] + randInt(1 + modificator.valueIncrease[0])
-          }
-          else {
-            message.addResponse("there is an error, modificator.valueIncrease is undefined (equipmentWaifu.ts)")
-          }
+          modificator.value += modificator.valueIncrease![0] + randInt(1 + modificator.valueIncrease![1])
+          message.addResponse(eval(getLoc)("equipment_waifu_upgraded_modificator"))
         }
       }
       this.giveXP(message, tempXP)

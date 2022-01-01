@@ -48,11 +48,11 @@ export default async function add(message: message, user: user, args:Array<strin
         message.addResponse(eval(getLoc)("deal_add_waifu_not_tradable"))
       }
       break;
-    case "consumablewaifu":
-    case "consumableuser":
-    case "equipmentwaifu":
-    case "equipmentuser":
-    case "material":
+    case 'userconsumable':
+    case 'waifuconsumable':
+    case 'userequipment':
+    case 'waifuequipment':
+    case 'material':
       const items = user.items[MAJ[type] as 'material']
       const item = testItem(message, items, index)
       if(!item){return true;}

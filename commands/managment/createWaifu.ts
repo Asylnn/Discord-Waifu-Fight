@@ -1,7 +1,7 @@
 import message from '../../class/message'
 import user from '../../class/user'
 import waifu from '../../class/waifu'
-import {LEVEL_PERMISSIONS, COST_CREATE_WAIFU} from '../../files/config.json'
+import {LEVEL_PERMISSIONS, COST_CREATE_WAIFU, TEST_BUILD} from '../../files/config.json'
 import Discord from 'discord.js'
 
 commandManager?.create({
@@ -22,7 +22,7 @@ export default async function createWaifu(message: message, user: user, args: Ar
 
   const url = message.isInteraction ? interaction.options.getString("url")! : args[1]
 
-  if(user.lvl < LEVEL_PERMISSIONS.createWaifu){message.addResponse(eval(getLoc)("lvl_too_low")); return true;}
+  if(user.lvl < LEVEL_PERMISSIONS.createWaifu && !TEST_BUILD){message.addResponse(eval(getLoc)("lvl_too_low")); return true;}
 
   if(url == undefined){message.addResponse(eval(getLoc)("invalid_url")); return true;}
   let customWaifu = new waifu(user, waifus.get("0"))

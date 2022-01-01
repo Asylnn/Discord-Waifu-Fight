@@ -118,260 +118,282 @@ Il faut certainement créer des variables globales au projet entier pour les inf
 }
 */
 
-import equipmentWaifu from "./item/equipmentWaifu";
-import material from "./item/materials"
+//import material from "./item/materials"
+import waifuEquipment from "./item/waifuEquipment";
 import user from "./user"
 import waifu from "./waifu"
 import gamemode from "./types/gamemode"
 import randInt from '../genericFunctions/randInt'
 import equipmentType from './types/equipmentType'
-import {ATTACK_LINE_NUMBER_IN_EMBED, IDLE_TIME_OF_INTERACTIONS, BEATMAP_HISTORY_SIZE} from '../files/config.json'
+import {TIME_FIGHT, BOSS_HP_PER_STAGE, RARITIES_PER_STAGE, ATTACK_LINE_NUMBER_IN_EMBED, BEATMAP_HISTORY_SIZE, DUNGEON_DURATION_IN_SECONDS, INTERVAL_CHECK_IN_MILISECONDS, CRIT_DAMAGE_MULTIPLIER} from '../files/config.json'
 import Discord from 'discord.js'
-import beatmap from './types/beatmap'
-
-
-
-const bossHPPerStage = new Array(100,1000,10000,100000,1000000,10000000,100000000,1000000000,10000000000,100000000000) // Valeur des 10 étages
-const raritiesPerStage : Array<[number, number, number]> = Array(
-  [1, 70, 30], //Etage 1
-  [1, 50, 50], //Etage 2
-  [1, 30, 65], //Etage 3
-  [1, 10, 75], //Etage 4
-  [2, 65, 30], //Etage 5
-  [2, 40, 55], //Etage 6
-  [2, 20, 60], //Etage 7
-  [3, 30, 65], //Etage 8
-  [3, 10, 75], //Etage 9
-  [3, 0, 75] //Etage 10
-)
-
-
-
-
-const dungeonDurationInSeconds = 3600
-const intervalChecksInMilliseconds = 10000
-const critDamageMultiplier = 1.5
+import {beatmap} from './types/beatmap'
+import createSimpleEmbed from '../commands/util/createSimpleEmbed'
+import globalMessage from './message'
+import osuClaim from '../commands/osu/osuClaim'
+import {milliToMinutes} from '../genericFunctions/timeConversion'
 
 export default class dungeon {
-  private timeRemaining = dungeonDurationInSeconds / 10
-  private readonly id: string
+  private timeRemaining = DUNGEON_DURATION_IN_SECONDS*1000
   private readonly name: string
-  private readonly stage: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
-  private bossHP: number //Vie actuelle
-  private readonly loots: Array<[string, string, string, string, equipmentType, string]> //Soit la liste des équipements des 2 sets et la ressource pour monter de niveau les équipements (dans une autre variable)
-  private readonly probabilityOfRarities: [number, number, number] // Tableau de 3 nombres
-  private readonly bossRes: [number, number, number]
+  private readonly bossName: string
+  private readonly stage: number
+  private bossHP: number
+  private readonly maxHP: number
+  private readonly loots: Array<{
+    "id":string
+    "name":string
+    "description":string
+    "imgURL":string
+    "type": equipmentType
+    "set": string
+  }>
+  private readonly probabilityOfRarities: [number, number, number]
+  private readonly bossRes: {phy:number, psy:number, mag:number}
   private readonly gamemode: gamemode
-  private readonly starRating: number
   private readonly ownerId: string
   private readonly ownerOsuId: number
   private readonly waifus: Array<[waifu, number]> = []
-  private message: Discord.Message = "" as unknown as Discord.Message //Quick fix for the ts error message is not defined in constructor (because probably assigned in a async function), should not stay like that
-  private visibleAttackSentences: Array<string> = []
+  private message: globalMessage //Quick fix for the ts error message is not defined in constructor (because probably assigned in a async function), should not stay like that
+  private attackSentences: Array<string> = []
   private timers: Array<NodeJS.Timeout> = []
   private beatmap: beatmap = {id:0, beatmapSetId:0, genre:"anime", language:"japanese", mapGenre:"unknown"}
   private beatmaps: Array<beatmap>
   private lg: string
   private readonly mapGenre: string
   private mapTimestamp : number = Date.now()
-  private recentMapsIds : Array<beatmap> = []
-
+  private recentMapsIds : number[]
+  private confirmDeleteDungeon = false
+  private buttonCollector: Discord.InteractionCollector<Discord.ButtonInteraction> = new Discord.InteractionCollector(discordClient)
 
 
   constructor(id: string, stage: number, gamemode : gamemode, starRating: number, user: user){
     //With the id of the dungeon, you get the name and the loots
     //With the stage of the dungeon, you get the baseBossHP and the probabilityOfRarities
 
-    this.id = id
-    this.name = dungeonMap[id].name
+    this.name = templateDungeons.get(id)!.name
+    this.bossName = templateDungeons.get(id)!.bossName
+
     this.stage = stage
-    this.beatmaps = dungeonMap[id].beatmaps
+    this.beatmaps = templateDungeons.get(id)!.beatmaps[starRating]
     this.recentMapsIds = user.playedMapsIds
-    this.mapGenre = dungeonMap[id].mapGenre
-    this.getNewMap()
-    this.bossHP = bossHPPerStage[stage - 1]
-    this.loots = dungeonMap[id].items
-    this.bossRes = dungeonMap[id].bossRes
-    this.probabilityOfRarities = raritiesPerStage[stage - 1]
+    this.mapGenre = templateDungeons.get(id)!.mapGenre
+
+    this.bossHP = this.maxHP = BOSS_HP_PER_STAGE[stage - 1]
+    this.loots = templateDungeons.get(id)!.items
+    this.bossRes = templateDungeons.get(id)!.bossRes
+    this.probabilityOfRarities = RARITIES_PER_STAGE[stage - 1] as [number, number, number]
     this.gamemode = gamemode
-    this.starRating = starRating
     this.ownerId = user.id
     this.ownerOsuId = user.osuId
     this.lg = user.lg
+    const discordUser = discordClient.users.cache.get(this.ownerId)
+    this.message = new globalMessage(this.lg, "", "DM", -1, discordUser, "-10", false)
+    this.message.haveToUpdate = true
+
+
 
     user.waifus.forEach((waifu) => {
-      if(waifu && waifu.action != null){
+      if(waifu && !waifu.action){
         waifu.action = {createdTimestamp:0, timeWaiting:-1, type:"dungeon", lvl:1}
-        this.waifus.push([waifu, waifu.phy*(100 - this.bossRes[0]) + waifu.psy*(100 - this.bossRes[1]) + waifu.mag*(100 - this.bossRes[2])])
+        this.waifus.push([waifu, waifu.phy*(100 - this.bossRes.phy) + waifu.psy*(100 - this.bossRes.psy) + waifu.mag*(100 - this.bossRes.mag)])
       }
-    })
-
-
-
-
-    discordClient.users.fetch(this.ownerId).then(user => {
-      const embed = new Discord.MessageEmbed()
-      const message = {lg:this.lg}; message;
-      embed.setColor(0x35A7BF)
-      embed.setTitle(`${eval(getLoc)(this.name)} ${this.stage}`)
-      const URL = `https://osu.ppy.sh/beatmapsets/${this.beatmap.beatmapSetId}#${this.gamemode}/${this.beatmap.id}`; URL
-      embed.setDescription(eval(getLoc)("fight_map"))
-      embed.addField("still don't know", "")
-      user.send(embed).then((message) => {
-        this.message = message
-      })
-    })
-
-    this.waifus.forEach(([waifu, damage]) => {
-
-      this.timers.push(setInterval(() => {
-        const critMultiplier = randInt(100) + 1 > waifu.critRate ? 1 : critDamageMultiplier
-        const totalDamage = Math.floor(critMultiplier*damage*(0.9 + Math.random()*0.2))
-        this.bossHP -= totalDamage
-        let mostImpactfulType = "phy"
-        if (waifu.psy >= waifu.phy || waifu.mag >= waifu.phy){
-          if (waifu.psy >= waifu.mag){
-            mostImpactfulType = "psy"
-          }
-          else{
-            mostImpactfulType = "mag"
-          }
-        }
-        const possibleAttackSentences = eval(`${this.lg}attackSentences.${mostImpactfulType}.${critMultiplier == 1 ? "normal" : "crit"}`)
-        const attackSentence = eval("`" + possibleAttackSentences[randInt(possibleAttackSentences.length)] + "`")
-        //const attackSentence = eval("`" + eval(`${lg}attackSentences.${critMultiplier == 1 ? "normal" : "crit"}_${mostImpactfulType}_${randInt(eval(`${lg}attackSentences.length`))}`) + "`")
-
-        this.editEmbed(attackSentence)
-
-        if(this.bossHP <= 0){
-          this.bossHP = 99999999999999 //used to avoid firing the function collectLoots two times if two waifu attacks at the same time
-          this.collectLoots()
-        }
-
-      }, waifu.attackSpeed))
-
     })
 
     this.timers.push(setInterval(() => {
-      this.timeRemaining --
+      this.timeRemaining -= INTERVAL_CHECK_IN_MILISECONDS
 
       if(this.timeRemaining < 600){
-        this.message.channel.send(eval(this.lg + 'dungeon_10_minute_left'))
+        this.message.channel.send(eval(getLoc)('dungeon_10_minute_left'))
       }
       else if (this.timeRemaining <= 0) {
-        this.message.channel.send(eval(this.lg + 'dungeon_not_defeated'))
+        this.message.channel.send(eval(getLoc)('dungeon_not_defeated'))
         this.delete()
       }
-    }, intervalChecksInMilliseconds))
+    }, INTERVAL_CHECK_IN_MILISECONDS));
 
-    const collector = (await message.reply()).createMessageComponentCollector({componentType:'BUTTON', idle:IDLE_TIME_OF_INTERACTIONS})
 
-    collector.on('collect', (interaction: Discord.ButtonInteraction) => {
-      switch (interaction.id){
-        case "claim_map":
-        this.recentMapsIds.push(this.beatmap.id)
-        recentMapsIds.remove(0)
-        user.playedMapsIds.unshift(beatmap.id)
-        user.playedMapsIds.length = BEATMAP_HISTORY_SIZE
-        const rawXp = osuClaim(message,this.ownerOsuId,this.beatmap.id)
-
-        this.waifus.forEach(([waifu, damage], index) => {
-          waifu.giveXP(rawXP/(this.waifus.length*3),message)
-        })
-        /*TODO : formule des dégats grace a un claim de map*/
-        const attackMultiplier = 100
-        let totalDamage = 0
-        this.waifus.forEach(waifuAndDamage => {
-          const waifu = waifuAndDamage[0]
-          const damage = waifuAndDamage[1]
-          const critMultiplier = 1 + waifu.critRate*1.5
-          const speedMultiplier = 30/waifu.attackSpeed
-          totalDamage += critMultiplier*speedMultiplier*damage
-        })
-        message.addResponse(eval(getLoc)("claim_dungeon_attack")))
+    (() => {
+      this.message.addButton("claim_map", eval(getLoc)("claim_map_button"), "SUCCESS")
+      this.message.addButton("skip_map" ,eval(getLoc)("skip_map_button"),"SECONDARY")
+      this.message.addButton("abandon_dungeon",eval(getLoc)("abandon_dungeon_button"),"DANGER")
+      this.message.reply("creating dungeon...").then((message: Discord.Message) => {
+        this.buttonCollector = message.createMessageComponentCollector({componentType:'BUTTON', idle:DUNGEON_DURATION_IN_SECONDS*1000})
+        this.message.id = message.id
         this.getNewMap()
-        /*for(const waifu : waifu in this.waifus){
 
-        }*/
-        break;
-        case "skip_map":
-          (Date.now()) - this.mapTimestamp >= 60000 ? this.getNewMap() : message.reply("generated_map_earlier")
-        break;
-        case "abandon_dungeon"
+        this.buttonCollector.on('collect', async (interaction: Discord.ButtonInteraction) => {
+          switch (interaction.customId){
+            case "claim_map":
+              user.playedMapsIds.unshift(this.beatmap.id)
+              user.playedMapsIds.length = BEATMAP_HISTORY_SIZE
+              const rawXP = await osuClaim(this.message, this.ownerOsuId, this.beatmap.id)
+              if(!rawXP){const sentence = this.message.response.replace('\r\n', ''); this.message.response = ""; this.addSentence(sentence); return;}
 
-        break;
-        default: message.reply("Je ne sais pas comment vous avez fait mais vous avez trouvé un bouton caché !")
-      }
-    });
-      message.addButton("claim_map","claim_map","SUCCESS"),
-      message.addButton("skip_map","skip_map","SECONDARY"),
-      message.addButton("abandon_dungeon","abandon_dungeon","DANGER")
+              this.waifus.forEach(([waifu]) => {
+                waifu.giveXP(rawXP/(this.waifus.length*3), this.message)
+              })
+              /*TODO : formule des dégats grace a  un claim de map*/
+              let totalDamage = 0
+              this.waifus.forEach(([waifu, damage]) => {
+                const critMultiplier = 1 + waifu.critRate*1.5
+                const speedMultiplier = 30000/waifu.attackSpeed
+                totalDamage += critMultiplier*speedMultiplier*damage
+              })
+
+              totalDamage *= Math.floor(100*Math.sqrt(rawXP)/40)
+              this.inflictDamage(totalDamage)
+
+              this.addSentence(eval(getLoc)("claim_dungeon_attack"))
+
+              this.getNewMap()
+              break;
+            case "skip_map":
+              let timeLeft: string | number = TIME_FIGHT + this.mapTimestamp - Date.now()
+              if(/*timeLeft <= 0*/true){
+                this.getNewMap()
+              }
+              else {
+                timeLeft = milliToMinutes(timeLeft as number)
+                this.addSentence(eval(getLoc)("generated_map_earlier"))
+              }
+              break;
+            case "abandon_dungeon":
+              if(this.confirmDeleteDungeon){
+                return this.delete()
+              }
+              this.addSentence(eval(getLoc)("delete_dungeon_confirmation"))
+              this.confirmDeleteDungeon = true
+              setTimeout(() => {
+                this.confirmDeleteDungeon = false
+              }, 10000)
+              break;
+            default:
+              this.addSentence("I don't know how you did it but you found an hidden button!")
+              break;
+          }
+        });
+
+        this.waifus.forEach(([waifu, damage]) => {
+          this.timers.push(setInterval(() => {
+            const critMultiplier = randInt(100) + 1 > waifu.critRate ? 1 : CRIT_DAMAGE_MULTIPLIER
+            const totalDamage = Math.floor(critMultiplier*damage*(0.9 + Math.random()*0.2))
+            let mostImpactfulType = "phy"
+            if (waifu.psy >= waifu.phy || waifu.mag >= waifu.phy){
+              if (waifu.psy >= waifu.mag){
+                mostImpactfulType = "psy"
+              }
+              else{
+                mostImpactfulType = "mag"
+              }
+            }
+            const possibleAttackSentences = eval(`${this.lg}attack_lines.${mostImpactfulType}`)
+            const attackSentence = eval("`" + possibleAttackSentences[randInt(possibleAttackSentences.length)] + "`")
+            this.inflictDamage(totalDamage)
+            this.addSentence(attackSentence)
+
+
+
+          }, waifu.attackSpeed))
+        })
+
+
+
+      })
+    })()
+
+
+
+
 
   }
 
-  claim(){
-    const message = {lg:this.lg}; message;
-    osuAPI.getUserScores({userId: this.ownerOsuId, type:"recent", gamemode:"osu", limit:10}).then(scores => {
-      console.log("user found! : " + this.ownerOsuId)
-      const score = scores.find(score => score.beatmap.id == this.beatmap.id)
-      if(!score){this.message.addResponse(eval(getLoc)("beatmap_not_done")); return;}
+  inflictDamage(damage: number){
+    this.bossHP -= damage
+    if(this.bossHP <= 0){
+      this.bossHP = 99999999999999 //used to avoid firing the function collectLoots two times if two waifu attacks at the same time
+      this.collectLoots()
+    }
+  }
 
-      //Some stuff
-      const attackMultiplier = 100
-      let totalDamage = 0
-      this.waifus.forEach(waifuAndDamage => {
-        const waifu = waifuAndDamage[0]
-        const damage = waifuAndDamage[1]
-        const critMultiplier = 1 + waifu.critRate*1.5
-        const speedMultiplier = 30/waifu.attackSpeed
-        totalDamage += critMultiplier*speedMultiplier*damage
-      })
-      totalDamage *= attackMultiplier
-      this.bossHP -= totalDamage
-      const URL = `https://osu.ppy.sh/beatmapsets/${this.beatmap.beatmapSetId}#${this.gamemode}/${this.beatmap.id}`; URL
-      this.editEmbed(eval(getLoc)("claim_dungeon_attack"), eval(getLoc)("fight_map")); totalDamage;
-      this.getNewMap()
-    })
+  addSentence(sentence: string){
+    this.attackSentences.unshift(sentence)
+    this.attackSentences.length = ATTACK_LINE_NUMBER_IN_EMBED
+    this.updateEmbed()
   }
 
   getNewMap(){
-    beatmaps.get(this.gamemode + this.starRating).then(dbBeatmaps =>  {
-      const possibleMaps = dbBeatmaps.filter(beatmap => beatmap.genre == this.mapGenre).concat(this.beatmaps)
-      this.beatmap = possibleMaps[randInt(possibleMaps.length)]
-    })
+
+    const mapPool = this.beatmaps
+
+    let randIndex = randInt(this.beatmaps.length)
+    this.beatmap = this.beatmaps[randIndex]
+    while (mapPool.length > 1 && mapPool.includes(this.beatmap) && this.recentMapsIds.includes(this.beatmap.id)){
+      mapPool.splice(randIndex, 1)
+      randIndex = randInt(mapPool.length)
+      this.beatmap = mapPool[randIndex]
+    }
+
+    this.updateEmbed()
+
   }
 
-  editEmbed(attackSentence:string, mapURL = ""){
-    this.visibleAttackSentences.unshift(attackSentence)
-    this.visibleAttackSentences.length = ATTACK_LINE_NUMBER_IN_EMBED
-    const embed = this.message.embeds[0]
-    const attackLines = this.visibleAttackSentences.join('\r\n')
-    embed.setDescription(attackLines)
-    if(mapURL){
+  updateEmbed(firstEmbed = false){
 
+
+    const embed = createSimpleEmbed(`${eval(getLoc)(this.name)} ${this.stage}`, this.attackSentences.join("\r\n"))
+    embed.addFields([{
+      name:eval(getLoc)(this.bossName),
+      value:`${this.bossHP}/${this.maxHP}`,
+      inline:true
+    }, {
+      name:eval(getLoc)("boss_resistances"),
+      value:`${eval(getLoc)("phy")} : ${this.bossRes.phy}\r\n ${eval(getLoc)("psy")} : ${this.bossRes.psy}\r\n ${eval(getLoc)("mag")} : ${this.bossRes.mag}\r\n`,
+      inline:true
+    }, {
+      name:eval(getLoc)("time_left"),
+      value:milliToMinutes(this.timeRemaining),
+      inline:true
+    }, {
+      name:eval(getLoc)("dungeon_fight_map"),
+      value:`https://osu.ppy.sh/beatmapsets/${this.beatmap.beatmapSetId}#${this.gamemode}/${this.beatmap.id}`,
+      inline:true
+    }])
+
+    if(firstEmbed){
+
+      this.message.channel.send({embeds:[embed]}).then((message: Discord.Message) => {
+        this.message.id = message.id
+      })
     }
-    embed.fields[0] = {name: "still don't know", value: attackLines, inline:false}
-    this.message.edit(embed).then((message) => {
-      this.message = message
-    })
+    else{
+      this.message.embeds[0] = embed
+      this.message.reply()
+    }
   }
 
   delete(){
+    this.addSentence(eval(getLoc)("dungeon_close"))
     users.get(this.ownerId).then(user => {
+      user.playedMapsIds = this.recentMapsIds
+      user.isDoingDungeon = false
       user.waifus.forEach(waifu => {
-        if(waifu != null && waifu.action != null && waifu.action.type == "dungeon"){
+        if(waifu?.action != null && waifu.action.type == "dungeon"){
           waifu.action = null
         }
       })
+      user.save()
     })
     this.timers.forEach(timer => {
       clearInterval(timer)
     })
+    this.buttonCollector.stop()
     dungeons.delete(this.ownerId)
   }
 
   collectLoots(){
-    let numberOfEquipments = 5, itemRarity, equipments: Array<equipmentWaifu> = []//Potentiellement genéré avec une formule dépendant du nb de claims? de la rapidité à finir le donjon?
+
+    let numberOfEquipments = 5, itemRarity, equipments: Array<waifuEquipment> = []//Potentiellement genéré avec une formule dépendant du nb de claims? de la rapidité à finir le donjon?
     for(var i = 0; i < numberOfEquipments; i++){
       const rand = randInt(100)
       if(rand - this.probabilityOfRarities[1] < 0){
@@ -383,20 +405,30 @@ export default class dungeon {
       else{
         itemRarity = this.probabilityOfRarities[0] + 2
       }
-      let whichEquipment = this.loots[randInt(this.loots.length)]
+      let equipment = this.loots[randInt(this.loots.length)]
 
-      equipments.push(new equipmentWaifu(whichEquipment[0], whichEquipment[1],  whichEquipment[2], itemRarity, whichEquipment[3], whichEquipment[4], whichEquipment[5]))
+
+      equipments.push(new waifuEquipment(equipment.id, equipment.name,  equipment.description, itemRarity, equipment.imgURL, equipment.type, equipment.set))
     }
-    users.get(this.ownerId).then((user) => {
-      user.items.equipmentWaifu.push(...equipments)
+
+
+
+    users.get(this.ownerId).then(async (user) => {
+
+      console.log(equipments)
+      user.items.waifuEquipment.push(...equipments)
       user.quests.updateQuest("finish_dungeon")
       /*
 
       user.items.materials.push ...
 
       */
-      user.save()
+
+
+      await user.save()
       this.delete()
+
+
     })
   }
 }
