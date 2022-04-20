@@ -7,6 +7,7 @@ import taikoClaim from './taikoClaim'
 import giveClaimXP from './giveClaimXP'
 import Discord from 'discord.js'
 import {mapGenre} from '../../class/types/beatmap'
+import checkClicker from '../util/checkClicker'
 
 import {BEATMAP_MAPPING_GENRE, IDLE_TIME_OF_INTERACTIONS} from '../../files/config.json'
 
@@ -47,7 +48,7 @@ export default async function claim(message: message, user: user){
         label:mapGenre,
         value:mapGenre
       }
-    })
+    }).filter(option => option.label != "unknown")
 
     selectMenu.setOptions(options)
     actionRow.addComponents(selectMenu)
@@ -63,6 +64,8 @@ export default async function claim(message: message, user: user){
       beatmaps.put(beatmap.id.toString(), beatmap)
       const reward = 1
       user.gachaCurrency = reward //<-----------------------------------
+      if(checkClicker(interaction, user.id)) return true;
+      collector.stop()
       user.save()
       message.reply(eval(getLoc)("thanks_for_voting")); reward;
     })

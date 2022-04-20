@@ -35,7 +35,7 @@ export default class Modificator {
     }
     else{
       if(this.type == "nakano_bonus")
-        return eval(getLoc)(this.type)
+        return eval(getLoc)(this.type) + "\n"
     }
   }
 

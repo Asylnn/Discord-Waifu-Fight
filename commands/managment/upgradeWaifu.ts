@@ -3,7 +3,7 @@ import user from '../../class/user'
 import {LEVEL_PERMISSIONS, TEST_BUILD, IDLE_TIME_OF_INTERACTIONS} from '../../files/config.json'
 import Discord from 'discord.js'
 import getParameterObject from '../util/getParameterObject'
-
+import checkClicker from '../util/checkClicker'
 
 commandManager.create({
   name:"upgrade",
@@ -88,6 +88,8 @@ export default async function upgradewaifu(message: message, user: user, args: A
     waifu.b_stg += 3*waifu.u_stg
     waifu.b_kaw += 3*waifu.u_kaw
     message.reply(eval(getLoc)("upgrade_waifu"))
+    if(checkClicker(interaction, user.id)) return true;
+    collector.stop()
     user.save()
   })
   return true;

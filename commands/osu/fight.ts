@@ -22,11 +22,10 @@ commandManager?.create({
     description:"the gamemode of the proposed map",
     required:false,
     type:"STRING",
-    choices:[{name:"consumableuser", value:"consumableuser"},
-    {name:"consumablewaifu", value:"consumablewaifu"},
-    {name:"equipmentuser", value:"equipmentuser"},
-    {name:"equipmentwaifu", value:"equipmentwaifu"},
-    {name:"material", value:"material"}],
+    choices:[{name:"standard", value:"osu"},
+    {name:"catch", value:"fruits"},
+    {name:"mania", value:"mania"},
+    {name:"taiko", value:"taiko"},],
   },{
     name:"w",
     description:"waifu slot -- Which waifu will be fighting with you (no input will open select menu)",
@@ -39,7 +38,7 @@ commandManager?.create({
 async function getMap(gamemode: gamemode, star: number, playedMapsIds: Array<number>){
   let mapPool = await beatmaps.filter(beatmap => {console.log(beatmap); return beatmap.gamemode == gamemode && Math.floor(beatmap.starRating) == star})
   console.log(mapPool)
-  let beatmap = mapPool ? mapPool[0].id : null
+  let beatmap = mapPool.length != 0 ? mapPool[0].id : null
 
   if (mapPool.length > 0){
     let index = randInt(mapPool.length)

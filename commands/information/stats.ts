@@ -99,12 +99,13 @@ export default async function rank(message: message, user: user, discordMessage:
 
   content += eval(getLoc)("stats_modificator")
 
-
-  content += getModificators(user, 'nakano_bonus').value == 1 ? getModificators(user, 'nakano_bonus').toString(message) : ""
-  content += getModificators(user, 'reduce_analyse_time').value != 1 ? getModificators(user, 'reduce_analyse_time').toString(message) : ""
-  content += getModificators(user, 'reduce_decrypt_time').value != 1 ? getModificators(user, 'reduce_decrypt_time').toString(message) : ""
-  content += getModificators(user, 'reduce_mining_time').value != 1 ? getModificators(user, 'reduce_mining_time').toString(message) : ""
-  content += getModificators(user, 'reduce_cafe_time').value != 1 ? getModificators(user, 'reduce_cafe_time').toString(message) : ""
+  let combinedModificators : Modificator[] = []
+  user.modificators.forEach(modificatorA => {
+    const index = combinedModificators.findIndex(modificatorB => modificatorA.type == modificatorB.type)
+    if(index == -1) combinedModificators.push(modificatorA)
+    else combinedModificators[index].value *= modificatorA.value
+  })
+  combinedModificators.forEach(modificator => content += modificator.toString(message))
 
   embed.setDescription(content)
   message.embeds.push(embed)

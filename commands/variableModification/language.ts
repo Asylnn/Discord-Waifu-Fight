@@ -2,6 +2,7 @@ import message from '../../class/message'
 import user from '../../class/user'
 import {ALL_LANGUAGES, ALL_LANGUAGES_FULL_NAME, IDLE_TIME_OF_INTERACTIONS} from '../../files/config.json'
 import Discord from 'discord.js'
+import checkClicker from '../util/checkClicker'
 
 commandManager?.create({
   name:"language",
@@ -37,6 +38,8 @@ export default async function language(message: message, user: user){
     message.lg = interaction.values[0] + "."
     user.lg = interaction.values[0] + "."
     message.reply(eval(getLoc)("language_edit"))
+    if(checkClicker(interaction, user.id)) return true;
+    collector.stop()
     user.save()
   })
   return true;

@@ -3,6 +3,7 @@ import user from '../../class/user'
 import gamemode from '../../class/types/gamemode'
 import {IDLE_TIME_OF_INTERACTIONS} from '../../files/config.json'
 import Discord from 'discord.js'
+import checkClicker from '../util/checkClicker'
 
 commandManager?.create({
   name:"gamemode",
@@ -10,7 +11,7 @@ commandManager?.create({
   description:"select a gamemode that would be used by default for fights, dungeons and quests"
 })
 
-export default async function setmode(message:message, user:user, args: Array<string>){
+export default async function setmode(message:message, user:user){
   const actionRow = new Discord.MessageActionRow()
   const selectMenu = new Discord.MessageSelectMenu()
   selectMenu.setCustomId('gamemode')
@@ -37,6 +38,8 @@ export default async function setmode(message:message, user:user, args: Array<st
     message.haveToUpdate = true
     user.gamemode = interaction.values[0] as gamemode
     message.reply(eval(getLoc)("gamemode_select"))
+    if(checkClicker(interaction, user.id)) return true;
+    collector.stop()
     user.save()
   })
   /*
