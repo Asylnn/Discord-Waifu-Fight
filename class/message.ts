@@ -13,7 +13,7 @@ export default class globalMessage{
   public readonly type: messageType
   public readonly createdTimestamp: number
   public channel: any
-  public readonly ephemeral: boolean
+  public ephemeral: boolean
   public id: string
   public response = ""
   public embeds: Array<Discord.MessageEmbed> = []
@@ -75,7 +75,7 @@ export default class globalMessage{
 
 
 
-    if((!this.hasReplied || this.channel.id == eventDiscordChannel.id) && (!this.hasReplied && TEST_BUILD)){
+    if((!this.hasReplied || this.channel.id == eventDiscordChannel.id) && !this.hasReplied){
 
       this.hasReplied = true
       this.response = ""

@@ -2,8 +2,6 @@ import Discord from 'discord.js'
 import waifu from "./class/waifu"
 import item from './class/item/item'
 import osuAPI from './osuAPI/Api'
-import collection from './class/collection'
-import pageEmbed from './class/types/pageEmbed'
 import dungeon from './class/dungeon'
 import consumableUser from './class/item/userConsumable'
 import consumableWaifu from './class/item/waifuConsumable'
@@ -33,7 +31,6 @@ declare global {
   var forceAuctionCompletion: boolean
   var discordClient: Discord.Client
   var getLoc: string
-  var allPagesEmbed: collection<string, pageEmbed>
   var osuAPI: osuAPI
   var activeDungeons: Map<string,dungeon>
   var uniqueId: string

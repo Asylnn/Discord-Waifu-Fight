@@ -2,25 +2,15 @@ import message from '../class/message'
 import userClass from '../class/user'
 import {PREFIX, ASYLN_DISCORD_ID} from '../files/config.json'
 import truncate from '../genericFunctions/truncate'
-//import item from '../class/item'
-//import itemManager from '../class/itemManager'
 import save from '../save'
-import createSimpleEmbed from './util/createSimpleEmbed'
-
-/*
- Do a command that unequip item
-
-
-*/
-var w = (nb:number) => BigInt(Math.pow(2, nb))
-
 import setOsuId from './variableModification/setOsuId'
 import setOsuName from './variableModification/setOsuName'
 
 
 import confirmAccCreation from './uncategorized/confirmAccCreation'
 
-
+import useItemXP from './items/useItemXP'
+import useWaifuXP from './items/useWaifuXP'
 import sell from './shop/sell'
 import buy from './shop/buy'
 import gacha from './shop/gacha'
@@ -45,6 +35,8 @@ import allexp from './waifuActions/allexp'
 import analyse from './waifuActions/analyse'
 import decrypt from './waifuActions/decrypt'
 import exp from './waifuActions/exp'
+import mining from './waifuActions/mining'
+import cafe from './waifuActions/cafe'
 import stopAction from './waifuActions/stopAction'
 
 
@@ -57,11 +49,8 @@ import sortWaifu from './managment/sortWaifus'
 import swap from './managment/swap'
 import upgradeWaifu from './managment/upgradeWaifu'
 
-import equipUserItem from './items/equipUserItem'
-import equipWaifuItem from './items/equipWaifuItem'
-import useUserConsumable from './items/useUserConsumable'
-import useWaifuConsumable from './items/useWaifuConsumable'
-import useWaifuXP from './items/useWaifuXP'
+import equipItem from './items/equipItem'
+import useConsumable from './items/useConsumable'
 
 import items from './information/items'
 import lb from './information/lb'
@@ -80,7 +69,7 @@ import enterDungeon from './dungeon/enterDungeon'
 import accept from './trades/accept'
 import refuse from './trades/refuse'
 import seeDealCommand from './trades/seeDealCommand'
-import startDeal from './trades/startDeal'
+//import startDeal from './trades/startDeal'
 import remove from './trades/remove'
 import add from './trades/add'
 import sendTerms from './trades/sendTerms'
@@ -91,14 +80,8 @@ import box from './uncategorized/box'
 import daily from './uncategorized/daily'
 import dmCreateAcc from './uncategorized/dmCreateAcc'
 
-
-commandManager?.create({
-  name:"createuser",
-  type:"CHAT_INPUT",
-  description:"DEV ONLY - Create new user (osu name and id is always asyln)",
-})
-
 export default function replyCommand(message: message, user: userClass, args: Array<string>, initialMessage: any): void{
+  console.log("ah")
   let commandStatus: Promise<boolean | undefined> = new Promise((resolve) => resolve(true))
   message.authorId = user.id
   args[0] = args[0]?.replace(PREFIX, "")
@@ -107,12 +90,11 @@ export default function replyCommand(message: message, user: userClass, args: Ar
   switch(command){
     case "GUILD_TEXT-createuser":
     case "GUILD_TEXT-cu":
-    case "interaction-createuser":
-      (new userClass(user.id, "Asyln", 10669137)).save()
+      (new userClass(user.id, "Asyln")).save()
       message.addResponse("account created")
       break;
-    case "GUILD_TEXT-leave":
-    case "DM-leave":
+    case "GUILD_TEXT-stop":
+    case "DM-stop":
       if(user.id == "297788049230921728"){
         const u:any = {}
         u.obj420.obj2.ob3[69]
@@ -120,11 +102,6 @@ export default function replyCommand(message: message, user: userClass, args: Ar
       else{
         message.addResponse("nope")
       }
-      break;
-    case "DM-testing":
-      const e1 = createSimpleEmbed("a", "b")
-      message.addButton("1", "STOP", "DANGER")
-      message.embeds.push(e1)
       break;
     case "DM-createacc":
       commandStatus = dmCreateAcc(message, user, args)
@@ -140,7 +117,7 @@ export default function replyCommand(message: message, user: userClass, args: Ar
       confirmAccCreation(message, initialMessage)
       break;
     case 'GUILD_TEXT-addmapset':
-      addMapSet(message, args)
+      commandStatus = addMapSet(message, args)
       break;
     /*case 'GUILD_TEXT-addmap':
       addMap(message, user, args)
@@ -155,54 +132,13 @@ export default function replyCommand(message: message, user: userClass, args: Ar
     case "GUILD_TEXT-eval":
       if(user.id == "297788049230921728"){
         try {
-          //userX.milestone = userX.milestone ^ w(parseInt(Smessage[1]))
-
           eval(truncate(message.content, 0))
           user.save()
           message.addResponse("success")
         } catch (e) {
+          message.addResponse("error, more in console")
           console.log(e)
         }
-      }
-      else{
-        message.addResponse("nope")
-      }
-      break;
-    case "DM-giveaway":
-    case "GUILD_TEXT-giveaway":
-      if(user.id == "297788049230921728"){
-        (async function(){
-          (await users.all()).forEach(user2 => {
-
-            /*if((w(0) & user2.milestone) != 0n) user2.giveXP(50, message)
-            if((w(4) & user2.milestone) != 0n) user2.giveXP(50, message)
-            if((w(5) & user2.milestone) != 0n) user2.giveXP(100, message)
-            if((w(7) & user2.milestone) != 0n) user2.giveXP(50, message)
-            if((w(12) & user2.milestone) != 0n) user2.giveXP(25, message)
-            if((w(13) & user2.milestone) != 0n) user2.giveXP(50, message)
-            if((w(14) & user2.milestone) != 0n) user2.giveXP(250, message)
-            if((w(15) & user2.milestone) != 0n) user2.giveXP(500, message)
-            if((w(30) & user2.milestone) != 0n) user2.giveXP(100, message)
-            if((w(31) & user2.milestone) != 0n) user2.giveXP(550, message)
-            if((w(32) & user2.milestone) != 0n) user2.giveXP(500, message)
-
-            user2.items.addItem("19",5)
-            user2.items.addItem("20",5)
-            user2.items.addItem("21",5)
-            user2.items.addItem("23",5)
-
-            user2.giveXP(user2.totalClaims*1, message)
-            user2.giveXP(user2.quests.totalQuestDone*10, message)*/
-
-            user2.milestone = user2.milestone & (w(40) - w(14) - 1n)
-            user2.milestone = user2.milestone & (w(40) - w(30) - 1n)
-            user2.milestone = user2.milestone & (w(40) - w(31) - 1n)
-
-
-            user2.save()
-          })
-        })()
-        message.addResponse('done!')
       }
       else{
         message.addResponse("nope")
@@ -223,8 +159,10 @@ export default function replyCommand(message: message, user: userClass, args: Ar
         message.addResponse("nope")
       }
       break;
+    //TO BE REMOVED
     case "GUILD_TEXT-gac":
       user.gachaCurrency += 200000
+      message.addResponse("got 200 000 free gac lulz")
       user.save()
       break;
     case "GUILD_TEXT-givebox":
@@ -246,9 +184,11 @@ export default function replyCommand(message: message, user: userClass, args: Ar
       message.addResponse(eval(getLoc)('no_account'))
       break;
     case "GUILD_TEXT-r":
+    case "GUILD_TEXT-rw":
     case "GUILD_TEXT-reserve":
     case "GUILD_TEXT-reservewaifu":
-      commandStatus = reserve(message, user, args)
+    case "interaction-reserve":
+      commandStatus = reserve(message, user, args, initialMessage)
       break;
     case "osu-osuname":
     case "GUILD_TEXT-osuname":
@@ -265,16 +205,16 @@ export default function replyCommand(message: message, user: userClass, args: Ar
       break;
     case "GUILD_TEXT-language":
     case "GUILD_TEXT-lg":
-    case "osu-language":
-    case "osu-lg":
     case "interaction-language":
       commandStatus = language(message, user)
       break;
     case "GUILD_TEXT-i":
     case "GUILD_TEXT-items":
-      commandStatus = items(message, user, args)
+    case "interaction-items":
+      commandStatus = items(message, user, args, initialMessage)
       break;
     case "GUILD_TEXT-collection":
+    case "interaction-collection":
       commandStatus = waifuCollection(message, user)
       break;
     case "GUILD_TEXT-nomention":
@@ -283,14 +223,13 @@ export default function replyCommand(message: message, user: userClass, args: Ar
     case "osu-nomentions":
       user.beMentionned = !user.beMentionned
       message.addResponse(eval(getLoc)(user.beMentionned ? "get_notifications" : "no_notification"))
+      user.save()
       break;
-    case "GUILD_TEXT-nomention":
-    case "GUILD_TEXT-nomentions":
-    case "osu-nomention":
-    case "osu-nomentions":
+    case "GUILD_TEXT-hidereply":
+    case "osu-hidereply":
       user.ephemeral = !user.ephemeral
       message.addResponse(eval(getLoc)(!user.ephemeral ? "show_reply" : "hide_reply"))
-
+      user.save()
       break;
     case "GUILD_TEXT-editname":
     case "interaction-editname":
@@ -298,10 +237,12 @@ export default function replyCommand(message: message, user: userClass, args: Ar
       commandStatus = editname(message, user, args, initialMessage)
       break;
     case "GUILD_TEXT-lb":
+    case "GUILD_TEXT-leaderboard":
+    case "interaction-leaderboard":
       commandStatus = lb(message, args, initialMessage)
       break;
     case "osu-default":
-    case "interaction-defaultwaifu"
+    case "interaction-defaultwaifu":
     case "GUILD_TEXT-default":
       commandStatus = setDefaultWaifu(message, user, args, initialMessage)
       break;
@@ -329,7 +270,6 @@ export default function replyCommand(message: message, user: userClass, args: Ar
       commandStatus = setMode(message, user, args)
       break;
     case "GUILD_TEXT-exp":
-    case "interaction-exp":
     case "osu-exp":
     case "GUILD_TEXT-explore":
     case "interaction-explore":
@@ -364,11 +304,24 @@ export default function replyCommand(message: message, user: userClass, args: Ar
     case "interaction-decrypt":
     case "osu-decrypt":
       commandStatus = decrypt(message, user, args, initialMessage)
+    break;
+    case "GUILD_TEXT-cafe":
+    case "interaction-cafe":
+    case "osu-cafe":
+      commandStatus = cafe(message, user, args, initialMessage)
+      break;
+    case "GUILD_TEXT-mine":
+    case "interaction-mining":
+    case "osu-mine":
+    case "osu-mining":
+    case "GUILD_TEXT-mining":
+      commandStatus = mining(message, user, args, initialMessage)
       break;
     case "osu-quest":
     case "osu-quests":
     case "GUILD_TEXT-quest":
     case "GUILD_TEXT-quests":
+    case "interaction-quests":
       commandStatus = quests(message, user)
       break;
     case "GUILD_TEXT-s":
@@ -412,64 +365,76 @@ export default function replyCommand(message: message, user: userClass, args: Ar
     case "GUILD_TEXT-dungeon":
     case "GUILD_TEXT-dungeons":
     case "interaction-dungeon":
-      commandStatus = dungeons(message)
+      commandStatus = dungeons(message, user)
       break;
-    case "GUILD_TEXT-startdeal":
+    /*case "GUILD_TEXT-startdeal":
       commandStatus = startDeal(message, user, initialMessage)
-      break;
+      break;*/
     case "GUILD_TEXT-replace":
     case "GUILD_TEXT-replacewaifu":
-      commandStatus = replaceWaifu(message, user, args)
+    case "interaction-replace":
+      commandStatus = replaceWaifu(message, user, args, initialMessage)
       break;
     case "GUILD_TEXT-recycle":
-      commandStatus = recycle(message, user, args)
+    case "interaction-recycle":
+      commandStatus = recycle(message, user, args, initialMessage)
       break;
     case "GUILD_TEXT-action":
     case "GUILD_TEXT-actions":
+    case "interaction-action":
       user.waifus.forEach(waifu => waifu?.testSendMesAction(message, "doing_action"))
       break;
     case "GUILD_TEXT-swap":
-      commandStatus = swap(message, user, args)
+    case "interaction-swap":
+      commandStatus = swap(message, user, args, initialMessage)
       break;
-    case "GUILD_TEXT-uuc":
-    case "GUILD_TEXT-useuserconsumable":
-      commandStatus = useUserConsumable(message, user, args)
+    case "GUILD_TEXT-e":
+    case "GUILD_TEXT-equip":
+    case "GUILD_TEXT-equipitem":
+    case "interaction-equip":
+      commandStatus = equipItem(message, user, args, initialMessage)
       break;
-    case "GUILD_TEXT-uwc":
-    case "GUILD_TEXT-usewaifuconsumable":
-      commandStatus = useWaifuConsumable(message, user, args)
+    case "GUILD_TEXT-use":
+    case "GUILD_TEXT-useItem":
+    case "GUILD_TEXT-useConsumable":
+    case "interaction-use":
+      commandStatus = useConsumable(message, user, args, initialMessage)
       break;
-    case "GUILD_TEXT-ewi":
-    case "GUILD_TEXT-equipwaifuitem":
-      commandStatus = equipWaifuItem(message, user, args)
+    case "GUILD_TEXT-usewaifuxp":
+    case "GUILD_TEXT-givewaifuxp":
+    case "GUILD_TEXT-uwx":
+    case "GUILD_TEXT-gwx":
+    case "interaction-usewaifuxp":
+      commandStatus = useWaifuXP(message, user, args, initialMessage)
       break;
-    case 'GUILD_TEXT-eui':
-    case "GUILD_TEXT-equipuseritem":
-      commandStatus = equipUserItem(message, user, args)
+    case "GUILD_TEXT-useitemxp":
+    case "GUILD_TEXT-giveitemxp":
+    case "GUILD_TEXT-uix":
+    case "GUILD_TEXT-gix":
+    case "interaction-useitemxp":
+      commandStatus = useItemXP(message, user, args, initialMessage)
       break;
-
-    case "GUILD_TEXT-usexp":
-      commandStatus = useWaifuXP(message, user, args)
-      break;
-
     case "interaction-gacha":
     case "GUILD_TEXT-gacha":
       commandStatus = gacha(message, user)
       break;
     case "GUILD_TEXT-create":
     case "GUILD_TEXT-createwaifu":
-      commandStatus = createWaifu(message, user, args)
+    case "interaction-createwaifu":
+      commandStatus = createWaifu(message, user, args, initialMessage)
       break;
     case "GUILD_TEXT-f":
     case "GUILD_TEXT-fight":
     case "osu-f":
     case "osu-fight":
-      commandStatus = fight(message, user, args)
+    case "interaction-fight":
+      commandStatus = fight(message, user, args, initialMessage)
       break;
     case "GUILD_TEXT-c":
     case "GUILD_TEXT-claim":
     case "osu-claim":
     case "osu-c":
+    case "interaction-claim":
       commandStatus = claim(message, user)
       break;
     /*case "osu-use":
@@ -482,25 +447,30 @@ export default function replyCommand(message: message, user: userClass, args: Ar
       break;
     case "GUILD_TEXT-u":
     case "GUILD_TEXT-upgradewaifu":
-      commandStatus = upgradeWaifu(message, user, args)
+    case "GUILD_TEXT-upgrade":
+    case "interaction-upgrade":
+      commandStatus = upgradeWaifu(message, user, args, initialMessage)
       break;
     case "GUILD_TEXT-sell":
-      commandStatus = sell(message, user, args)
+    case "interaction-sell":
+      commandStatus = sell(message, user, args, initialMessage)
       break;
     case "GUILD_TEXT-shop":
-      commandStatus = shop(message, user, args)
+    case "interaction-shop":
+      commandStatus = shop(message, user, args, initialMessage)
       break;
     case "GUILD_TEXT-sortwaifu":
-      commandStatus = sortWaifu(message, user, args)
+    case "interaction-sortwaifu":
+      commandStatus = sortWaifu(message, user, args, initialMessage)
       break;
     case "GUILD_TEXT-buy":
-      commandStatus = buy(message, user, args)
+    case "interaction-buy":
+      commandStatus = buy(message, user, args, initialMessage)
       break;
     default:
       message.addResponse(eval(getLoc)("command_not_exist"))
       break;
   }
-  //BETTER ALTERNATIVE ?
 
   commandStatus.then(hasUserNotBeenModified => {
     if(!hasUserNotBeenModified ){

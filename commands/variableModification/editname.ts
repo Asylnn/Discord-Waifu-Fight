@@ -18,7 +18,7 @@ commandManager?.create({
     },
     {
       name:"w",
-      description:"waifu slot -- what waifu you want to rename (no input will open select menu) -- help slot",
+      description:"waifu slot -- what waifu you want to rename (no input will open select menu)",
       required:false,
       type:"INTEGER"
     }

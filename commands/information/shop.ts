@@ -10,11 +10,11 @@ import createSimpleEmbed from '../util/createSimpleEmbed'
 commandManager.create({
   name:"shop",
   type:"CHAT_INPUT",
-  description:"see the shop",
+  description:"access the shop",
   options:[
     {
       name:"s",
-      description:"reserve waifu index",
+      description:"what part of the shop you want to access",
       required:true,
       type:"STRING",
       choices:[{name:"user", value:"user"},
@@ -37,7 +37,7 @@ export default async function shop(message: message, user: user, args: Array<str
       message.createPageInteraction(numberOfPages, page => {
         let content = ""
         for (var i = (page - 1)*OBJECT_PER_PAGE; i < page*OBJECT_PER_PAGE && i < itemShop.length; i++) {
-          content += `${i}: ${eval(getLoc)(itemShop[i].item.name)} | ${eval(getLoc)(itemShop[i].item.description)} | Prix: ${itemShop[i].price}¥ \n`
+          content += `${i+1}: ${eval(getLoc)(itemShop[i].item.name)} | ${eval(getLoc)(itemShop[i].item.description)} | ${eval(getLoc)("price")}: ${itemShop[i].price}¥ \n`
         }
         return createSimpleEmbed(eval(getLoc)('item_shop_title'), content+" ")
       })
@@ -48,13 +48,13 @@ export default async function shop(message: message, user: user, args: Array<str
         let content = ""
         for (var i = (page - 1)*OBJECT_PER_PAGE; i < page*OBJECT_PER_PAGE && i < userShop.length; i++) {
           switch(userShop[i].object.objectType){
-            case "consumableUser":
-            case "consumableWaifu":
-            case "equipmentUser":
+            case "userConsumable":
+            case "waifuConsumable":
+            case "userEquipment":
             case "material":
               content += `${i + 1}: ${eval(getLoc)(userShop[i].object.name)} ${"★".repeat(userShop[i].object.rarity)} | ${eval(getLoc)("price")} : ${userShop[i].price} | ${userShop[i].proposer.username} \r\n`
               break;
-            case "equipmentWaifu":
+            case "waifuEquipment":
               content += `${i + 1}: ${eval(getLoc)(userShop[i].object.name)} LV: ${(userShop[i].object as equipmentWaifu).lvl} ${"★".repeat(userShop[i].object.rarity)} | ${eval(getLoc)("price")} : ${userShop[i].price} | ${userShop[i].proposer.username} \r\n`
               break;
             case "waifu":

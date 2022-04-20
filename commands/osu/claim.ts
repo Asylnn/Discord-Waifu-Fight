@@ -5,11 +5,15 @@ import maniaClaim from './maniaClaim'
 import osuClaim from './osuClaim'
 import taikoClaim from './taikoClaim'
 import giveClaimXP from './giveClaimXP'
+import Discord from 'discord.js'
+import {mapGenre} from '../../class/types/beatmap'
+
+import {BEATMAP_MAPPING_GENRE, IDLE_TIME_OF_INTERACTIONS} from '../../files/config.json'
 
 commandManager?.create({
   name:"claim",
   type:"CHAT_INPUT",
-  description:"claim -- do description",
+  description:"claim the map you have done",
 })
 
 export default async function claim(message: message, user: user){
@@ -33,5 +37,34 @@ export default async function claim(message: message, user: user){
   }
   if(rawXP != 0){
     giveClaimXP(message, user, rawXP)
+
+    const actionRow = new Discord.MessageActionRow()
+    const selectMenu = new Discord.MessageSelectMenu()
+    selectMenu.setCustomId('mapgenre')
+    selectMenu.setPlaceholder('Select A Map Genre')
+    const options: Array<Discord.MessageSelectOptionData> = BEATMAP_MAPPING_GENRE.map(mapGenre => {
+      return {
+        label:mapGenre,
+        value:mapGenre
+      }
+    })
+
+    selectMenu.setOptions(options)
+    actionRow.addComponents(selectMenu)
+    message.components.push(actionRow)
+
+    const collector = (await message.reply(eval(getLoc)("voting_explanation"))).createMessageComponentCollector({componentType:'SELECT_MENU', idle:IDLE_TIME_OF_INTERACTIONS})
+    collector.on('collect', async (interaction: Discord.SelectMenuInteraction) => {
+      message.channel = interaction
+      message.haveToUpdate = true
+      const beatmap = await beatmaps.get(user.fight.beatmapId.toString())
+      beatmap.mapGenre = interaction.values[0] as mapGenre
+      beatmap.mapGenreAuthor = user.id
+      beatmaps.put(beatmap.id.toString(), beatmap)
+      const reward = 1
+      user.gachaCurrency = reward //<-----------------------------------
+      user.save()
+      message.reply(eval(getLoc)("thanks_for_voting")); reward;
+    })
   }
 }

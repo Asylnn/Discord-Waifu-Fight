@@ -27,7 +27,7 @@ export default async function decrypt(message: message,user : user, args: Array<
   for(let i = 0; i <= MAX_TIER; i++){
     if(user.items.hasItem(PAR_ID[i])){
       waifu.action = {createdTimestamp:message.createdTimestamp, type:"decryption", timeWaiting: waifu.timeWaiting("decryption", i), lvl:i}
-      user.items.removeItem(PAR_ID[i])
+      user.items.removeItemById(PAR_ID[i])
       message.addResponse(eval(getLoc)("waifu_decrypt"))
       break;
     }

@@ -27,7 +27,7 @@ export default async function analyse(message :message ,user: user, args: Array<
   if(!user.items.hasItem("1")){message.addResponse(eval(getLoc)("not_having_artefact")); return true;}
 
   waifu.action = {createdTimestamp:message.createdTimestamp, type:"analyse", timeWaiting: waifu.timeWaiting("analyse", user.anaLevel), lvl:user.anaLevel}
-  user.items.removeItem("1") //artifact
+  user.items.removeItemById("1") //artifact
   message.addResponse(eval(getLoc)("waifu_analyse"))
 
 }

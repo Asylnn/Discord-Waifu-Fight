@@ -13,8 +13,8 @@ import {IDLE_TIME_OF_INTERACTIONS} from '../../files/config.json'
 
 const options: Discord.ApplicationCommandChoicesData[] = [
   {
-    name:"index",
-    description:"Index",
+    name:"slot",
+    description:"Slot of what you want to recycle",
     required:true,
     type:"INTEGER"
   }
@@ -23,7 +23,7 @@ const options: Discord.ApplicationCommandChoicesData[] = [
 commandManager.create({
   name:"recycle",
   type:"CHAT_INPUT",
-  description:"sometimes things has to be done to earn money...",
+  description:"recycle your items and waifus into money",
   options:[
     {
       name:"waifu",
@@ -44,7 +44,7 @@ commandManager.create({
       type:"SUB_COMMAND",
       options:options.concat([{
         name:"it",
-        description:"item type -- ADD DESCRIPTION",
+        description:"item type",
         required:true,
         type:"STRING",
         choices:[{name:"consumableuser", value:"consumableuser"},
@@ -64,7 +64,7 @@ export default async function recycleItem(message: message, user: user, args: Ar
   let waifu:waifu | null
   console.log("changess")
 
-  let {i:index, t:type} = !message.isInteraction ? {"i":parseInt(args[2]) - 1, "t":args[1]} : {"i":interaction.options.getInteger('index')!, "t":interaction.options.getSubcommand()}
+  let {i:index, t:type} = !message.isInteraction ? {"i":parseInt(args[2]) - 1, "t":args[1]} : {"i":interaction.options.getInteger('slot')!, "t":interaction.options.getSubcommand()}
   if(type == "item") type = interaction.options.getString("it")!
 
 
@@ -96,8 +96,7 @@ export default async function recycleItem(message: message, user: user, args: Ar
       const amount = Math.floor(parseInt(args[3]) || 1)
 
       const items = user.items[MAJ[type] as 'material']
-      const item = testItem(message, items, index)
-      console.log(item)
+      const item = testItem(message, items, index)?.item
       if(!item){return true;}
 
       if(items[index]?.qty && amount > items[index].qty){message.addResponse(eval(getLoc)("not_enough_item")); return true;}

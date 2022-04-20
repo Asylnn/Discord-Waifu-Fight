@@ -1,4 +1,4 @@
-type itemType = 'consumableUser' | 'consumableWaifu' | 'equipmentUser' | 'equipmentWaifu' | 'materials'
+type itemType = 'userConsumable' | 'waifuConsumable' | 'userEquipment' | 'waifuEquipment' | 'material'
 export default itemType
 
 

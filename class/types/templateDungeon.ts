@@ -30,7 +30,7 @@ Sinon, c'est la défaite.
 */
 
 
-import {beatmap, mapGenre} from './beatmap'
+import {mapGenre} from './beatmap'
 import equipmentType from './equipmentType'
 
 export default interface templateDungeon {
@@ -49,6 +49,5 @@ export default interface templateDungeon {
     "type":equipmentType
     "set": string
   }>
-  beatmaps: beatmap[][]
   mapGenre: mapGenre
 }

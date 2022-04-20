@@ -2,7 +2,7 @@ import message from '../../class/message'
 import user from '../../class/user'
 import between from '../../genericFunctions/between'
 import {milliToMinutes} from '../../genericFunctions/timeConversion'
-import {TIME_FIGHT, BEATMAP_HISTORY_SIZE} from '../../files/config.json'
+import {TIME_FIGHT, BEATMAP_HISTORY_SIZE, TEST_BUILD} from '../../files/config.json'
 import randInt from '../../genericFunctions/randInt'
 import gamemode from '../../class/types/gamemode'
 import getParameterObject from '../util/getParameterObject'
@@ -11,7 +11,7 @@ import Discord from 'discord.js'
 commandManager?.create({
   name:"fight",
   type:"CHAT_INPUT",
-  description:"fight a beatmap",
+  description:"fight a beatmap (whatever that means :thinking:)",
   options:[{
     name:"sr",
     description:"the star rating of the maps you want to play",
@@ -29,7 +29,7 @@ commandManager?.create({
     {name:"material", value:"material"}],
   },{
     name:"w",
-    description:"waifu slot -- Which waifu will analyse an artifact (no input will open select menu) -- help slot",
+    description:"waifu slot -- Which waifu will be fighting with you (no input will open select menu)",
     required:false,
     type:"INTEGER"
   }],
@@ -37,18 +37,19 @@ commandManager?.create({
 
 
 async function getMap(gamemode: gamemode, star: number, playedMapsIds: Array<number>){
-  let mapPool = await beatmaps.get(gamemode + star)
-  let beatmap = mapPool ? mapPool[0] : null
+  let mapPool = await beatmaps.filter(beatmap => {console.log(beatmap); return beatmap.gamemode == gamemode && Math.floor(beatmap.starRating) == star})
+  console.log(mapPool)
+  let beatmap = mapPool ? mapPool[0].id : null
 
   if (mapPool.length > 0){
     let index = randInt(mapPool.length)
-    beatmap = mapPool[index]
-    while (mapPool.length > 1 && playedMapsIds.includes(beatmap.id)){
+    beatmap = mapPool[index].id
+    while (mapPool.length > 1 && playedMapsIds.includes(beatmap)){
       mapPool.splice(index, 1)
       index = randInt(mapPool.length)
-      beatmap = mapPool[index]
+      beatmap = mapPool[index].id
     }
-    if (mapPool.length == 1 && playedMapsIds.includes(beatmap.id)) {
+    if (mapPool.length == 1 && playedMapsIds.includes(beatmap) && !TEST_BUILD) {
       beatmap = null
     }
   }
@@ -85,8 +86,9 @@ export default async function fight(message: message, user: user, args:Array<str
       const timeLeft = milliToMinutes(user.fight.time + TIME_FIGHT - message.createdTimestamp); timeLeft
       if(user.fight.time + TIME_FIGHT >= message.createdTimestamp){message.addResponse(eval(getLoc)("already_in_fight")); return true;}
     }
-    const beatmap = await getMap(gamemode, star, user.playedMapsIds)
-    if(beatmap == null){message.addResponse(eval(getLoc)('did_all_maps'));return true;}
+    const beatmapId = await getMap(gamemode, star, user.playedMapsIds)
+    if(beatmapId == null){message.addResponse(eval(getLoc)('did_all_maps'));return true;}
+    const beatmap = await beatmaps.get(beatmapId.toString())
     const URL = `https://osu.ppy.sh/beatmapsets/${beatmap.beatmapSetId}#${gamemode}/${beatmap.id}`; URL
     user.fight = {isInAFight:true, beatmapId:beatmap.id, indexWaifu:waifuIndex, mode:gamemode, time:message.createdTimestamp}
     user.playedMapsIds.unshift(beatmap.id)

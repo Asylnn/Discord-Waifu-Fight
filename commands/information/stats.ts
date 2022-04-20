@@ -2,7 +2,8 @@ import message from '../../class/message'
 import user from '../../class/user'
 import Discord from 'discord.js'
 import createSimpleEmbed from '../util/createSimpleEmbed'
-import getModificators from '../../genericFunctions/getModificators'
+import Modificator from '../../class/modificator'
+const {getModificators} = Modificator
 
 commandManager?.create({
   name:"stats",
@@ -32,7 +33,6 @@ export default async function rank(message: message, user: user, discordMessage:
   if(discordMessage instanceof Discord.CommandInteraction || discordMessage instanceof Discord.ContextMenuInteraction){
     if(discordMessage.isContextMenu()){
       userId = discordMessage.targetId
-      console.log(discordClient)
       discordUser = discordClient.users.cache.get(userId)
     }
     else {
@@ -71,6 +71,7 @@ export default async function rank(message: message, user: user, discordMessage:
     XP : ${user.xp}/${user.xplvlup}
 
     ${eval(getLoc)("pure_xp")} : ${user.waifuXP} \n
+    ${eval(getLoc)("item_xp")} : ${user.itemXP} \n
 
     claims std : ${user.playCount.osu}
     claims mania : ${user.playCount.mania}
@@ -98,16 +99,12 @@ export default async function rank(message: message, user: user, discordMessage:
 
   content += eval(getLoc)("stats_modificator")
 
-  content += getModificators(user, 'mult_XP').toString()
-  content += getModificators(user, 'add_box_level').toString()
-  content += getModificators(user, 'mult_money_earned').toString()
-  content += getModificators(user, 'mult_EX').toString()
-  content += getModificators(user, 'mult_int').toString()
-  content += getModificators(user, 'mult_XP_std').toString()
-  content += getModificators(user, 'mult_XP_mania').toString()
-  content += getModificators(user, 'mult_XP_catch').toString()
-  content += getModificators(user, 'mult_XP_taiko').toString()
-  content += getModificators(user, 'nakano_bonus').toString()
+
+  content += getModificators(user, 'nakano_bonus').value == 1 ? getModificators(user, 'nakano_bonus').toString(message) : ""
+  content += getModificators(user, 'reduce_analyse_time').value != 1 ? getModificators(user, 'reduce_analyse_time').toString(message) : ""
+  content += getModificators(user, 'reduce_decrypt_time').value != 1 ? getModificators(user, 'reduce_decrypt_time').toString(message) : ""
+  content += getModificators(user, 'reduce_mining_time').value != 1 ? getModificators(user, 'reduce_mining_time').toString(message) : ""
+  content += getModificators(user, 'reduce_cafe_time').value != 1 ? getModificators(user, 'reduce_cafe_time').toString(message) : ""
 
   embed.setDescription(content)
   message.embeds.push(embed)

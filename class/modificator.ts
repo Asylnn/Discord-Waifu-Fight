@@ -21,9 +21,9 @@ export default class Modificator {
 
   toString(message: Message){
     message;
-    
+
     if(MODIFICATOR_OPERATION[this.type] == "multiplicative"){
-      if(["reduce_explo_time", "reduce_analyse_time", "reduce_decrypt_time"].includes(this.type)){
+      if(["reduce_explo_time", "reduce_analyse_time", "reduce_decrypt_time", "reduce_cafe_time", "reduce_mining_time"].includes(this.type)){
         return `${eval(getLoc)(this.type)} : ${Math.round((1 - 1 / this.value)*100)}% \n`
       }
       else {

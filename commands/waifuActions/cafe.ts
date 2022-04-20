@@ -34,5 +34,5 @@ export default async function exp(message: message, user: user, args: Array<stri
       break;
   }
   message.addResponse(eval(getLoc)("went_maid_cafe"))
-  waifu.action = {createdTimestamp:message.createdTimestamp, type:"cafe", timeWaiting: waifu.timeWaiting("exploration", lvl), lvl:lvl}
+  waifu.action = {createdTimestamp:message.createdTimestamp, type:"cafe", timeWaiting: waifu.timeWaiting("cafe", lvl), lvl:lvl}
 }

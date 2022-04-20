@@ -6,6 +6,7 @@ import {QUEST_PROBABILITY_BONUS} from '../files/config.json'
 
 export default function checkQuests(user: user, message: message, userMention: any){
   if(user.quests.date != (new Date()).getDate()){
+    user.newStatDay()
     user.quests.refreshQuests()
   }
 
@@ -13,28 +14,33 @@ export default function checkQuests(user: user, message: message, userMention: a
     if(userQuest.name != "completed"){
       if(userQuest.state >= userQuest.objective){
         user.quests.totalQuestDone++
-        let rand, reward
+        let rand: number, reward: number, rewardGC: number
         switch (userQuest.difficulty) {
           case 1:
-            reward = 100 + user.lvl*2
-            user.money = reward
+            reward = 25 + randInt(50)
+            rewardGC = 5 + randInt(10)
+
             user.giveXP((3 + randInt(3)), message)
-            message.addResponse(eval(getLoc)("quest_completed_1")); userMention;
+
+            message.addResponse(eval(getLoc)("quest_completed_1")); userMention; rewardGC;
             rand = randInt(100)
             break;
           case 2:
             user.giveXP((6 + randInt(6)), message)
-            reward = 200 + user.lvl*4
-            user.money = reward
+            reward = 50 + randInt(100)
+            rewardGC = 10 + randInt(20)
+
 
             user.waifuXP += 750*((user.lvl+50)/50)
             message.addResponse(eval(getLoc)("quest_completed_2"))
-            rand = 50 + randInt(50)
+            rand = 100 + randInt(50)
             break;
           case 3:
             user.giveXP(12 + randInt(12), message)
-            reward = reward = 400 + user.lvl*8
-            user.money = reward
+            reward = reward = 75 + randInt(150)
+            rewardGC = 15 + randInt(30)
+
+
             user.waifuXP += 1500*((user.lvl+50)/50)
             const item = items.randItem(user.boxLevel, "box")
             if(item) user.items.addItem(item)
@@ -43,6 +49,8 @@ export default function checkQuests(user: user, message: message, userMention: a
             break;
           default:
         }
+        user.money = reward!
+        user.gachaCurrency = rewardGC!
         if(randInt(100) > QUEST_PROBABILITY_BONUS){
           rand = randInt(5)
           switch (rand) {

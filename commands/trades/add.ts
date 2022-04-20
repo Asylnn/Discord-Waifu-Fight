@@ -54,7 +54,7 @@ export default async function add(message: message, user: user, args:Array<strin
     case 'waifuequipment':
     case 'material':
       const items = user.items[MAJ[type] as 'material']
-      const item = testItem(message, items, index)
+      const item = testItem(message, items, index)?.item
       if(!item){return true;}
       complement = Math.floor(parseInt(args[3])) || 1
       if(complement > items[index].qty){message.addResponse(eval(getLoc)("not_enough_item")); return true;}

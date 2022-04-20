@@ -1,9 +1,10 @@
 import message from '../../class/message'
 import user from '../../class/user'
 import {questType} from '../../class/types/quest'
-import getModificators from '../../genericFunctions/getModificators'
-import {modificatorType} from '../../class/types/modificator'
-import hasModificators from '../../genericFunctions/hasModificators'
+import Modificator from '../../class/modificator'
+const {getModificators} = Modificator
+const {hasModificators} = Modificator
+import modificatorType from '../../class/types/modificatorType'
 import randInt from '../../genericFunctions/randInt'
 
 export default function giveClaimXP(message: message, user: user, rawXP: number){
@@ -14,18 +15,19 @@ export default function giveClaimXP(message: message, user: user, rawXP: number)
   //let lb = global.dailyChallenge.lb[1]
   /*let claim = lb.has(user.id) ? lb.get(user.id) : 0
   lb.set(user.id, ++claim)*/
-
   const waifu = user.waifus[user.fight.indexWaifu]!
-  const mult = getModificators(waifu, 'mult_XP_' + mode as modificatorType)*user.multXP
+  console.log(getModificators(waifu, 'mult_XP_' + mode as modificatorType).value)
+  const mult = getModificators(waifu, 'mult_XP_' + mode as modificatorType).value*user.multXP
+  console.log(mult)
   const earnedXP = waifu.giveXP(rawXP*mult, message)
   user.giveXP(1 + randInt(1), message)
-  user.multXP = 1
+
 
   console.log("rawXP : " + rawXP)
   console.log("XP : " + earnedXP)
 
   if(hasModificators(waifu, 'get_quest_reroll')){
-    const probability = getModificators(waifu, 'mult_XP_' + mode as modificatorType)
+    const probability = getModificators(waifu, 'get_quest_reroll').value
     if(Math.random() <= probability){
       user.items.addItem("18") //quest re roll
       message.addResponse(eval(getLoc)("win_quest_reroll"))

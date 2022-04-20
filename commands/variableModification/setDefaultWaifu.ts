@@ -10,7 +10,7 @@ commandManager?.create({
   options:[
     {
       name:"w",
-      description:"waifu slot -- what waifu do you want to use as default (no input will open select menu) -- help slot",
+      description:"waifu slot -- what waifu do you want to use as default (no input will open select menu)",
       required:false,
       type:"INTEGER"
     }

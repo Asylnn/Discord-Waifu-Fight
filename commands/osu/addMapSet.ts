@@ -39,24 +39,35 @@ function removemap(message, user, Smessage){
 }*/
 
 import message from '../../class/message'
+import {beatmap} from '../../class/types/beatmap'
 
-export default async function addmapset(message: message, args: Array<string>){
+export default async function addMapset(message: message, args: Array<string>){
+
   const beatmapset = await osuAPI.getBeatmapSet({beatmapsetId:parseInt(args[1])})
-  if(!beatmapset) {message.addResponse("Le set de map n'a pas été trouvé :/"); return true};
+
+  if(!beatmapset) {message.addResponse("The map set wasn't found :/"); return true};
+
   beatmapset.beatmaps.forEach(async beatmap =>  {
-    const beatmapId = beatmap.id
-    const beatmapStarRating = Math.floor(beatmap.difficulty_rating)
+    if(await beatmaps.exists(beatmap.id.toString())){ //If the map already exists
+      message.addResponse(`The map : ${beatmapset.title_unicode}, ID : ${beatmap.id} was already added`)
 
-    const beatmapArray = await beatmaps.get(beatmap.mode + beatmapStarRating)
-
-    if(!beatmapArray.some(beatmapInfo => beatmapInfo.id == beatmapId)){ //If the map already exists
-      beatmapArray.push({beatmapSetId:beatmap.beatmapset_id, id: beatmap.id, genre:beatmapset.genre.name, language: beatmapset.language.name, mapGenre:"no_genre"})
     }
     else {
-      console.log("Cette beatmap est déja ajoutée!")
+      const map: beatmap = {
+        beatmapSetId: beatmapset.id,
+        id: beatmap.id,
+        genre: beatmapset.genre,
+        language: beatmapset.language,
+        mapGenre: "unknown",
+        gamemode: beatmap.mode,
+        mapGenreAuthor:null,
+        starRating: beatmap.difficulty_rating
+      }
+      beatmaps.put(map.id.toString(), map)
+
     }
   });
-  message.addResponse("Beatmaps ajoutées !")
+  message.addResponse("Beatmaps added!")
   return true
 }
 

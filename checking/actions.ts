@@ -1,162 +1,166 @@
 import user from '../class/user'
 import message from '../class/message'
+import item from '../class/item/item'
+import materials from '../class/item/material'
+
+
 import randInt from '../genericFunctions/randInt'
-import {PAR_DIFFICULTY} from '../files/config.json'
+import {PAR_DIFFICULTY, ANA_DIFFICULTY} from '../files/config.json'
 import waifuConsumable from '../class/item/waifuConsumable'
+import collection from '../class/collection'
+import Modificator from '../class/modificator'
+const {getModificators} = Modificator
 
 export default function checkAction(user: user, message: message, userMention: any){
 
   let updateProfile = false
-
+  let modificator: number
   user.waifus.forEach(waifu => {
     if(waifu?.action && waifu.action.type != "dungeon"){
       if(waifu.action.createdTimestamp + waifu.action.timeWaiting < Date.now()){
-
+        modificator = getModificators(waifu, 'exploration_capability').value
+        let gainXP:number, mult = 1
         updateProfile = true
-        if(waifu.action.type == "exploration"){
-          let mult = 1, luckMult = 1
-          switch(waifu.action.lvl){
-            case 1:
-              user.giveXP(2, message)
-              mult = 0.5
-              luckMult = 0.32
-              break;
-            case 2:
-              user.giveXP(4, message)
-              break;
-            case 3:
-              user.giveXP(8, message)
-              mult = 3
-              luckMult = 4.5
-              break;
-            case 4:
-              user.giveXP(12, message)
-              mult = 5.2
-              luckMult = 10
-              break;
-          }
-          const reward = waifu.stg/4*mult
-          user.money = reward
-          const gainXP = waifu.giveXP(Math.floor(mult*(100 + waifu.stg/1.5)), message)
-          message.addResponse(eval(getLoc)("waifu_back_from_exploration")); gainXP;
-          if(Math.random() <= luckMult*waifu.luck/300){
-            message.addResponse(eval(getLoc)("waifu_got_artifact")); userMention;
-            user.items.addItem("1") //artifact
-          }
-          user.quests.updateQuest("do_exploration")
-        }
+        switch(waifu.action.type){
+          case "exploration":
+            switch(waifu.action.lvl){
+              case 1:
+                user.giveXP(2, message)
+                mult = 0.5
+                break;
+              case 2:
+                user.giveXP(4, message)
+                break;
+              case 3:
+                user.giveXP(8, message)
+                mult = 3
+                break;
+              case 4:
+                user.giveXP(12, message)
+                mult = 5.2
+                break;
+            }
+            gainXP = waifu.giveXP((100 + randInt(150))*mult, message)
+            const agiMult = 1 + modificator*waifu.agi/200
+            const numberOfItems = Math.floor(1 + randInt(200 + waifu.agi)/200)
+            console.log(numberOfItems)
+            const randomItem = [
+              [items.get("1")/*Artifact*/, 10*mult],
+              [items.get("2")/*Parchment*/, 10*mult],
+              [items.get("75")/*artifact_fragment*/, 25/( 1 + (agiMult - 1)/4)],
+              [items.get("76")/*par_page*/, 25/( 1 + (agiMult - 1)/4)],
+              [items.get("77")/*purse*/, 30/agiMult],
+            ] as Array<[item, number]>
+            items.getColRand([randomItem], 1)
 
-
-
-        else if(waifu.action.type == "analyse"){
-          user.giveXP(5 + randInt(11), message)
-          let gainXP = waifu.giveXP(Math.floor(150 + 1.5*waifu.stg), message)
-          if(randInt(2) == 0){
-            message.addResponse(eval(getLoc)("end_analyse_money")); gainXP;
-            user.money = 100 + waifu.action.lvl*80
-          }
-          else{
-            let founditem = items.randItem(waifu.action.lvl, "ana")
-            if(founditem) user.items.addItem(founditem)
+            let obtainedItems: Array<{item:materials, qty:number}> = []
+            while(numberOfItems > obtainedItems.length){
+              const randItem = items.getColRand([randomItem], 1) as materials
+              const index = obtainedItems.findIndex((itemRow) => itemRow.item.id == randItem.id)
+              if(index == -1)
+                obtainedItems.push({item:randItem, qty:1})
+              else
+                obtainedItems[index].qty++
+            }
+            const listOfItems = obtainedItems.reduce((content, {item, qty}) => {
+              user.items.addItem(item, qty)
+              return content += `x${qty} ${eval(getLoc)(item.name)}\r\n`
+            } , "")
+            message.addResponse(eval(getLoc)("waifu_back_from_exploration")); listOfItems; gainXP; userMention;
+            user.quests.updateQuest("do_exploration")
+            break
+          case "analyse":
+            user.giveXP(5 + randInt(11), message)
+            const randANA = randInt(waifu.agi)
+            const levelANA = ANA_DIFFICULTY.findIndex(difficulty => difficulty > randANA)
+            gainXP = waifu.giveXP((400*randInt(600)), message)
+            const foundItemANA = items.randItem(levelANA + waifu.action.lvl, "ana")
+            if(foundItemANA) user.items.addItem(foundItemANA)
             message.addResponse(eval(getLoc)("end_analyse_item"))
-          }
-          user.quests.updateQuest("analyse_artifact")
-        }
-
-
-
-        else if(waifu.action.type == "decryption"){
-          user.giveXP(5 + randInt(11), message)
-          const difficulty = PAR_DIFFICULTY[waifu.action.lvl]
-          const gainXP = waifu.giveXP(Math.floor((250 + 3*waifu.action.lvl*waifu.int + waifu.action.lvl*120)), message)
-
-          if(randInt(difficulty) < waifu.int){
-            let founditem = items.randItem(waifu.action.lvl, "par")
-            if(founditem) user.items.addItem(founditem)
+            user.quests.updateQuest("analyse_artifact")
+            break
+          case "decryption":
+            user.giveXP(5 + randInt(11), message)
+            const randPAR = randInt(waifu.int/2)
+            const levelPAR = PAR_DIFFICULTY.findIndex(difficulty => difficulty > randPAR)
+            gainXP = waifu.giveXP((400*randInt(600)), message)
+            const foundItemPAR = items.randItem(levelPAR + waifu.action.lvl, "par")
+            if(foundItemPAR) user.items.addItem(foundItemPAR)
             message.addResponse(eval(getLoc)("end_decrypt_item")); gainXP;
-          }
-          else{
-            let reward = 100 + waifu.action.lvl*80
-            message.addResponse(eval(getLoc)("end_decrypt_money")); gainXP;
-            user.money = reward
-          }
-          user.quests.updateQuest("decrypt_parchement")
-        }
-        else if(waifu.action.type == "mining"){
-          let mult = 1
-          switch(waifu.action.lvl){
-            case 1:
-              user.giveXP(2, message)
-              mult = 0.5
-              break;
-            case 2:
-              user.giveXP(4, message)
-              break;
-            case 3:
-              user.giveXP(8, message)
-              mult = 3
-              break;
-            case 4:
-              user.giveXP(12, message)
-              mult = 5.2
-              break;
-          }
-          const nbOfMinerals = Math.floor((200 + waifu.stg)*mult)
-          const minerals: Array<{item:waifuConsumable, qty:number}> = []
-          const itemXP = Math.floor((15 + waifu.stg)*mult)
-          user.itemXP += itemXP
-          while(nbOfMinerals > minerals.length){
-            const randMineral = items.randItem(1, "mining") as waifuConsumable
-            const index = minerals.findIndex((mineral) => mineral.item.id == randMineral.id)
-            if(index == -1)
-              minerals.push({item:randMineral, qty:1})
-            else
-              minerals[index].qty++
-          }
-          const listOfMinerals = minerals.reduce((content, {item, qty}) => {
-            user.items.addItem(item, qty)
-            return content += `x${qty} ${eval(getLoc)(item.name)}\r\n`
-          } , "")
-          message.addResponse(eval(getLoc)("waifu_back_from_mining")); listOfMinerals;
-          user.quests.updateQuest("go_mining")
+            user.quests.updateQuest("decrypt_parchement")
+            break
+          case "mining":
+            modificator = getModificators(waifu, 'mining_capability').value
+            switch(waifu.action.lvl){
+              case 1:
+                user.giveXP(2, message)
+                mult = 0.5
+                break;
+              case 2:
+                user.giveXP(4, message)
+                break;
+              case 3:
+                user.giveXP(8, message)
+                mult = 3
+                break;
+              case 4:
+                user.giveXP(12, message)
+                mult = 5.2
+                break;
+            }
+            gainXP = waifu.giveXP((100*randInt(150))*mult, message)
+            const nbOfMinerals = Math.floor((200 + waifu.stg*modificator)*mult/200)
+            let minerals: Array<{item:waifuConsumable, qty:number}> = []
+            const itemXP = Math.floor((15 + waifu.stg*modificator)*mult)
+            user.itemXP += itemXP
+            while(nbOfMinerals > minerals.length){
+              const randMineral = items.randItem(1, "mining") as waifuConsumable
+              console.log(randMineral)
+              const index = minerals.findIndex((mineral) => mineral.item.id == randMineral.id)
+              console.log(index)
+              if(index == -1)
+                minerals.push({item:randMineral, qty:1})
+              else
+                minerals[index].qty++
+            }
+            const listOfMinerals = minerals.reduce((content, {item, qty}) => {
+              user.items.addItem(item, qty)
+              return content += `x${qty} ${eval(getLoc)(item.name)}\r\n`
+            } , "")
 
-          //user.quests.updateQuest("mining")
-        }
-        else if(waifu.action.type == "cafe"){
-          let mult = 1
-          switch(waifu.action.lvl){
-            case 1:
-              user.giveXP(2, message)
-              mult = 0.5
-              break;
-            case 2:
-              user.giveXP(4, message)
-              break;
-            case 3:
-              user.giveXP(8, message)
-              mult = 3
-              break;
-            case 4:
-              user.giveXP(12, message)
-              mult = 5.2
-              break;
-          }
-          const gachaReward = (3 + waifu.kaw/800)*mult
-          const reward = waifu.kaw/4*mult
-          user.money = reward
-          user.gachaCurrency += gachaReward
-          const gainXP = waifu.giveXP(Math.floor(mult*(100 + waifu.kaw/1.5)), message)
-          message.addResponse(eval(getLoc)("waifu_back_from_cafe")); gainXP;
-          user.quests.updateQuest("do_maid_cafe")
 
+            message.addResponse(eval(getLoc)("waifu_back_from_mining")); listOfMinerals;
+            user.quests.updateQuest("go_mining")
+            break
+          case "cafe":
+          modificator = getModificators(waifu, 'cafe_capability').value
+            switch(waifu.action.lvl){
+              case 1:
+                user.giveXP(2, message)
+                mult = 0.5
+                break;
+              case 2:
+                user.giveXP(4, message)
+                break;
+              case 3:
+                user.giveXP(8, message)
+                mult = 3
+                break;
+              case 4:
+                user.giveXP(12, message)
+                mult = 5.2
+                break;
+            }
+            const gachaReward = (3 + waifu.kaw/800)*mult
+            user.gachaCurrency = gachaReward
+            gainXP = waifu.giveXP((100*randInt(150))*mult, message)
+            message.addResponse(eval(getLoc)("waifu_back_from_cafe")); gainXP;
+            user.quests.updateQuest("do_maid_cafe")
+            break
         }
-
         waifu.action = null
-
       }
-
     }
-
   })
   if(updateProfile){
     user.save()

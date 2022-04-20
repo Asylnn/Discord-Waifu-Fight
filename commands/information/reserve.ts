@@ -12,7 +12,7 @@ commandManager.create({
   options:[
     {
       name:"rw",
-      description:"reserve waifu index",
+      description:"reserve waifu slot",
       required:false,
       type:"INTEGER"
     }
@@ -29,16 +29,17 @@ export default async function reservewaifu(message: message, user: user, args: A
       let content = ""
       for (var i = (page - 1)*OBJECT_PER_PAGE; i < page*OBJECT_PER_PAGE && i < user.reserveWaifu.length; i++) {
 
-        let lvl = "LV " + user.reserveWaifu[i].lvl
-        let star = "★".repeat(user.reserveWaifu[i].stars)
+        const lvl = "LV " + user.reserveWaifu[i].lvl
+        const star = "★".repeat(user.reserveWaifu[i].stars)
         content += `${i+1}: ${user.reserveWaifu[i].name}${star} ${lvl} ${user.reserveWaifu[i].rarityName(message)}\r\n`
       }
       return createSimpleEmbed(eval(getLoc)('reserve_title'), content+" ")
     })
   }
   else{
-    const waifu = testReserveWaifu(message, user.waifus, +waifuIndex!)
+    const waifu = testReserveWaifu(message, user.reserveWaifu, +waifuIndex!)
     if(!waifu){return true;}
+
     message.embeds.push(waifu.showStats(message, +waifuIndex!))
   }
   return true

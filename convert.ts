@@ -1,20 +1,127 @@
+// @ts-nocheck
+
 import fs from 'fs'
 import questManager from './class/questManager'
 import itemManager from './class/itemManager'
 import collection from './class/collection'
-import itemClass from './class/item'
-import waifuClass from './class/waifu'
+import Item from './class/item/item'
+import Waifu from './class/waifu'
 import User from './class/user'
+import Material from './class/item/material'
+import WaifuConsumable from './class/item/waifuConsumable'
+import UserEquipment from './class/item/userEquipment'
+import UserConsumable from './class/item/userConsumable'
+import Message from './class/message'
+import Modificator from './class/modificator'
 
 var w = (nb:number) => BigInt(Math.pow(2, nb))
 const userCol = new collection()
 
 export default async function convert(){
+  const message  = new Message("en.","","GUILD_TEXT",-1,null,'-1');
   (await users.all()).forEach((user)=>{
-    const tempUser = new User('asyln', 'asyln')
-    Object.assign(user, tempUser)    
+
+    delete user.gachaCurrency
+
+    const tempUser = new User()
+    Object.assign(tempUser, user)
+    //console.log(user)
+    user.modificators = user.modificators.map(mod => new Modificator(mod.origin, mod.type, mod.value))
+    user.equipedItems = user.equipedItems.map(item => {
+      if(item && item.id == "-1") return null
+      else return item
+    })
+    user.items.waifuEquipment = []
+    user.items.waifuConsumable = user.items.waifuConsumable.map(({item, qty}) => {
+      if(!item) return {item:items.get("73"), qty:qty}
+      return {item:items.get(item.id), qty:qty}
+    })
+    user.items.userConsumable = user.items.userConsumable.map(({item, qty})=> {
+      if(!item) return {item:items.get("72"), qty:qty}
+      return {item:items.get(item.id), qty:qty}
+    })
+    user.items.material = user.items.material.map(({item, qty})=> {
+      if(!item) return {item:items.get("70"), qty:qty}
+      return {item:items.get(item.id), qty:qty}
+    })
+    user.items.userEquipment = user.items.userEquipment.map(({item, qty})=> {
+      if(!item) return {item:items.get("71"), qty:qty}
+      return {item:items.get(item.id), qty:qty}
+    })
+    user.items.userConsumable = user.items.userConsumable.filter((itemAndQty) => itemAndQty.item)
+
+    user.waifus = user.waifus.map(waifu => {
+      //if(user.osuName == "QuentinFTW") console.log("a", waifu.id)
+
+      if(waifu && waifu.id == "-1") return null
+      return convertWaifu(waifu, user, message)
+    })
+
+    user.milestone = user.milestone & ~w(5)
+
+    user.modificators = user.modificators.filter(modificator => modificator.origin != "nakano")
+
+    user.reserveWaifu = user.reserveWaifu.map(waifu => {
+      return convertWaifu(waifu, user, message)
+    })
+    //console.log(user)
     user.save();
   })
+
+  //console.log(message.content)
+
+}
+
+function convertWaifu(waifu:Waifu | null, user:User, message:Message){
+  console.log(waifu.diffLvlUp)
+  if(!waifu) return waifu
+  if(user.osuName == "QuentinFTW"){
+    console.log("QuentinFTW", waifu.id)
+  }
+  if(user.osuName == "Honthagr"){
+    console.log("Honthagr", waifu.id)
+  }
+  if(user.osuName == "Takamin"){
+    console.log("Takamin", waifu.id)
+  }
+  if(user.osuName == "Eyre"){
+    console.log("Eyre", waifu.id)
+  }
+  const template = waifus.get(waifu.id.toString())
+  const waifu2 = new Waifu(user, template)
+  waifu2.name = waifu.name
+  console.log(waifu.xp)
+  let totalXP = waifu.xp
+
+  /*for(var i = 1; i < waifu.stars; i++){
+    waifu2.stars++
+    waifu2.b_luck += 3*waifu2.u_luck
+    waifu2.b_agi += 3*waifu2.u_agi
+    waifu2.b_int += 3*waifu2.u_int
+    waifu2.b_dext += 3*waifu2.u_dext
+    waifu2.b_stg += 3*waifu2.u_stg
+    waifu2.b_kaw += 3*waifu2.u_kaw
+  }*/
+  console.log(waifu.lvl)
+  for (var j = 1; j <= waifu.lvl; j++) {
+    let diffLvlUp = 1
+    if(waifu.id == "1000") diffLvlUp = 1.2
+    if(waifu.id == "39") diffLvlUp = 1.25
+    if(waifu.name == "Asuna-sama") console.log(waifu.id)
+    totalXP += Math.floor(((1 + diffLvlUp)*j + 5*j + 20)*diffLvlUp)
+  }
+
+
+
+  console.log(totalXP)
+  waifu2.giveXP(totalXP, message, true)
+  waifu2.owner = undefined
+  waifu2.modificators = []
+  if(waifu.id == "18") waifu2.modificators.push(new modificator("suzumiya_haruhi_waifu_bonus", "reduce_action_time", 1.5))
+
+  //if(waifu2.name == "Yuu Koito") console.log("convert", waifu2)
+
+  return waifu2
 }
 
 /*export default function convert(){

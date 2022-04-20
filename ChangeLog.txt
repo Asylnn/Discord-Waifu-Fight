@@ -1,5 +1,7 @@
 you can now do o!explore instead of o!exp
-language now cannot be done from osu (that will for sure cause issue for a lot of users (0 out of 0 is a lot kekw))
+you can now do o!e instead of o!equip
+you can now do o!rw instead of o!reserve
+language now cannot be done from osu (that will for sure cause issue for a lot of users (1 out of 1 is a lot kekw))
 same for o!setmode
 can now do o!defaultwaifu instead of o!default
 can now do o!gamemode instead of o!setmode
@@ -10,7 +12,8 @@ made item shop page embed
 Reverted back the way to equip / use items, it's to say (without slash commands):
 o!equip waifu/user / item index / waifu id (if needed) / slot
 now to view waifus you need to do o!waifus
-commands o!rank and o!stats (without waifus) were combined 
+commands o!rank and o!stats (without waifus) are now combined
+click on someone profil go to application and you can now see waifus or rank of someone that easely
 
 Changed some waifus
 changed rarity of rem from rare to legendary
@@ -28,11 +31,44 @@ Added numerous waifus:
 -Petra (common)
 -Frederica (common)
 
+Exploration XP is no longer proportionnal to the EX (AGI) of waifu
+Exploration no longer gives money
+Exploration now gives multiple different items based on AGI
+
+Parchment now have only one level
+
+Complete rework on how to earn money and how much
+
 Big changes:
-New Stats bla bla bla...
-New Actions bla bla bla...
-Slash commands bla bla bla...
-Dungeons bla bla bla...
+
+New currency : GC (stand for gacha currency, IG name is Dream Essence, may be suggested to change)
+New Stats :
+
+KAW (Kawainess of your waifu)
+DEXT (Dexterity)
+STG (Strength)
+AGI (Agility) (new EX, so not really new)
+
+
+New Actions
+Exploration was entirely rework, no longer give money, now give parchment, the more agility you have the better the exploration is
+Cafe, give GC and money, the more cute your waifu is the more she will bring back
+Mining, give crystal and item XP proportionnal to your strength
+Analyse now is based by your waifu agility
+
+All commands can now be done via Discord's Slash commands (less time efficient than doing it the old way tho)
+A new game mechanic : dungeons
+new stats will be used for inflicting damage to a boss you will fight, multiplicated by the XP of what your claim did
+finishing a dungeon will reward you with waifu equipment
+
 Added quests for completing a dungeon
-Gacha blablabla...
-waifuEquipment bla bla bla...
+New Gacha Mechanic, now to earn waifus you will have to roll them using o!gacha with GC
+Now Waifu have three different equipment slot: outfit, weapon and accessory
+waifu equipment have numerous random small modificators alongside the main one
+leveling up the waifu equipment using item XP will add a small modificator every 3 level and increase the main one
+using three items of the same set give powerful set bonus
+
+To upgrade a waifu you now have to use a duplicate or use a syringe and doll (both temporarly bought in the item shop)
+
+Box no longer waifus but now have a chance to give item
+removed nakano bonus

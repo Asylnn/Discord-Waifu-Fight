@@ -31,7 +31,7 @@ export default async function lb(message: message, args: Array<string>, interact
     evClaim.push(user.totalClaims)
     evQuest.push(user.quests.totalQuestDone)
   });
-  leaderboardType = interaction.options.getString("sort") || args[1]
+  leaderboardType = interaction.options?.getString("sort") || args[1]
   switch(leaderboardType){
     case "claim":
     case "claims":

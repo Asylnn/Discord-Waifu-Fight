@@ -88,7 +88,7 @@ export default class templateWaifu {
     embed.setTitle(`${this.name} ${userHaveWaifu ? "✅" : ""}` )
     embed.addField("Stats", //the title of the embed
       `AGI : ${this.o_agi} \n
-      LUCK : ${this.o_luck}% \n
+      LUCK : ${this.o_luck} \n
       INT : ${this.o_int} \n
       STG : ${this.o_stg} \n
       DEXT : ${this.o_dext} \n

@@ -14,7 +14,7 @@ export default async function setmode(message:message, user:user, args: Array<st
   const actionRow = new Discord.MessageActionRow()
   const selectMenu = new Discord.MessageSelectMenu()
   selectMenu.setCustomId('gamemode')
-  selectMenu.setPlaceholder('Select A Gamemode')
+  selectMenu.setPlaceholder(eval(getLoc)("select_a_gamemode"))
   selectMenu.setOptions([{
     label:"standard",
     value:'osu'
@@ -31,16 +31,16 @@ export default async function setmode(message:message, user:user, args: Array<st
   actionRow.addComponents(selectMenu)
   message.components.push(actionRow)
 
-  const collector = (await message.reply("Please select a gamemode")).createMessageComponentCollector({componentType:'SELECT_MENU', idle:IDLE_TIME_OF_INTERACTIONS})
+  const collector = (await message.reply(eval(getLoc)("select_a_gamemode"))).createMessageComponentCollector({componentType:'SELECT_MENU', idle:IDLE_TIME_OF_INTERACTIONS})
   collector.on('collect', (interaction: Discord.SelectMenuInteraction) => {
     message.channel = interaction
     message.haveToUpdate = true
     user.gamemode = interaction.values[0] as gamemode
     message.reply(eval(getLoc)("gamemode_select"))
-
+    user.save()
   })
-
+  /*
   if(!["osu", "fruits", "taiko", "mania"].includes(args[1])){message.addResponse(eval(getLoc)('wrong_gamemode')); return true}
   user.gamemode = args[1] as gamemode
-  message.addResponse(eval(getLoc)("gamemode_select"))
+  message.addResponse(eval(getLoc)("gamemode_select"))*/
 }

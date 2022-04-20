@@ -11,8 +11,8 @@ import Discord from 'discord.js'
 
 const options: Discord.ApplicationCommandChoicesData[] = [
   {
-    name:"index",
-    description:"Index",
+    name:"slot",
+    description:"slot of what you want to sell",
     required:true,
     type:"INTEGER"
   },{
@@ -46,7 +46,7 @@ commandManager.create({
       type:"SUB_COMMAND",
       options:options.concat([{
         name:"it",
-        description:"item type -- ADD DESCRIPTION",
+        description:"item type",
         required:true,
         type:"STRING",
         choices:[{name:"userconsumable", value:"userconsumable"},
@@ -77,7 +77,7 @@ export default async function sell(message: message,user: user, args: Array<stri
     case 'we':
     case 'm':
 
-      let item = testItem(message, user.items[MAJ[type] as "material"], index)
+      let item = testItem(message, user.items[MAJ[type] as "material"], index)?.item
       if(item == null){return true;}
       item = deepCopy(item)
 

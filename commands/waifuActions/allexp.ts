@@ -11,7 +11,8 @@ export default async function allexp(message: message, user: user, args: Array<s
   let noWaifuEXP = true
   user.waifus.forEach(waifu => {
     if(waifu){
-      if(waifu.action){
+      if(!waifu.action){
+
         noWaifuEXP = false
         let lvl = 2
         switch(true){
@@ -30,5 +31,6 @@ export default async function allexp(message: message, user: user, args: Array<s
       }
     }
   });
+  if(noWaifuEXP) message.addResponse(eval(getLoc)("allexp_no_waifu_went_exploring"))
   return noWaifuEXP
 }

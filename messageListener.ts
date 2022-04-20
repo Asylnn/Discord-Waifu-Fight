@@ -1,6 +1,5 @@
 import commands from './commands/commands'
-import messageReaction from './commands/messageReaction'
-import {USERNAME, ASYLN_DISCORD_ID, PREFIX} from './files/config.json'
+import {USERNAME, PREFIX} from './files/config.json'
 import user from './class/user'
 import messageClass from "./class/message"
 import Discord from 'discord.js'
@@ -23,6 +22,7 @@ discordClient.on('interactionCreate', async (interaction) => {
 
    if(await users.exists(interaction.user.id)){
     userObj = await users.get(interaction.user.id)
+    message.ephemeral = userObj.ephemeral
   }
   commands(message, userObj, [], interaction)
 })
@@ -46,15 +46,27 @@ discordClient.on('messageCreate', async function(discordMessage: Discord.Message
 
    if(await users.exists(discordMessage.author.id)){
     userObj = await users.get(discordMessage.author.id)
+    console.log(userObj.ephemeral)
+    message.ephemeral = userObj.ephemeral
   }
 
   commands(message, userObj, args, discordMessage)
 })
 
 osuBancho.on("PM", async (osuMessage: any) => {
+
   console.log(`${osuMessage.user.ircUsername}: ${osuMessage.message}`)
   const message = new messageClass(defaultLanguage, osuMessage.message, "osu", Date.now(),osuMessage.user, "-1")
-  let userObj: user = {currentDealId:"-1", lg:defaultLanguage, id:"-1", verified:false, osuName:osuMessage.user.ircUsername} as any
+  let user = await users.find(user => user.osuName == osuMessage.user.ircUsername)
+  if(!user) user = {currentDealId:"-1", lg:defaultLanguage, id:"-1", verified:false, osuName:osuMessage.user.ircUsername} as user
+
+  if(osuMessage.message.split("https://osu.ppy.sh/b/")[1] != undefined && user.canAddMap){
+    let beatmapId = osuMessage.message.split("https://osu.ppy.sh/b/")[1].split(" ")[0]
+    console.log(beatmapId)
+    addbeatmapset(message, ["", beatmapId])
+    message.reply()
+    return
+  }
 
   if(osuMessage.user.ircUsername == USERNAME){return;} // If it comes from the bot itself return.
   const args = message.content.toLowerCase().split(' ');
@@ -62,9 +74,7 @@ osuBancho.on("PM", async (osuMessage: any) => {
 
 
 
-  const user = await users.find(user => user.osuName == userObj.osuName)
-  if(user != undefined){
-    userObj = user
-  }
-  commands(message, userObj, args, osuMessage)
+
+
+  commands(message, user, args, osuMessage)
 });

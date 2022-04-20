@@ -11,8 +11,10 @@ export default abstract class item {
   public value: number
   public readonly img: string
   public readonly uniqueId: string
+  public stackable: boolean
+  public complementaryInformation:any //used by used serynge and doll
 
-  constructor(id = "-1", name = "noName", description = "noDesc", rarity = 0, value = -69, img = ""){
+  constructor(id = "-1", name = "noName", description = "noDesc", rarity = 0, value = -69, img = "", stackable = true){
     this.id = id
     this.name = name
     this.description = description
@@ -21,6 +23,7 @@ export default abstract class item {
     this.img = img
     this.uniqueId = uniqueId
     uniqueId = (+uniqueId+1).toString()
+    this.stackable = stackable
   }
 }
 

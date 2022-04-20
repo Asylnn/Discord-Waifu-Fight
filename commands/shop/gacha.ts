@@ -54,13 +54,13 @@ export default async function gacha(message:message, user:user){
           content = "Obtained Waifus \r\n" + pulledWaifus.reduce((str, waifu) => str + `${waifu.rarityName(message)} ${waifu.name}\r\n`, "")
         }
         //message.hasReplied = false
-        interaction.reply({content:content, embeds: embeds, ephemeral: /*user.ephemeral*/ false});
+        interaction.reply({content:content, embeds: embeds, ephemeral: user.ephemeral});
         user.reserveWaifu.push(...pulledWaifus.map(template => new waifu(user, template)))
         user.save()
       }
     }
 
-    return createSimpleEmbed(banner.name, banner.description)
+    return createSimpleEmbed(eval(getLoc)(banner.name), eval(getLoc)(banner.description))
   })
 
 

@@ -5,8 +5,8 @@ import Discord from 'discord.js'
 
 const options: Discord.ApplicationCommandChoicesData[] = [
   {
-    name:"index",
-    description:"Index",
+    name:"slot",
+    description:"slot of what you want to buy",
     required:true,
     type:"INTEGER"
   }
@@ -45,7 +45,7 @@ export default async function buy(message: message, user: user, args: Array<stri
   let price
   if(user.lvl < LEVEL_PERMISSIONS.buy && !TEST_BUILD){message.addResponse(eval(getLoc)("lvl_too_low")); return true;}
 
-  const {i:index, t:type} = !message.isInteraction ? {"i":parseInt(args[2]) - 1, "t":args[1]} : {"i":interaction.options.getInteger('index')!,"t":interaction.options.getSubcommand()}
+  const {i:index, t:type} = !message.isInteraction ? {"i":parseInt(args[2]) - 1, "t":args[1]} : {"i":interaction.options.getInteger('slot')!,"t":interaction.options.getSubcommand()}
 
   switch (type) {
     case "item":

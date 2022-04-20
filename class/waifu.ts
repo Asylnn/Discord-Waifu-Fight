@@ -4,7 +4,7 @@ import Modificator from './modificator'
 const {getModificators} = Modificator
 import WaifuEquipment from './item/waifuEquipment'
 import {Action, ActionType} from './types/action'
-import {EXP_DIFFICULTY, PAR_DIFFICULTY, TIME_ANALYSE, TIME_DECRYPTION, TEST_BUILD} from '../files/config.json'
+import {EXP_DIFFICULTY, PAR_DIFFICULTY, TIME_ANALYSE, TIME_DECRYPTION, TEST_BUILD, CAFE_DIFFICULTY, MINING_DIFFICULTY} from '../files/config.json'
 import Discord from 'discord.js'
 import {milliToHours} from '../genericFunctions/timeConversion'
 import User from './user'
@@ -43,12 +43,11 @@ export default class waifu extends TemplateWaifu{
     this.b_kaw = template.o_kaw
   }
 
-
   get xplvlup(){
     if(this.lvl < 20){
-      return 0.55*Math.pow(this.lvl,2.2) + 20
+      return Math.floor(0.55*Math.pow(this.lvl,2.2) + 20)
     }
-    return 1.025*((-13/256000)*Math.pow(this.lvl,4) + (4471/96000)*Math.pow(this.lvl,3) +(-161/50)*this.lvl*this.lvl+ (42893/480)*this.lvl -422.29)
+    return Math.floor(1.025*((-13/256000)*Math.pow(this.lvl,4) + (4471/96000)*Math.pow(this.lvl,3) +(-161/50)*this.lvl*this.lvl+ (42893/480)*this.lvl -422.29))
   }
 
   get maxLvl(){
@@ -60,7 +59,7 @@ export default class waifu extends TemplateWaifu{
     return this.b_stg*mult
   }
 
-  get agi(){ // Renvoie la valeur avec modifs
+  get agi(){
     const mult =  getModificators(this, 'mult_agi').value
     return this.b_agi*mult
   }
@@ -70,7 +69,7 @@ export default class waifu extends TemplateWaifu{
     return this.b_int*mult
   }
 
-  get luck(){ // Renvoie la valeur avec modifs
+  get luck(){
     const mult = getModificators(this, 'mult_luck').value
     return this.b_luck*mult
   }
@@ -100,7 +99,7 @@ export default class waifu extends TemplateWaifu{
     return this.int*mult
   }
 
-  giveXP(xp: number, message: Message, useModificators = true, first = true){
+  giveXP(xp: number, message: Message, useModificators = true){
     let mult = 1, totalXP
     if(useModificators){
       mult = getModificators(this, 'mult_XP').value
@@ -121,8 +120,8 @@ export default class waifu extends TemplateWaifu{
 
         let tempxp = this.xp
         this.xp = 0
-        if(first) message.addResponse(eval(getLoc)("level_up"))
-        this.giveXP(tempxp, message, false, false)
+        if(tempxp < this.xplvlup) message.addResponse(eval(getLoc)("level_up"))
+        this.giveXP(tempxp, message, false)
       }
       else {
         message.addResponse(eval(getLoc)("max_lvl"))
@@ -145,14 +144,25 @@ export default class waifu extends TemplateWaifu{
   testSendMesAction(message: Message, sendMes:string | boolean = false){
     if(this.action && sendMes){
       let actionType
-      if(this.action.type == 'exploration'){
-        actionType = eval(getLoc)("an_exploration"); actionType;
-      }
-      else if(this.action.type == 'analyse'){
-        actionType = eval(getLoc)("an_analyse")
-      }
-      else if(this.action.type == 'decryption'){
-        actionType = eval(getLoc)("an_decrypt")
+      switch(this.action.type){
+        case "exploration":
+          actionType = eval(getLoc)("exploration"); actionType;
+          break;
+        case "cafe":
+          actionType = eval(getLoc)("cafe")
+          break;
+        case "decryption":
+          actionType = eval(getLoc)("decrypt")
+          break;
+        case "dungeon":
+          actionType = eval(getLoc)("dungeon")
+          break;
+        case "mining":
+          actionType = eval(getLoc)("mine")
+          break;
+        case "analyse":
+          actionType = eval(getLoc)("analyse")
+          break;
       }
       let timeLeft = milliToHours(this.action.createdTimestamp + this.action.timeWaiting - message.createdTimestamp)
       message.addResponse(eval(getLoc)(sendMes)); timeLeft;
@@ -164,6 +174,16 @@ export default class waifu extends TemplateWaifu{
     let mult = 1
     let time = 0
     switch (type) {
+      case "cafe":
+        time = CAFE_DIFFICULTY[lvl]
+        mult = getModificators(this, 'reduce_cafe_time').value
+        time = time/mult
+        break;
+      case "mining":
+        time = MINING_DIFFICULTY[lvl]
+        mult = getModificators(this, 'reduce_mining_time').value
+        time = time/mult
+        break;
       case "exploration" :
         time = EXP_DIFFICULTY[lvl]
         mult = getModificators(this, 'reduce_explo_time').value
@@ -185,11 +205,10 @@ export default class waifu extends TemplateWaifu{
   }
 
   get attackSpeed(){
-    return 5000/Math.pow(Math.E, this.agi/550)
+    return 30000/(1 + this.agi/1000)
   }
 
   get critRate(){
-
     return 0.05 + this.dext/1000
   }
 
@@ -200,16 +219,23 @@ export default class waifu extends TemplateWaifu{
     let multXP = getModificators(this, 'mult_XP').value
     let modificators = ""
 
-    //let waifuTimeAction = getModificators(this, 'reduce_action_time')
-    modificators += getModificators(this, 'reduce_explo_time').toString(message)
-    modificators += getModificators(this, 'reduce_analyse_time').toString(message)
-    modificators += getModificators(this, 'reduce_decrypt_time').toString(message)
-    modificators += getModificators(this, 'add_artifact_level').toString(message)
+    modificators += getModificators(this, 'reduce_explo_time').value != 1 ? getModificators(this, 'reduce_explo_time').toString(message) : ""
+    modificators += getModificators(this, 'reduce_analyse_time').value != 1 ? getModificators(this, 'reduce_analyse_time').toString(message) : ""
+    modificators += getModificators(this, 'reduce_decrypt_time').value != 1 ? getModificators(this, 'reduce_decrypt_time').toString(message) : ""
+    modificators += getModificators(this, 'reduce_mining_time').value != 1 ? getModificators(this, 'reduce_mining_time').toString(message) : ""
+    modificators += getModificators(this, 'reduce_cafe_time').value != 1 ? getModificators(this, 'reduce_cafe_time').toString(message) : ""
+    //modificators += getModificators(this, 'add_artifact_level').value != 0 ? getModificators(this, 'add_artifact_level').toString(message) : ""
 
-    modificators += getModificators(this, 'mult_XP_std').toString(message)
-    modificators += getModificators(this, 'mult_XP_mania').toString(message)
-    modificators += getModificators(this, 'mult_XP_catch').toString(message)
-    modificators += getModificators(this, 'mult_XP_taiko').toString(message)
+    modificators += getModificators(this, 'mult_XP_std').value != 1 ? getModificators(this, 'mult_XP_std').toString(message) : ""
+    modificators += getModificators(this, 'mult_XP_mania').value != 1 ? getModificators(this, 'mult_XP_mania').toString(message) : ""
+    modificators += getModificators(this, 'mult_XP_catch').value != 1 ? getModificators(this, 'mult_XP_catch').toString(message) : ""
+    modificators += getModificators(this, 'mult_XP_taiko').value != 1 ? getModificators(this, 'mult_XP_taiko').toString(message) : ""
+
+    modificators += getModificators(this, 'cafe_capability').value != 1 ? getModificators(this, 'cafe_capability').toString(message) : ""
+    modificators += getModificators(this, 'exploration_capability').value != 1 ? getModificators(this, 'exploration_capability').toString(message) : ""
+    modificators += getModificators(this, 'mining_capability').value != 1 ? getModificators(this, 'mining_capability').toString(message) : ""
+    modificators += getModificators(this, 'get_quest_reroll').value != 1 ? getModificators(this, 'get_quest_reroll').toString(message) : ""
+
 
     let multStg = this.stg / this.b_stg
     let multAgi = this.agi / this.b_agi
@@ -219,25 +245,25 @@ export default class waifu extends TemplateWaifu{
     let multKaw = this.kaw / this.b_kaw
 
     const outfit = this.equipedItems.outfit
-    const showOutfit = {name: eval(getLoc)("outfit"), value: outfit != null ? `${eval(getLoc)(outfit.name)} ${"★".repeat(outfit.rarity)} Lvl: ${outfit.lvl}`: eval(getLoc)("no_item_in_this_slot"), inLine: true}
+    const showOutfit = {name: eval(getLoc)("outfit"), value: outfit != null ? `${eval(getLoc)(outfit.name)} ${"★".repeat(outfit.rarity)} Lvl: ${outfit.lvl}`: eval(getLoc)("no_item_in_this_slot"), inLine: false}
 
     const weapon = this.equipedItems.weapon
-    const showWeapon = {name: eval(getLoc)("sword"), value: weapon != null ? `${eval(getLoc)(weapon.name)} ${"★".repeat(weapon.rarity)} Lvl: ${weapon.lvl}`: eval(getLoc)("no_item_in_this_slot"), inLine: true}
+    const showWeapon = {name: eval(getLoc)("weapon"), value: weapon != null ? `${eval(getLoc)(weapon.name)} ${"★".repeat(weapon.rarity)} Lvl: ${weapon.lvl}`: eval(getLoc)("no_item_in_this_slot"), inLine: false}
 
     const accessory = this.equipedItems.accessory
-    const showAccessory = {name: eval(getLoc)("outfit"), value: accessory != null ? `${eval(getLoc)(accessory.name)} ${"★".repeat(accessory.rarity)} Lvl: ${accessory.lvl}`: eval(getLoc)("no_item_in_this_slot"), inLine: true}
+    const showAccessory = {name: eval(getLoc)("accessory"), value: accessory != null ? `${eval(getLoc)(accessory.name)} ${"★".repeat(accessory.rarity)} Lvl: ${accessory.lvl}`: eval(getLoc)("no_item_in_this_slot"), inLine: false}
 
     embed.setColor(this.rarityColor as any)
     embed.addField("Stats", //the title of the embed
       `${eval(getLoc)("number")} : ${number + 1} \n
       Level : ${this.lvl}/${this.maxLvl}
       XP : ${Math.round(this.xp)}/${this.lvl != this.maxLvl ? this.xplvlup : "-"} ${multXP != 1 ? `(+${Math.round((multXP - 1)*100)}%)` : ""}
-      STG : ${Math.round(this.stg)} ${multXP != 1 ? `(+${Math.round((multStg - 1)*100)}%)` : ""}
-      AGI : ${Math.round(this.agi)} ${multXP != 1 ? `(+${Math.round((multAgi - 1)*100)}%)` : ""}
-      INT : ${Math.round(this.int)} ${multXP != 1 ? `(+${Math.round((multInt - 1)*100)}%)` : ""}
-      LUCK : ${Math.round(this.luck)} ${multXP != 1 ? `(+${Math.round((multLuck - 1)*100)}%)` : ""}
-      DEXT : ${Math.round(this.dext)} ${multXP != 1 ? `(+${Math.round((multDext - 1)*100)}%)` : ""}
-      KAW : ${Math.round(this.kaw)} ${multXP != 1 ? `(+${Math.round((multKaw - 1)*100)}%)` : ""}
+      STG : ${Math.round(this.stg)} ${multStg != 1 ? `(+${Math.round((multStg - 1)*100)}%)` : ""}
+      AGI : ${Math.round(this.agi)} ${multAgi != 1 ? `(+${Math.round((multAgi - 1)*100)}%)` : ""}
+      INT : ${Math.round(this.int)} ${multInt != 1 ? `(+${Math.round((multInt - 1)*100)}%)` : ""}
+      LUCK : ${Math.round(this.luck)} ${multLuck != 1 ? `(+${Math.round((multLuck - 1)*100)}%)` : ""}
+      DEXT : ${Math.round(this.dext)} ${multDext != 1 ? `(+${Math.round((multDext - 1)*100)}%)` : ""}
+      KAW : ${Math.round(this.kaw)} ${multKaw != 1 ? `(+${Math.round((multKaw - 1)*100)}%)` : ""}
       ${eval(getLoc)("rarity")} : ${this.rarityName(message)} \n`
     )
     embed.addFields(showOutfit, showWeapon, showAccessory)

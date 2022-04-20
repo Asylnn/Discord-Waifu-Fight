@@ -16,13 +16,13 @@ export default async function language(message: message, user: user){
   const selectMenu = new Discord.MessageSelectMenu()
   selectMenu.setCustomId('language')
   selectMenu.setPlaceholder('Select A Language')
-  let options: Array<Discord.MessageSelectOptionData> = []
-  ALL_LANGUAGES.forEach((language, i) => {
-    options.push({
+  const options: Array<Discord.MessageSelectOptionData> = ALL_LANGUAGES.map((language, i) => {
+    return {
       label:ALL_LANGUAGES_FULL_NAME[i],
       value:language
-    })
+    }
   })
+
 
   selectMenu.setOptions(options)
   actionRow.addComponents(selectMenu)
@@ -37,7 +37,7 @@ export default async function language(message: message, user: user){
     message.lg = interaction.values[0] + "."
     user.lg = interaction.values[0] + "."
     message.reply(eval(getLoc)("language_edit"))
-
+    user.save()
   })
-  return false;
+  return true;
 }

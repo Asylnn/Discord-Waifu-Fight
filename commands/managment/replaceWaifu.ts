@@ -9,16 +9,16 @@ import checkClicker from '../util/checkClicker'
 commandManager.create({
   name:"replace",
   type:"CHAT_INPUT",
-  description:"sometime things has to be done to earn money...",
+  description:"replace a waifu by another waifu in reserve",
   options:[
     {
       name:"w",
-      description:"waifu index",
+      description:"waifu slot -- In which slot your waifu to be in (no input will open select menu)",
       required:true,
       type:"INTEGER"
     },{
       name:"rw",
-      description:"reserve waifu index",
+      description:"reserve waifu slot",
       required:true,
       type:"INTEGER"
     },
@@ -47,8 +47,13 @@ export default async function replaceWaifu(message: message, user: user, args: A
   const collector = (await message.reply(eval(getLoc)("replace_waifu"))).createMessageComponentCollector({componentType:'BUTTON', idle:IDLE_TIME_OF_INTERACTIONS})
 
   collector.on('collect', (interaction: Discord.ButtonInteraction) => {
+    message.channel = interaction
+    message.haveToUpdate = true
     if (checkClicker(interaction, user.id)) return true;
+    console.log(isEmpty)
     if(!isEmpty){
+
+      console.log(remplacedWaifu)
       if(remplacedWaifu.action){
         remplacedWaifu.action = null
         message.addResponse(eval(getLoc)("no_longer_doing_action"))
@@ -56,8 +61,8 @@ export default async function replaceWaifu(message: message, user: user, args: A
       user.reserveWaifu.push(remplacedWaifu)
     }
     user.waifus[waifuIndex] = reserveWaifu
-    user.reserveWaifu.splice(reserveWaifuIndex)
-    message.addResponse(eval(getLoc)("remplaced_waifu"))
+    user.reserveWaifu.splice(reserveWaifuIndex, 1)
+    message.reply(eval(getLoc)("remplaced_waifu"))
     user.save()
     collector.stop()
   })

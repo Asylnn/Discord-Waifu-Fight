@@ -10,12 +10,12 @@ commandManager.create({
   options:[
     {
       name:"w1",
-      description:"first waifu index",
+      description:"first waifu slot",
       required:true,
       type:"INTEGER"
     },{
       name:"w2",
-      description:"second waifu index",
+      description:"second waifu slot",
       required:true,
       type:"INTEGER"
     },

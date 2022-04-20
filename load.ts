@@ -7,8 +7,6 @@ import Discord from 'discord.js'
 import Banchojs from "bancho.js"
 import api from './osuAPI/Api'
 import checking from './checking/checking'
-import collection from './class/collection'
-//import convert from './convert'
 
 
 
@@ -22,7 +20,6 @@ export default async function load(){
 
 
 
-  global.allPagesEmbed = new collection()
   global.getLoc = GETLOC
   global.osuBancho = new Banchojs.BanchoClient({ username: USERNAME, password: IRC_PASSWORD, limiterTimespan:60000, port: 6667, apiKey:OSU_API_KEY, limiterPrivate:270 });
   global.discordClient = new Discord.Client({partials:["REACTION", "CHANNEL"], intents:["GUILD_MESSAGE_REACTIONS", "GUILD_MESSAGES", "GUILDS", "GUILD_EMOJIS_AND_STICKERS", "DIRECT_MESSAGES"]});
@@ -31,10 +28,10 @@ export default async function load(){
   global.day = (new Date()).getDate()
 
   global.discordClient
-  fs.readFile('./files/beatmapsIds.json', (err, data) => {
+  /*fs.readFile('./files/beatmapsIds.json', (err, data) => {
     if(err) console.log(err)
     global.beatmaps = JSON.parse(data.toString())
-  })
+  })*/
   const data = fs.readFileSync('./files/uniqueId.json')
   global.uniqueId = JSON.parse(data.toString())
 
@@ -45,6 +42,7 @@ export default async function load(){
   fs.readFile('./files/userShop.json', (err, data) => {
     if(err) console.log(err)
     global.userShop = decode(data.toString())
+
   })
   global.pendingAccount = []
 
@@ -57,6 +55,7 @@ export default async function load(){
     global.guild = discordClient.guilds.cache.get(GUILD_ID)!
     global.eventDiscordChannel = guild.channels.cache.get(EVENT_CHANNEL_ID)!
     global.commandManager = guild.commands
+
     checking()
     require("./messageListener")
   });
@@ -64,10 +63,11 @@ export default async function load(){
   require('./objectCreation')
   require('./database');
 
+
   (await users.all()).forEach(user => {
     user.isDoingDungeon = false
     user.waifus.forEach((waifu) => {
-      if(waifu) waifu.action = null
+      if(waifu?.action?.type == "dungeon") waifu.action = null
     })
     user.save()
   })

@@ -65,11 +65,12 @@ weapon.add_luck.rarity.statSecondaire <- tableau avec la fourchette [valeur_min,
 
 import modificator from "../modificator";
 import randInt from '../../genericFunctions/randInt'
-import message from '../../class/message'
+import Message from '../../class/message'
 import item from './item'
 import equipmentType from '../types/equipmentType'
 import modificatorType from '../types/modificatorType'
-
+import {MAX_PROCS} from '../../files/config.json'
+import createSimpleEmbed from '../../commands/util/createSimpleEmbed'
 
 const procsPerPiece: {
   "generic":Array</*rarity*/Array<[modificatorType, number, number]>>,
@@ -83,9 +84,23 @@ const procsPerPiece: {
               /*Rareté 4*/[["mult_stg",0.05,0.04],["mult_int",0.05,0.04],["mult_kaw",0.05,0.04],["mult_agi",0.05,0.04],["mult_dext",0.05,0.04],["mult_luck",0.05,0.04],["mult_XP",0.09,0.06]],
               /*Rareté 5*/[["mult_stg",0.06,0.05],["mult_int",0.06,0.05],["mult_kaw",0.06,0.05],["mult_agi",0.06,0.05],["mult_dext",0.06,0.05],["mult_luck",0.06,0.05],["mult_XP",0.11,0.07]]
              ],
-  "weapon": [[], [], [], [], []],
-  "outfit": [[], [], [], [], []],
-  "accessory": [[], [], [], [], []]
+  "weapon": [   [["mult_phy", 0.015,0.01],["mult_psy", 0.015,0.02],["mult_mag", 0.015,0.01]],
+                [["mult_phy", 0.03,0.02],["mult_psy", 0.03,0.02],["mult_mag", 0.03,0.02]],
+                [["mult_phy", 0.05,0.04],["mult_psy", 0.05,0.02],["mult_mag", 0.05,0.04]],
+                [["mult_phy", 0.07,0.06],["mult_psy", 0.07,0.02],["mult_mag", 0.07,0.06]],
+                [["mult_phy", 0.1,0.08],["mult_psy", 0.1,0.02],["mult_mag", 0.1,0.08]]
+  ],
+  "outfit": [   [["exploration_capability", 0.015,0.01],["cafe_capability", 0.015,0.02],["mining_capability", 0.015,0.01]],
+                [["exploration_capability", 0.03,0.02],["cafe_capability", 0.03,0.02],["mining_capability", 0.03,0.02]],
+                [["exploration_capability", 0.05,0.04],["cafe_capability", 0.05,0.02],["mining_capability", 0.05,0.04]],
+                [["exploration_capability", 0.07,0.06],["cafe_capability", 0.07,0.02],["mining_capability", 0.07,0.06]],
+                [["exploration_capability", 0.1,0.08],["cafe_capability", 0.1,0.02],["mining_capability", 0.1,0.08]]
+              ],
+  "accessory":[ [["reduce_action_time", 0.01, 0.01] , ["mult_XP_std", 0.05, 0.02], ["mult_XP_catch", 0.05, 0.02], ["mult_XP_taiko", 0.05, 0.02], ["mult_XP_mania", 0.05, 0.02]],
+                [["reduce_action_time", 0.02, 0.02] , ["mult_XP_std", 0.08, 0.04], ["mult_XP_catch", 0.08, 0.04], ["mult_XP_taiko", 0.08, 0.04], ["mult_XP_mania", 0.08, 0.04]],
+                [["reduce_action_time", 0.03, 0.02] , ["mult_XP_std", 0.1, 0.06], ["mult_XP_catch", 0.1, 0.06], ["mult_XP_taiko", 0.1, 0.06], ["mult_XP_mania", 0.1, 0.06]],
+                [["reduce_action_time", 0.04, 0.03] , ["mult_XP_std", 0.12, 0.08], ["mult_XP_catch", 0.12, 0.08], ["mult_XP_taiko",  0.12, 0.08], ["mult_XP_mania", 0.12, 0.08]],
+                [["reduce_action_time", 0.05, 0.04] , ["mult_XP_std", 0.15, 0.1], ["mult_XP_catch", 0.15, 0.1], ["mult_XP_taiko", 0.15, 0.1], ["mult_XP_mania", 0.15, 0.1]]]
 }
 
 const mainStatPerPiece: {
@@ -93,28 +108,25 @@ const mainStatPerPiece: {
   "outfit":Array</*rarity*/Array<[modificatorType, number, number]>>,
   "accessory":Array</*rarity*/Array<[modificatorType, number, number]>>
 } = {
-  "weapon": [/*Rareté 1*/[["mult_stg",0.01,0.02],["mult_int",0.01,0.02],["mult_kaw",0.01,0.02]],
-              /*Rareté 2*/[["mult_stg",0.02,0.02],["mult_int",0.02,0.02],["mult_kaw",0.02,0.02]],
-              /*Rareté 3*/[["mult_stg",0.03,0.03],["mult_int",0.03,0.03],["mult_kaw",0.03,0.03]],
-              /*Rareté 4*/[["mult_stg",0.05,0.04],["mult_int",0.05,0.04],["mult_kaw",0.05,0.04]],
-              /*Rareté 5*/[["mult_stg",0.06,0.05],["mult_int",0.06,0.05],["mult_kaw",0.06,0.05]]
+  "weapon": [/*Rareté 1*/[["mult_stg",0.01,0.01],["mult_int",0.01,0.01],["mult_kaw",0.01,0.01]],
+              /*Rareté 2*/[["mult_stg",0.02,0.013],["mult_int",0.02,0.013],["mult_kaw",0.02,0.013]],
+              /*Rareté 3*/[["mult_stg",0.03,0.015],["mult_int",0.03,0.015],["mult_kaw",0.03,0.015]],
+              /*Rareté 4*/[["mult_stg",0.05,0.019],["mult_int",0.05,0.019],["mult_kaw",0.05,0.019]],
+              /*Rareté 5*/[["mult_stg",0.06,0.023],["mult_int",0.06,0.023],["mult_kaw",0.06,0.023]]
              ],
-  "outfit": [/*Rareté 1*/[["mult_agi",0.01,0.02],["mult_dext",0.01,0.02]],
-              /*Rareté 2*/[["mult_agi",0.02,0.02],["mult_dext",0.02,0.02]],
-              /*Rareté 3*/[["mult_agi",0.03,0.03],["mult_dext",0.03,0.03]],
-              /*Rareté 4*/[["mult_agi",0.05,0.04],["mult_dext",0.05,0.04]],
-              /*Rareté 5*/[["mult_agi",0.06,0.05],["mult_dext",0.06,0.05]]
+  "outfit": [/*Rareté 1*/[["mult_agi",0.01,0.01],["mult_dext",0.01,0.01]],
+              /*Rareté 2*/[["mult_agi",0.02,0.013],["mult_dext",0.02,0.013]],
+              /*Rareté 3*/[["mult_agi",0.03,0.015],["mult_dext",0.03,0.015]],
+              /*Rareté 4*/[["mult_agi",0.05,0.019],["mult_dext",0.05,0.019]],
+              /*Rareté 5*/[["mult_agi",0.06,0.023],["mult_dext",0.06,0.023]]
              ],
-  "accessory": [/*Rareté 1*/[["mult_luck",0.01,0.02],["mult_XP",0.03,0.03]],
-              /*Rareté 2*/[["mult_luck",0.02,0.02],["mult_XP",0.05,0.03]],
-              /*Rareté 3*/[["mult_luck",0.03,0.03],["mult_XP",0.07,0.04]],
-              /*Rareté 4*/[["mult_luck",0.05,0.04],["mult_XP",0.09,0.06]],
-              /*Rareté 5*/[["mult_luck",0.06,0.05],["mult_XP",0.11,0.07]]
+  "accessory": [/*Rareté 1*/[["mult_luck",0.01,0.01],["mult_XP",0.03,0.03]],
+              /*Rareté 2*/[["mult_luck",0.02,0.013],["mult_XP",0.05,0.03]],
+              /*Rareté 3*/[["mult_luck",0.03,0.015],["mult_XP",0.07,0.04]],
+              /*Rareté 4*/[["mult_luck",0.05,0.019],["mult_XP",0.09,0.06]],
+              /*Rareté 5*/[["mult_luck",0.06,0.023],["mult_XP",0.11,0.07]]
              ],
 }
-
-const maxProcs = 5
-
 
 export default class waifuEquipment extends item {
   public readonly objectType = "waifuEquipment"
@@ -127,7 +139,7 @@ export default class waifuEquipment extends item {
   constructor(id: string, name: string, description:string, rarity: number, img:string, type: equipmentType, set: string){
     //Générer valeur
 
-    super(id, name, description, rarity, rarity*100, img)
+    super(id, name, description, rarity, rarity*100, img, false)
 
 
     this.type = type
@@ -140,10 +152,10 @@ export default class waifuEquipment extends item {
 
 
     const modificatorInfo = mainStatPerPiece[this.type][rarity - 1][randInt(mainStatPerPiece[this.type][rarity - 1].length)]
-    this.modificators = [new modificator(`${this.type}_${this.rarity}_${modificatorInfo[0]}`, modificatorInfo[0], 1 + modificatorInfo[1], [modificatorInfo[2], 0])]
+    this.modificators.push(new modificator(`${this.type}_${this.rarity}_${modificatorInfo[0]}`, modificatorInfo[0], 1 + modificatorInfo[1], [modificatorInfo[2], 0]))
 
-    let numberOfPossibleProcs = [1,2,3,3,4]
-    let numberOfModificators = numberOfPossibleProcs[this.rarity] + randInt(2)
+    const numberOfPossibleProcs = [0,1,2,2,3]
+    let numberOfModificators = numberOfPossibleProcs[this.rarity - 1] + randInt(2)
     for(var i = 0; i < numberOfModificators; i++){
       this.generateModificator()
     }
@@ -151,46 +163,63 @@ export default class waifuEquipment extends item {
 
   generateModificator(){
 
-    const possibleProcs = procsPerPiece[this.type][this.rarity - 1].concat(procsPerPiece.generic[this.rarity- 1])
-    possibleProcs.filter(proc => !this.modificators.some(modificator => modificator.type == proc[0]))
+    let possibleProcs = procsPerPiece[this.type][this.rarity - 1].concat(procsPerPiece.generic[this.rarity- 1])
+    possibleProcs = possibleProcs.filter(proc => !this.modificators.some(modificator => modificator.type == proc[0]))
 
     let randProcIndex = randInt(possibleProcs.length) //Generating the modificator index
     const procInfo = possibleProcs[randProcIndex]
-    const proc = new modificator(`${this.type}_${this.rarity}_${procInfo[0]}`, procInfo[0], 1 + procInfo[1] + randInt(procInfo[2] + 1), [procInfo[1], procInfo[2]])
+    const proc = new modificator(`${this.type}_${this.rarity}_${procInfo[0]}`, procInfo[0], 1 + procInfo[1], [procInfo[1], procInfo[2]])
     this.modificators.push(proc)
 
   }
 
   get xpNeededToLevelUp(){
-    return Math.pow(this.rarity, 1.7)*(10 + 4*this.lvl + this.lvl*this.lvl)
+    return Math.floor(Math.pow(this.rarity, 1.7)*(10 + 4*this.lvl + this.lvl*this.lvl))
   }
 
-  giveXP(message: message, amount:number){
+  giveXP(message: Message, amount:number){
     this.xp += amount
     let tempXP
-    if(this.xpNeededToLevelUp >= this.xp && this.lvl < 15){ //Enough XP to level up and have not reached level max
+    if(this.xpNeededToLevelUp <= this.xp && this.lvl < 15){ //Enough XP to level up and have not reached level max
       this.value += this.rarity*10
       this.xp -= this.xpNeededToLevelUp
       tempXP = this.xp
       this.xp = 0
+      this.lvl++
       message.addResponse(eval(getLoc)("equipment_waifu_lvl_up"))
       const mainStat = this.modificators[0]
-      mainStat.value += mainStat.valueIncrease![0]*(1 + Math.pow(this.lvl, 3)/2000)
+      mainStat.value += mainStat.valueIncrease![0]
 
       if(this.lvl % 3 == 0){
-        if(this.modificators.length < maxProcs + 1){ // If there is still available procs slots
+        if(this.modificators.length < MAX_PROCS){ // If there is still available procs slots
           this.generateModificator()
           message.addResponse(eval(getLoc)("equipment_waifu_new_modificator"))
         }
         else {
-          const modificator = this.modificators[randInt(maxProcs + 1)]
-          modificator.value += modificator.valueIncrease![0] + randInt(1 + modificator.valueIncrease![1])
+          const modificator = this.modificators[randInt(MAX_PROCS)]
+          modificator.value += randInt(1 + modificator.valueIncrease![1]*100)/100
+
           message.addResponse(eval(getLoc)("equipment_waifu_upgraded_modificator"))
         }
       }
       this.giveXP(message, tempXP)
       message.addResponse(eval(getLoc)("equipment_waifu_lvl_up"))
     }
+  }
+
+  showStats(message: Message){
+    const embed = createSimpleEmbed(`${eval(getLoc)(this.name) + "★".repeat(this.rarity)} [${eval(getLoc)(this.type)}]`, eval(getLoc)(this.description), )
+    embed.addFields([
+      {
+        name:"level",
+        value:`LVL: ${this.lvl}/15 \r\n XP: ${this.xp}/${this.lvl == 15 ? "-" : this.xpNeededToLevelUp}`
+      },
+      {
+        name:"modificators",
+        value:this.modificators.reduce((accumulator, modificator) => accumulator += modificator.toString(message), '')
+      }
+    ])
+    return embed
   }
 }
 

@@ -19,6 +19,7 @@ export default class user{
   public osuName: string
   public waifus: Array<Waifu | null>
   public quests: QuestManager
+  public dungeonsPassedFloor: {[key: string]: number} = {}
 
   public modificators: Array<Modificator> = []
   public multXP = 1
@@ -44,16 +45,27 @@ export default class user{
   public itemXP = 0
   public currentDealId = "-1"
   public isDoingDungeon = false
-  public gachaCurrency = 0
+  public _gachaCurrency = 0
   public ephemeral = true
+  public statistics : {date:string, gachaCurrency:{daily:number, cafe:number, quests:number}, money:{recycling:{waifu:number, item:number}, daily:number, quests:number, box:number}, xp:{claim:number, dungeons:number, pure:number}, claims:number, dungeons:number, actions:{cafe:number, mining:number, exploration:number, analyse:number, decrypt:number}}[] = []
+
 
   constructor(id: string, osuName: string){
-
+    //if(!id) return;
     this.waifus = [new Waifu(this, waifus.get(["1", "12", "13"][randInt(3)])), null, null]
     this.id = id
     this.osuName = osuName
     this.quests = new QuestManager(this)
     this.waifuManager = new WaifuManager(this)
+    if(this.statistics.length == 0) this.newStatDay()
+  }
+
+  newStatDay(){
+    this.statistics.push({date:new Date(Date.now()).toDateString(), gachaCurrency:{daily:0, cafe:0, quests:0}, money:{recycling:{waifu:0, item:0}, daily:0, box:0, quests:0}, xp:{claim:0, pure:0, dungeons:0}, claims:0, dungeons:0, actions:{cafe:0, mining:0, exploration:0, analyse:0, decrypt:0}})
+  }
+
+  get todayStatistics(){
+    return this.statistics[this.statistics.length - 1]
   }
 
   get boxLevel(){
@@ -92,6 +104,20 @@ export default class user{
     const mult = getModificators(this, 'mult_money_earned').value
     this.quests.updateQuest("quest_money", coins*mult)
     this._money += coins*mult
+  }
+
+  get gachaCurrency(){
+    return this._gachaCurrency
+  }
+
+  set gachaCurrency(coins){
+    const mult = getModificators(this, 'mult_gc_earned').value
+    console.log(coins)
+    this.quests.updateQuest("quest_money", coins*mult)
+    console.log(mult)
+    console.log(coins)
+
+    this._gachaCurrency += coins*mult
   }
 
   get money(){

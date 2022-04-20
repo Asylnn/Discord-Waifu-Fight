@@ -35,12 +35,12 @@ commandManager.create({
       type:"INTEGER"
     },{
       name:"sr",
-      description:"star rating",
+      description:"star rating of the proposed maps",
       required:true,
       type:"INTEGER"
     },{
       name:"mode",
-      description:"the gamemode of the proposed map",
+      description:"the gamemode of the proposed maps",
       required:false,
       type:"STRING",
       choices:[{name:"consumableuser", value:"consumableuser"},
@@ -56,15 +56,19 @@ commandManager.create({
 export default async function enterDungeon(message: message, user: user, args: Array<string>, interaction: Discord.CommandInteraction){
 
   const dungeonId = message.isInteraction ? interaction.options.getString('dg')! : args[1]
-  const stage = message.isInteraction ? interaction.options.getInteger('floor')! : Math.floor(+args[2])
+  const floor = message.isInteraction ? interaction.options.getInteger('floor')! : Math.floor(+args[2])
   const sr = message.isInteraction ? interaction.options.getInteger('sr')! : Math.floor(+args[3])
   let mode = message.isInteraction ? interaction.options.getString('mode') : args[4]
 
   if(user.isDoingDungeon){message.addResponse(eval(getLoc)("already_in_dungeon")); return true;}
 
-  if(!templateDungeons.has(dungeonId)){message.addResponse(eval(getLoc)("dungeon_does_not_exitst")); return true;}
-  if(!between(stage, 1, 10)){message.addResponse(eval(getLoc)("invalid_stage")); return true;}
+  if(!templateDungeons.has(dungeonId)){message.addResponse(eval(getLoc)("dungeon_does_not_exist")); return true;}
+  if(!between(floor, 1, 10)){message.addResponse(eval(getLoc)("invalid_stage")); return true;}
   if(!between(sr, 0, 11)){message.addResponse(eval(getLoc)("invalid_star")); return true;}
+
+  let lastFloorCompleted = user.dungeonsPassedFloor[dungeonId]
+  if(!lastFloorCompleted) lastFloorCompleted = 0
+  if(lastFloorCompleted + 1 < floor){message.addResponse(eval(getLoc)("stage_too_high")); return true;}
 
 
   if(!mode || !["osu", "mania", "taiko", "fruits"].includes(mode)){
@@ -72,7 +76,7 @@ export default async function enterDungeon(message: message, user: user, args: A
   }
 
 
-  let dungeon = new dungeonClass(dungeonId, stage, mode as gamemode, sr, user)
+  let dungeon = new dungeonClass(dungeonId, floor, mode as gamemode, sr, user)
   console.log(eval(getLoc)("check_dm"))
   message.addResponse(eval(getLoc)("check_dm"))
   dungeons.set(user.id, dungeon)

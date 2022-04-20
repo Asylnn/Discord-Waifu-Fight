@@ -14,7 +14,7 @@ export default class itemManager {
   public userConsumable: Array<{item:UserConsumable, qty:number}>
   public waifuConsumable: Array<{item:WaifuConsumable, qty:number}>
   public userEquipment: Array<{item:UserEquipment, qty:number}>
-  public waifuEquipment: Array<WaifuEquipment>
+  public waifuEquipment: Array<{item: WaifuEquipment, qty:number}>
   public material: Array<{item:Material, qty:number}>
 
 
@@ -31,12 +31,14 @@ export default class itemManager {
     const userConCount = this.userConsumable.reduce((accumulator, itemAndQty) => accumulator += itemAndQty.qty, 1)
     const userItemCount = this.userEquipment.reduce((accumulator, itemAndQty) => accumulator += itemAndQty.qty, 1)
     const waifuConCount = this.waifuConsumable.reduce((accumulator, itemAndQty) => accumulator += itemAndQty.qty, 1)
-    const waifuItemCount = this.waifuEquipment.length
+    const waifuItemCount = this.waifuEquipment.reduce((accumulator, itemAndQty) => accumulator += itemAndQty.qty, 1)
     const matCount = this.material.reduce((accumulator, itemAndQty) => accumulator += itemAndQty.qty, 1)
     return userConCount + userItemCount + waifuConCount + waifuItemCount + matCount
   }
 
   addItem(itemOrId: item | string , qty = 1){
+    /*console.log(itemOrId)
+    console.log(qty)*/
     let item: itemClassType
     if(typeof itemOrId == "string"){
       item = items.get(itemOrId)
@@ -44,33 +46,32 @@ export default class itemManager {
     else {
       item = itemOrId as itemClassType
     }
-    if(item.objectType == "waifuEquipment"){
-      let materialAndQty = (this[item.objectType]).find(itemAndQty => itemAndQty.id == item.id)
-      if(materialAndQty == undefined) (this[item.objectType]).push(item)
-      this[item.objectType].sort((itemA, itemB) => itemA.rarity - itemB.rarity)
-    }
-    else {
+    if(item.stackable){
+      this[item.objectType] = (this[item.objectType]).filter((itemAndQty) => itemAndQty.item)
+      console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+      console.log(this[item.objectType])
+      console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
       let materialAndQty = (this[item.objectType] as {item:itemClassType, qty:number}[]).find(itemAndQty => itemAndQty.item.id == item.id)
       if(materialAndQty == undefined) (this[item.objectType] as {item:itemClassType, qty:number}[]).push({item:item, qty:qty})
       else materialAndQty.qty += qty
-      this[item.objectType].sort((itemA, itemB) => itemA.item.rarity - itemB.item.rarity)
     }
+    else {
+      (this[item.objectType] as {item:itemClassType, qty:number}[]).push({item:item, qty:1})
+    }
+    //this[item.objectType] = (this[item.objectType]).filter((itemAndQty) => itemAndQty.item)
+    /*console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+    console.log(this[item.objectType])
+    console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")*/
+    this[item.objectType].sort((itemA, itemB) => itemA.item.rarity - itemB.item.rarity)
   }
 
   removeItem(item: itemClassType, amount:number = 1){
-
-    if(item.objectType == "waifuEquipment"){
-      let index = this.waifuEquipment.findIndex(equipment => equipment.uniqueId == item.uniqueId)
-      this.waifuEquipment.splice(index, 1)
+    let index = this[item.objectType].findIndex((itemAndQty: {item:item, qty:number}) => itemAndQty.item.uniqueId == item.uniqueId)
+    if(this[item.objectType][index].qty > amount){
+      this[item.objectType][index].qty -= amount
     }
-    else {
-      let index = this[item.objectType].findIndex((itemAndQty: {item:item, qty:number}) => itemAndQty.item.id == item.id)
-      if(this[item.objectType][index].qty > amount){
-        this[item.objectType][index].qty -= amount
-      }
-      else{
-        this[item.objectType].splice(index, 1)
-      }
+    else{
+      this[item.objectType].splice(index, 1)
     }
   }
 
@@ -83,7 +84,7 @@ export default class itemManager {
       this[item.objectType][index].qty -= amount
     }
     else{
-      this[item.objectType].splice(index)
+      this[item.objectType].splice(index, 1)
     }
   }
 

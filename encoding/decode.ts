@@ -11,29 +11,38 @@ import waifuConsumable from '../class/item/waifuConsumable'
 import material from '../class/item/material'
 import modificator from '../class/modificator'
 
-
 eval(""); waifuManager; questManager; user; waifu; item; itemManager; material; waifuConsumable; userConsumable; userEquipment; waifuEquipment; modificator;
 
 
 export default function decode(data: string): any{
   const object = JSON.parse(data)
-  return recursiveShit2(object)
+  const datad = recursiveShit2(object)
+  return datad
+
+
 }
 
 function recursiveShit2(object: any, userObject: any  = undefined){
+//console.log(object)
+//console.log("XXXX")
   let stop = false
   let newObject: any = {}
   if(typeof object == "object" && object != null){
+
     if(object.objectType){
       if(object.objectType == "user"){
         userObject = object
+        delete object.gachaCurrency
         object.milestone = BigInt(object.milestone)
       }
       else if(object.objectType == "waifu" || object.objectType == "waifuManager" || object.objectType == "questManager" ){
+        //if(object.objectType == "questManager") console.log(object)
         object.owner = userObject
         stop = true
+
       }
       newObject = eval(`Object.assign(new ${object.objectType}_1.default(), object)`)
+      //if(object.objectType == "waifu" && userObject.osuName == "QuentinFTW") console.log(newObject)
     }
 
     if(object.constructor.name == "Array"){
@@ -46,6 +55,7 @@ function recursiveShit2(object: any, userObject: any  = undefined){
 
       for(const key in object){
         if(!stop) {
+          //console.log(key)
           newObject[key] = recursiveShit2(object[key], userObject)
         }
       }

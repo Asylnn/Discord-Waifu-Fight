@@ -31,25 +31,24 @@ Add boutons to confirm instead of adding c to the end of the command (V13)  ----
 Add system to give XP to item  ----Done
 Add XP needed formula for waifu equipment  ----Done
 finish "use user consumable" in commands/items ----Ignored for the moment (V13)
-
+skip score submission for dungeon with button omg big brain (V13) ----Done
+Clean Up objectCreation GetRandItem (replace collection by array) ----done
+Bug /gamemode part of response message is 'undefined' (V13) ----Done
+gacha system / gacha currency / pay 2 win ----Done
+upgrade waifu stuff (copies?) ----Done
 
 Create converter from old profile to new profiles
 Beatmaps converters (old beatmap to beatmap interface)
 Add mapping genre to beatmaps database
 
-skip score submission for dungeon with button omg big brain (V13)
-Bug /gamemode part of response message is 'undefined' (V13)
-gacha system / gacha currency / pay 2 win -
-upgrade waifu stuff (copies?)
+
 update help txt about equip commands
 transform waifuCollection into a page embed
 test if an embed can have an empty string as description
 
-
-
 check difference between defaultAvatarURL and avatar (and also check avatarURL function)
 
-
+Make action interaction in message.ts
 
 
 update help :/ ...
@@ -57,12 +56,75 @@ add waifu converter (from software to bot)
 convert every item object creation in objectCreation.ts
 
 
-when everything is finished, put user.ephemeral in gacha.ts
+when everything is finished, put user.ephemeral in gacha.ts OK
 when everything is finished, uncomment line in enterDungeon
+
 replace reduce_EX_time by reduce_explo_time
 
 
+
+remove all bonus linked to obtaining all waifus it's to say : nakano bonus, for base (origin: nakano, base)
+what to do with counciousness key?
+
+
+Ask for type of map after fight to get map genre (for bonus gc)
+
+IDEA : extracting XP from waifu give souls and counciousness to make copy of a waifu
+IDEA : item that let you change URL of waifu (cost GC and money)
+IDEA : item XP become item
+
+Make code to know if someone has done a dungeon
+Make code to get see where every drop of money, GC and XP come from
+Clean up code of globalItemManager (especially the fact getColRand need collection instead of nested arrays)
+Modify all language line for actions
+expected XP lvl
+Add temp variable (?.) in waifu for total damage and most impactful type
+
+
+
+
+"
+Yaaa
+D'ailleurs un truc à patch
+Le prix des auctions
+Comme t'as mis qu'on doit mettre 10% de plus
+Et que le prix de base est 100
+On est obligé de mettre 111 au minimum pour la première enchère
+"
+
+fight with only with a music genre or language
+Create other dungeons
+do bonus set of item
+reset achievements and retest everything
+Dungeon show all stats of obtained items
+fix bug waifu not gaining XP in dungeon
+item equipment when 5, upgrade one of the procs
+give back all itemXP used that wont be used
+Remove osu waifu from gacha
+reset achievement w(5)
+remove nakano buff
+
+NEXT UPDATE PACKAGE FOR 1.0
+
+- NEW DUNGEON that unlock waifu slots and item slots
+- ASCEND AND TRANSCEND feature
+- ALL OBJECT UP TO TIER 5
+
+Merge all modificator in o!stats
  ------ Soon -------
+
+Update waifu creator to put modificator in waifus
+Make dungeon is finished more visible
+
+Number of Artifact based on time to finish dungeon / claim
+
+Faire un module de stat pour obtenir : qté d'XP moyen pour un rank
+
+
+Make quest info when doing o!quest an embed
+Make system that check for every modificator and waifu and adjust them automatically + make corrupted items into angel statues
+Modificator manager?
+update achievement have all osu waifus?
 
 Next Update
 Make so you can instantly skip map above 8:00 min

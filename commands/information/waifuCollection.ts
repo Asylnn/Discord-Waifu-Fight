@@ -6,7 +6,7 @@ import {LEVEL_PERMISSIONS, TEST_BUILD} from '../../files/config.json'
 commandManager?.create({
   name:"collection",
   type:"CHAT_INPUT",
-  description:"see all the waifus and which one you got!",
+  description:"see all the existing waifus and which one you got!",
 })
 
 export default async function waifuCollection(message: message, user: user){
