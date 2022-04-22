@@ -75,10 +75,10 @@ export default class globalMessage{
 
 
 
-    if((!this.hasReplied || this.channel.id == eventDiscordChannel.id) && !this.hasReplied){
+    if(!this.hasReplied || this.channel.id == eventDiscordChannel.id){
 
       this.hasReplied = true
-      this.response = ""
+
 
       if(this.type == "osu"){
         this.channel.sendMessage(this.response)
@@ -96,6 +96,8 @@ export default class globalMessage{
         }
         return this.channel.reply({...interactionReplyOptions, ...messageReplyOptions})
       }
+
+      this.response = ""
     }
     else if(this.haveToUpdate){
       if(this.type == "DM"){

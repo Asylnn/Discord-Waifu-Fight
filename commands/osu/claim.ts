@@ -36,8 +36,10 @@ export default async function claim(message: message, user: user){
       rawXP = await maniaClaim(message, user.osuId, user.fight.beatmapId)
       break;
   }
-  if(rawXP != 0){
-    giveClaimXP(message, user, rawXP)
+  giveClaimXP(message, user, rawXP)
+
+  if(rawXP >= 1 && message.type != "osu"){
+
 
     const actionRow = new Discord.MessageActionRow()
     const selectMenu = new Discord.MessageSelectMenu()

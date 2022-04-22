@@ -36,8 +36,7 @@ commandManager?.create({
 
 
 async function getMap(gamemode: gamemode, star: number, playedMapsIds: Array<number>){
-  let mapPool = await beatmaps.filter(beatmap => {console.log(beatmap); return beatmap.gamemode == gamemode && Math.floor(beatmap.starRating) == star})
-  console.log(mapPool)
+  let mapPool = await beatmaps.filter(beatmap => {return beatmap.gamemode == gamemode && Math.floor(beatmap.starRating) == star})
   let beatmap = mapPool.length != 0 ? mapPool[0].id : null
 
   if (mapPool.length > 0){
